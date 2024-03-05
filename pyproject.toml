@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "aac"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aac-puml"
+version = "0.0.1"
+authors = [
+	{ name="Patrick Malone", email="patrick.malone@ngc.com" },
+] 
+description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/DevOps-MBSE/aac-puml"
+Issues = "https://github.com/DevOps-MBSE/aac-puml/issues"
