@@ -19,7 +19,7 @@ jobs:
           python-version: 3.11
 
       - name: Install the AaC Package
-        run: pip install aac -e .[all]
+        run: pip install aac-puml -e .[all]
 
       - name: Lint with flake8
         run: flake8 .
@@ -45,7 +45,7 @@ jobs:
       - name: Upload Documentation
         uses: actions/upload-artifact@v3
         with:
-          name: aac-documentation
+          name: aac-puml-documentation
           path: |
             python/docs/doc_artifacts/api
             python/docs/doc_artifacts/project_documentation
