@@ -26,3 +26,4 @@ vscode:
     - ms-python.python
     - samuelcolvin.jinjahtml
     - streetsidesoftware.code-spell-checker
+    - ms-python.debugpy
