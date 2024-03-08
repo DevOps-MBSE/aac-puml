@@ -12,5 +12,7 @@ RUN sudo pip install --upgrade pip
 RUN sudo pip install build
 RUN sudo pip install tox
 RUN sudo pip install sphinx
+RUN sudo pip install pipdeptree
+
 
 
