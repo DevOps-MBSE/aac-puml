@@ -3,3 +3,5 @@ pipdeptree==2.16.1
 sphinx==7.2.6
 myst-parser==2.0.0
 tox==4.14.1
+sphinx_contributors==0.2.7
+
