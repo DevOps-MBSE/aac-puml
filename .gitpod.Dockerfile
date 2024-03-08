@@ -9,10 +9,10 @@ RUN sudo apt install python${PYTHON_VERSION}-venv -y
 RUN sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 2
 RUN sudo pip install --upgrade pip
 
-RUN sudo pip install build
-RUN sudo pip install tox
-RUN sudo pip install sphinx
-RUN sudo pip install pipdeptree
+RUN pip install build
+RUN pip install tox
+RUN pip install sphinx
+RUN pip install pipdeptree
 
 
 
