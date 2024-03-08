@@ -22,7 +22,7 @@ jobs:
         run: pip install -e .
 
       - name: List Transitive Dependencies
-        run: pipdeptree
+        run: python -m pipdeptree
 
       - name: Build distribution package
         run: python -m build
