@@ -7,9 +7,9 @@ name = "aac-puml"
 version = "0.0.1"
 authors = [
 	{ name="Patrick Malone", email="patrick.malone@ngc.com" },
-] 
+]
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
-requires-python = "== 3.9.18"
+requires-python = "== 3.9"
 dependencies = [
 	"aac==0.4.3"
 ]
