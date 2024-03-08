@@ -19,7 +19,7 @@ jobs:
           python-version: 3.9.18
 
       - name: Install the AaC Package
-        run: pip install aac-puml -e .
+        run: pip install -e .
 
       - name: List Transitive Dependencies
         run: pipdeptree
