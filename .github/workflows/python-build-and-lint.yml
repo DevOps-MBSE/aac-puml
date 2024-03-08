@@ -28,10 +28,12 @@ jobs:
         run: python -m build
 
       - name: Upload Python Wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: aac_wheel
-          path: dist/aac_puml*
+          name: aac_puml
+          path: dist/aac_puml/
+          if-no-files-found: error
+          overwrite: true
 
       - name: Build Documentation
         run: |
@@ -40,8 +42,7 @@ jobs:
           sphinx-build source doc_artifacts
 
       - name: Upload Documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: aac-puml-documentation
-          path: |
-            docs/doc_artifacts
+          name: aac-puml-docs
+          path: docs/doc_artifacts
