@@ -7,4 +7,6 @@ sphinx_contributors==0.2.7
 sphinx-copybutton==0.5.2
 sphinx-copybutton==0.5.2
 furo==2024.1.29
+nose2==0.14.1
+coverage==7.4.3
 
