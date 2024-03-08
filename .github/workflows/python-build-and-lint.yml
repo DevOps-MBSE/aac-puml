@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aac_puml
-          path: dist/aac_puml/
+          path: python/dist/aac_puml
           if-no-files-found: error
           overwrite: true
 
@@ -45,4 +45,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aac-puml-docs
-          path: docs/doc_artifacts
+          path: python/docs/doc_artifacts
+          overwrite: true
