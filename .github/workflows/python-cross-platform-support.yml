@@ -16,15 +16,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.9.18
+        uses: actions/setup-python@main
         with:
-          python-version: 3.11
+          python-version: 3.9.18
 
       - name: Install the AaC Package
-        run: python -m pip install -e .[all]
+        run: python -m pip install -e .
 
       - name: Create Dependencies Package
         id: os_id
@@ -63,12 +63,12 @@ jobs:
 
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@main
         with:
           python-version:  ${{ matrix.py_version }}
 
       - name: Checkout Repository # Checked-out repository is necessary to test the first party plugin generation.
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Download Secure Install
         uses: actions/download-artifact@v3

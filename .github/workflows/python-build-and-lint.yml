@@ -11,27 +11,32 @@ jobs:
         working-directory: ./python
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Set up Python 3.9.18
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@main
         with:
           python-version: 3.9.18
 
-      - name: Install the AaC Package
-        run: pip install aac-puml -e .
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Install the aac-puml Package
+        run: pip install -e .
 
       - name: List Transitive Dependencies
-        run: pipdeptree
+        run: python -m pipdeptree
 
       - name: Build distribution package
         run: python -m build
 
       - name: Upload Python Wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: aac_wheel
-          path: dist/aac_puml*
+          name: aac_puml
+          path: python/dist
+          if-no-files-found: error
+          overwrite: true
 
       - name: Build Documentation
         run: |
@@ -40,8 +45,8 @@ jobs:
           sphinx-build source doc_artifacts
 
       - name: Upload Documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: aac-puml-documentation
-          path: |
-            docs/doc_artifacts
+          name: aac-puml-docs
+          path: python/docs/doc_artifacts
+          overwrite: true
