@@ -11,14 +11,14 @@ jobs:
     name: Python Build
     uses: ./.github/workflows/python-build-and-lint.yml
 
-  python_tests:
-    name: Python Unit Tests
-    needs: build_python_artifacts
-    uses: ./.github/workflows/python-test-python-version.yml
+  # python_tests:
+  #   name: Python Unit Tests
+  #   needs: build_python_artifacts
+  #   uses: ./.github/workflows/python-test-python-version.yml
 
-  # python_cross_platform:
-  #   name: Python Cross Platform Build & Test
-  #   uses: ./.github/workflows/python-cross-platform-support.yml
+  python_cross_platform:
+    name: Python Cross Platform Build & Test
+    uses: ./.github/workflows/python-cross-platform-support.yml
 
 # Commenting out from main branch workflow till permissions aspect can be resolved for
 # reconnecting automated page deployment. The below workflow is able to be ran manually
