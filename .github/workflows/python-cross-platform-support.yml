@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Set up Python 3.9.18
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@main
         with:
           python-version: 3.9.18
 
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@main
         with:
           python-version:  ${{ matrix.py_version }}
 
