@@ -9,7 +9,7 @@ authors = [
 	{ name="Patrick Malone", email="patrick.malone@ngc.com" },
 ]
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
-requires-python = "== 3.9"
+requires-python = "== 3.9.13"
 dependencies = [
 	"aac==0.4.3"
 ]
