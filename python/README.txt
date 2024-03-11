@@ -6,7 +6,7 @@ pyproject.toml vs setup.py
     Previously, this project was built with dependency information kept in a setup.py script.
     However, the preferred method is to use pyproject.toml to set the project-level options.
     Required modules are kept in the requirements.in file, and then the pip-compile command is
-    used to add hashes to the requirements.txt file for enhanced security (see additinoal
+    used to add hashes to the requirements.txt file for enhanced security (see additional
     instructions below).
 
 TO BUILD FROM TERMINAL:
