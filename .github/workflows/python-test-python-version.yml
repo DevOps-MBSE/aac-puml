@@ -23,8 +23,8 @@ jobs:
         with:
           python-version: ${{ matrix.py_version }}
 
-      - name: Install the AaC Package
-        run: pip install -e .[all]
+      - name: Install the AaC PUML Package
+        run: pip install -e .
 
       - name: Run Tox Tests
         run: tox -e $(echo py${{ matrix.py_version }} | awk -F "." '{print $1$2;}')
