@@ -24,6 +24,9 @@ jobs:
       - name: Install the aac-puml Package
         run: pip install -e .
 
+      - name: Lint with flake8
+        run: flake8 .
+
       - name: List Transitive Dependencies
         run: python -m pipdeptree
 
