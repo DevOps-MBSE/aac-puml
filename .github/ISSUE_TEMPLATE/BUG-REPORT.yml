@@ -1,11 +1,11 @@
-name: "🐛 Bug Report"
-description: Create a new ticket for a bug.
-title: "🐛 [BUG] - <title>"
+name: "🐛 PUML Bug Report"
+description: Create a new ticket for a bug in the PUML repository.
+title: "🐛 [PUML BUG] - <title>"
 labels: [
   "bug"
 ]
 projects: [
-  "DevOps-MBSE/aac-puml"
+  "DevOps-MBSE"
 ]
 body:
   - type: checkboxes
