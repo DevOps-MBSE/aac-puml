@@ -1,11 +1,11 @@
-name: "✏️📘 Documentation Request"
-description: Create a new ticket for a documentation request
-title: "✏️📘 [Documentation] - <title>"
+name: "✏️📘 PUML Documentation Request"
+description: Create a new ticket for a documentation request in the PUML repository.
+title: "✏️📘 [PUML Documentation] - <title>"
 labels: [
   "documentation"
 ]
 projects: [
-  "DevOps-MBSE/aac-puml"
+  "DevOps-MBSE"
 ]
 body:
   - type: checkboxes
