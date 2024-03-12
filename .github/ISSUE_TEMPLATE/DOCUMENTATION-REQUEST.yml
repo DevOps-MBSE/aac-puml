@@ -14,10 +14,7 @@ body:
       label: "Documentation Types"
       description: Please select the type(s) of documentation your request relates to.
       options:
-        - label: User Documentation
-        - label: Developer Documentation
-        - label: API Documentation
-        - label: New 
+        - label: New
         - label: Expansion
         - label: Correction
   - type: textarea

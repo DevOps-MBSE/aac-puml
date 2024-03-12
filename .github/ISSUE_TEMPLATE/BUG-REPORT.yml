@@ -21,7 +21,14 @@ body:
   - type: input
     id: version-pre-req
     attributes:
-      label: "What version of the AaC package are you using? Check your version with the command: aac version."
+      label: "What version of AaC are you using? Check your version with the command: aac version."
+      placeholder: i.e. 0.1.7
+    validations:
+      required: true
+  - type: input
+    id: plugin-version-pre-req
+    attributes:
+      label: "What version of the plugin are you using?"
       placeholder: i.e. 0.1.7
     validations:
       required: true
