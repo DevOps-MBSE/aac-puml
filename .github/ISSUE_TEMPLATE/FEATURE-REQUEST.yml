@@ -1,12 +1,12 @@
-name: "💭 Feature Request"
-description: Create a new ticket for a new feature request
-title: "💭 [REQUEST] - <title>"
+name: "💭 PUML Feature Request"
+description: Create a new ticket for a new feature request in the PUML repository.
+title: "💭 [PUML REQUEST] - <title>"
 labels: [
   "question", 
   "enhancement"
 ]
 projects: [
-  "DevOps-MBSE/aac-puml"
+  "DevOps-MBSE"
 ]
 body:
   - type: textarea
