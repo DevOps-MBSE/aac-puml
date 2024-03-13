@@ -1,5 +1,5 @@
-#image:
-#  file: .gitpod.Dockerfile
+image:
+ file: .gitpod.Dockerfile
 
 tasks:
   - name: Serve Sphinx Docs
@@ -15,8 +15,6 @@ tasks:
       cd python/
       python -m venv venv --system-site-packages
       source venv/bin/activate
-      pyenv install 3.9.13
-      pyenv local 3.9.13
       pip install -e .
     command: cd /workspace/aac-puml/python/; source venv/bin/activate # Always launch a console with our virtual env
 
