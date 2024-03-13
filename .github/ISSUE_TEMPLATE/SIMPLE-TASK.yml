@@ -1,6 +1,6 @@
-name: "📋 Task"
-description: Create a new ticket for a task to go with a feature
-title: "📋 [TASK] - <title>"
+name: "📋 PUML Task"
+description: Create a new ticket for a task to go with a PUML feature
+title: "📋 [PUML TASK] - <title>"
 labels: [
   "enhancement"
 ]

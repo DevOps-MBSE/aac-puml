@@ -34,7 +34,7 @@ jobs:
         run: python -m build
 
       - name: Upload Python Wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: aac_puml
           path: python/dist
@@ -48,7 +48,7 @@ jobs:
           sphinx-build source doc_artifacts
 
       - name: Upload Documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: aac-puml-docs
           path: python/docs/doc_artifacts
