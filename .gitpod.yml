@@ -1,0 +1,29 @@
+image:
+ file: .gitpod.Dockerfile
+
+tasks:
+  - name: Serve Sphinx Docs
+    init: |
+      cd /workspace/aac-puml/docs/
+      sleep 120 # Gitpod often takes a long time to install the python environment
+      source /workspace/aac-puml/python/venv/bin/activate
+      sphinx-build source gen_docs # Pre-build the docs so that when Gitpod opens the port it's ready to serve
+    command: sphinx-autobuild source gen_docs
+
+  - name: Python Virtual Environment
+    init: |
+      cd python/
+      python -m venv venv --system-site-packages
+      source venv/bin/activate
+      pip install -e .
+    command: cd /workspace/aac-puml/python/; source venv/bin/activate # Always launch a console with our virtual env
+
+vscode:
+  extensions:
+    - eamodio.gitlens
+    - redhat.vscode-yaml
+    - editorconfig.editorconfig
+    - ms-python.python
+    - samuelcolvin.jinjahtml
+    - streetsidesoftware.code-spell-checker
+
