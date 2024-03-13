@@ -1,4 +1,4 @@
-image: 
+image:
   file: .gitpod.Dockerfile
 
 tasks:
@@ -26,4 +26,4 @@ vscode:
     - ms-python.python
     - samuelcolvin.jinjahtml
     - streetsidesoftware.code-spell-checker
-    - ms-python.debugpy
+
