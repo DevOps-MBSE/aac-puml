@@ -1,3 +1,41 @@
+# IDE/Editor files
+.project
+.settings/
+
+# Emacs temporary files
+.#*
+
+# Vim temporary files
+*.sw[po]
+
+*.http
+
+# Occasionally created gitpod .tmp files
+*.tmp
+
+# jekyll / GitHub Pages
+*.gem
+.bundle
+.ruby-version
+.jekyll-cache
+.sass-cache
+_site
+Gemfile.lock
+node_modules
+
+# TypeScript server logs
+.log/
+
+# Rope configuration
+.ropeproject/
+
+aac.log
+AaC_OpenAPI_Schema.json
+generated/
+state.json
+
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
