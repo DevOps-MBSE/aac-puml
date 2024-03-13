@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.9.13
         uses: actions/setup-python@v5
@@ -67,7 +67,7 @@ jobs:
           python-version: ${{ matrix.py_version }}
 
       - name: Checkout Repository # Checked-out repository is necessary to test the first party plugin generation.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Download Secure Install
         uses: actions/download-artifact@v3
