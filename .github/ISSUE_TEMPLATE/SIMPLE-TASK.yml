@@ -1,11 +1,11 @@
 name: "📋 Task"
 description: Create a new ticket for a task to go with a feature
 title: "📋 [TASK] - <title>"
-labels: [ 
+labels: [
   "enhancement"
 ]
 projects: [
-  "DevOps-MBSE/aac-puml"
+  "DevOps-MBSE"
 ]
 body:
   - type: input
@@ -26,7 +26,7 @@ body:
     id: ac
     attributes:
       label: "Acceptance Criteria"
-      placeholder: | 
+      placeholder: |
         Provide initial criteria to determine when the work is complete and elligible for merging.
         i.e. - [ ] Include unit tests for new thing
              - [ ] Update documentation with new thing
