@@ -126,7 +126,7 @@ def run_puml_requirements(
 
         Args:
             architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
-    generate a PlantUML diagram.
+    generate a PlantUML requirements diagram.
 
             output_directory (str): The output directory into which the PlantUML (.puml) diagram file
     will be written.
