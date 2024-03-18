@@ -24,6 +24,7 @@ plugin:
           - name: Output PlantUML component diagram for valid architecture.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
+              - The positional argument {{puml.input.output-directory}} contains a valid file path.
             when:
               - The aac app is run with the puml-component command.
             then:
@@ -55,6 +56,7 @@ plugin:
           - name: Output PlantUML sequence diagram for valid use case.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
+              - The positional argument {{puml.input.output-directory}} contains a valid file path.
             when:
               - The aac app is run with the puml-sequence command.
             then:
@@ -86,6 +88,7 @@ plugin:
           - name: Output PlantUML object diagram for valid model.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
+              - The positional argument {{puml.input.output-directory}} contains a valid file path.
             when:
               - The aac app is run with the puml-object command.
             then:
@@ -117,6 +120,7 @@ plugin:
         - name: Output a requirements diagram in PlantUML format with a valid system model.
           given:
             - The {{puml.input.architecture-file}} contains a valid model.
+            - The positional argument {{puml.input.output-directory}} contains a valid file path.
           when:
             - The aac app is run with the puml-requirement command.
           then:
