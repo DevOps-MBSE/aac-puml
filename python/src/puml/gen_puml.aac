@@ -21,7 +21,7 @@ plugin:
       acceptance:
         name: Component Diagram Test
         scenarios:
-          - name: Output PlantUML component diagram for valid architecture.
+          - name: Output PlantUML component diagram for specified .aac file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -29,14 +29,6 @@ plugin:
               - The aac app is run with the puml-component command.
             then:
               - A PlantUML component diagram of the model is written to the output directory.
-          - name: Output PlantUML component diagram to file.
-            given:
-              - The {{puml.input.architecture-file}} contains a valid model.
-              - The positional argument {{puml.input.output-directory}} contains a valid file path.
-            when:
-              - The aac app is run with the puml-component command.
-            then:
-              - A PlantUML component diagram of the model is generated to a .puml file.
     - name: puml-sequence
       help_text: Converts an AaC-defined usecase to PlantUML sequence diagram.
       input:
@@ -53,7 +45,7 @@ plugin:
       acceptance:
         name: Sequence Diagram Test
         scenarios:
-          - name: Output PlantUML sequence diagram for valid use case.
+          - name: Output PlantUML sequence diagram for specified .aac file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -61,14 +53,6 @@ plugin:
               - The aac app is run with the puml-sequence command.
             then:
               - A PlantUML sequence diagram of the use case is written to the output directory.
-          - name: Output PlantUML sequence diagram to file.
-            given:
-              - The {{puml.input.architecture-file}} contains a valid model.
-              - The positional argument {{puml.input.output-directory}} contains a valid file path.
-            when:
-              - The aac app is run with the puml-sequence command.
-            then:
-              - A PlantUML sequence diagram of the model is generated to a .puml file.
     - name: puml-object
       help_text: Convert an AaC-defined system to PlantUML object diagram.
       input:
@@ -85,7 +69,7 @@ plugin:
       acceptance:
         name: Object Diagram Test
         scenarios:
-          - name: Output PlantUML object diagram for valid model.
+          - name: Output PlantUML object diagram for specified .aac file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -93,14 +77,6 @@ plugin:
               - The aac app is run with the puml-object command.
             then:
               - A PlantUML object diagram of the model is written to the output directory.
-          - name: Output PlantUML object diagram to file.
-            given:
-              - The {{puml.input.architecture-file}} contains a valid model.
-              - The positional argument {{puml.input.output-directory}} contains a valid file path.
-            when:
-              - The aac app is run with the puml-object command.
-            then:
-              - A PlantUML object diagram of the model is generated to a .puml file.
     - name: puml-requirements
       help_text: Convert an AaC-defined system to a requirements diagram in PlantUML format.
       input:
@@ -117,19 +93,11 @@ plugin:
       acceptance:
         name: Requirement Diagram Test
         scenarios:
-        - name: Output a requirements diagram in PlantUML format with a valid system model.
+        - name: Output PlantUML requirements diagram for specified .aac file and output path.
           given:
             - The {{puml.input.architecture-file}} contains a valid model.
             - The positional argument {{puml.input.output-directory}} contains a valid file path.
           when:
             - The aac app is run with the puml-requirement command.
           then:
-            - A PlantUML object diagram of the model is written to the output directory.
-        - name: Output PlantUML requirements diagram to file.
-          given:
-            - The {{puml.input.architecture-file}} contains a valid model.
-            - The positional argument {{puml.input.output-directory}} contains a valid file path.
-          when:
-            - The aac app is run with the puml-requirements command.
-          then:
-            - A requirements diagram using PlantUML format of the model is generated to a .puml file.
+            - A PlantUML requirements diagram of the model is written to the output directory.
