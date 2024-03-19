@@ -21,7 +21,7 @@ plugin:
       acceptance:
         name: Component Diagram Test
         scenarios:
-          - name: Output PlantUML component diagram for specified .aac file and output path.
+          - name: Output PlantUML component diagram for specified input and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -45,7 +45,7 @@ plugin:
       acceptance:
         name: Sequence Diagram Test
         scenarios:
-          - name: Output PlantUML sequence diagram for specified .aac file and output path.
+          - name: Output PlantUML sequence diagram for specified input and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -69,7 +69,7 @@ plugin:
       acceptance:
         name: Object Diagram Test
         scenarios:
-          - name: Output PlantUML object diagram for specified .aac file and output path.
+          - name: Output PlantUML object diagram for specified input and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -93,7 +93,7 @@ plugin:
       acceptance:
         name: Requirement Diagram Test
         scenarios:
-        - name: Output PlantUML requirements diagram for specified .aac file and output path.
+        - name: Output PlantUML requirements diagram for specified input file and output path.
           given:
             - The {{puml.input.architecture-file}} contains a valid model.
             - The positional argument {{puml.input.output-directory}} contains a valid file path.
