@@ -20,7 +20,7 @@ from aac.execute.plugin_runner import PluginRunner
 from aac.context.source_location import SourceLocation
 
 
-from aac.plugins.puml.generate_plantuml_diagrams_impl import (
+from aac.plugins.puml.gen_puml_impl import (
     plugin_name,
     puml_component,
     puml_sequence,
@@ -29,7 +29,7 @@ from aac.plugins.puml.generate_plantuml_diagrams_impl import (
 )
 
 
-generate_plantuml_diagrams_aac_file_name = "generate_plantuml_diagrams.aac"
+gen_puml_aac_file_name = "gen_puml.aac"
 
 
 def run_puml_component(
@@ -157,21 +157,21 @@ def register_plugin() -> None:
     """
 
     active_context = LanguageContext()
-    generate_plantuml_diagrams_aac_file = join(
-        dirname(__file__), generate_plantuml_diagrams_aac_file_name
+    gen_puml_aac_file = join(
+        dirname(__file__), gen_puml_aac_file_name
     )
-    definitions = active_context.parse_and_load(generate_plantuml_diagrams_aac_file)
+    definitions = active_context.parse_and_load(gen_puml_aac_file)
 
-    generate_plantuml_diagrams_plugin_definition = [
+    gen_puml_plugin_definition = [
         definition for definition in definitions if definition.name == plugin_name
     ][0]
 
-    plugin_instance = generate_plantuml_diagrams_plugin_definition.instance
+    plugin_instance = gen_puml_plugin_definition.instance
     for file_to_load in plugin_instance.definition_sources:
         active_context.parse_and_load(file_to_load)
 
     plugin_runner = PluginRunner(
-        plugin_definition=generate_plantuml_diagrams_plugin_definition
+        plugin_definition=gen_puml_plugin_definition
     )
     plugin_runner.add_command_callback("puml-component", run_puml_component)
     plugin_runner.add_command_callback("puml-sequence", run_puml_sequence)

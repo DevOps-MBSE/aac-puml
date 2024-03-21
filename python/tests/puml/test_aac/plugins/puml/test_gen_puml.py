@@ -5,7 +5,7 @@ from aac.execute.command_line import cli, initialize_cli
 from aac.execute.aac_execution_result import ExecutionStatus
 
 
-from aac.plugins.puml.generate_plantuml_diagrams_impl import (
+from aac.plugins.puml.gen_puml_impl import (
     plugin_name,
     puml_component,
     puml_sequence,
