@@ -6,6 +6,7 @@ from aac.plugins.first_party.gen_plant_uml.gen_plant_uml_impl import plugin_name
 from aac.plugins.plugin import Plugin
 from aac.plugins._common import get_plugin_definitions_from_yaml
 
+print("initializing puml plugin")
 
 @hookimpl
 def get_plugin() -> Plugin:
