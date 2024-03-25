@@ -21,7 +21,10 @@ classifiers = [
 	"License :: OSI Approved :: MIT License",
 	"Operating System :: OS Independent",
 ]
+[project.entry-points."aac"]
+spec-csv = "puml"
 
 [project.urls]
 Homepage = "https://github.com/DevOps-MBSE/aac-puml"
 Issues = "https://github.com/DevOps-MBSE/aac-puml/issues"
+

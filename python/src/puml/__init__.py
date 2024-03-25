@@ -20,7 +20,7 @@ from aac.execute.plugin_runner import PluginRunner
 from aac.context.source_location import SourceLocation
 
 
-from aac.plugins.puml.gen_puml_impl import (
+from puml.gen_puml_impl import (
     plugin_name,
     puml_component,
     puml_sequence,

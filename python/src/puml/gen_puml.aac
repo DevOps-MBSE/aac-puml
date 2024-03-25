@@ -1,6 +1,6 @@
 plugin:
   name: Generate PlantUML Diagrams
-  package: aac.plugins.puml
+  package: puml
   description: |
     An AaC plugin that enables PlantUML diagrams to be generated from AaC
     definitions.
