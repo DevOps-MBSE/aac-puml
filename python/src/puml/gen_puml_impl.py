@@ -16,12 +16,27 @@ from aac.context.definition import Definition
 from aac.context.source_location import SourceLocation
 from typing import Any
 
+# from puml.puml_helpers import (
+#     generate_diagram_to_file,
+#     get_model_content,
+#     get_generated_file_name,
+#     extract_aac_file_name,
+# )
+
 
 plugin_name = "Generate PlantUML Diagrams"
 
 
 def puml_component(architecture_file, output_directory) -> ExecutionResult:
-    """Business logic for allowing puml-component command to perform Converts an AaC-defined system to a PlantUML component diagram.."""
+    """
+    Convert an AaC model to Plant UML component diagram.
+
+    Args:
+        architecture_file (str): Path to a yaml file containing an AaC usecase from which to generate a Plant UML component diagram.
+        output_directory (str): Output directory for the PlantUML (.puml) diagram file.
+    """
+
+    architecture_file_path = os.path.abspath(architecture_file)
 
     # TODO: implement plugin logic here
     status = ExecutionStatus.GENERAL_FAILURE
@@ -36,6 +51,44 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 
+# def puml_component(architecture_file: str, output_directory: str) -> PluginExecutionResult:
+#     """
+#     Convert an AaC model to Plant UML component diagram.
+
+#     Args:
+#         architecture_file (str): Path to a yaml file containing an AaC usecase from which to generate a Plant UML component diagram.
+#         output_directory (str): Output directory for the PlantUML (.puml) diagram file.
+#     """
+#     architecture_file_path = os.path.abspath(architecture_file)
+
+#     def generate_component_diagram(definitions: list[Definition]):
+#         model_definitions = get_definitions_by_root_key("model", definitions)
+
+#         models = []
+#         for model_definition in model_definitions:
+#             root_model_name = model_definition.name
+#             model_properties = get_model_content(model_definition, set())
+#             aac_file_name = extract_aac_file_name(architecture_file)
+#             generated_file_name = get_generated_file_name(aac_file_name, COMPONENT_STRING, root_model_name, output_directory)
+#             models.append(
+#                 {
+#                     "filename": generated_file_name,
+#                     "title": model_definition.name,
+#                     "models": [model_properties],
+#                 }
+#             )
+
+#         return models
+
+#     with plugin_result(
+#         plugin_name,
+#         generate_diagram_to_file,
+#         architecture_file_path,
+#         output_directory,
+#         COMPONENT_STRING,
+#         generate_component_diagram,
+#     ) as result:
+#         return result
 
 def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
     """Business logic for allowing puml-sequence command to perform Converts an AaC-defined usecase to PlantUML sequence diagram.."""
