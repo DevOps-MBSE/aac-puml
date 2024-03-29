@@ -22,10 +22,10 @@ classifiers = [
 	"Operating System :: OS Independent",
 ]
 [project.entry-points."aac"]
-puml-component = "puml."
-puml-object = "puml"
-puml-requirements = "puml"
-puml-sequence = "puml"
+puml-component = "puml"
+#puml-object = "puml"
+#puml-requirements = "puml"
+#puml-sequence = "puml"
 
 [project.urls]
 Homepage = "https://github.com/DevOps-MBSE/aac-puml"
