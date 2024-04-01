@@ -26,7 +26,7 @@ from typing import Any
 plugin_name = "Generate PlantUML Diagrams"
 
 
-def puml_component(architecture_file, output_directory) -> ExecutionResult:
+def puml_component(architecture_file: str, output_directory: str) -> ExecutionResult:
     """
     Convert an AaC model to Plant UML component diagram.
 
@@ -92,7 +92,8 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 #     ) as result:
 #         return result
 
-def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
+
+def puml_sequence(architecture_file: str, output_directory: str) -> ExecutionResult:
     """Business logic for allowing puml-sequence command to perform Converts an AaC-defined usecase to PlantUML sequence diagram.."""
 
     # TODO: implement plugin logic here
@@ -176,7 +177,7 @@ def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
 #         return result
 
 
-def puml_object(architecture_file, output_directory) -> ExecutionResult:
+def puml_object(architecture_file: str, output_directory: str) -> ExecutionResult:
     """Business logic for allowing puml-object command to perform Convert an AaC-defined system to PlantUML object diagram.."""
 
     # TODO: implement plugin logic here
@@ -245,7 +246,8 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
 #     ) as result:
 #         return result
 
-def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
+
+def puml_requirements(architecture_file: str, output_directory: str) -> ExecutionResult:
     """Business logic for allowing puml-requirements command to perform Convert an AaC-defined system to a requirements diagram in PlantUML format.."""
 
     # TODO: implement plugin logic here
