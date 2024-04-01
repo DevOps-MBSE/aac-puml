@@ -4,7 +4,7 @@
 
 Feature: Sequence Diagram Test
 
-  Scenario: Output PlantUML sequence diagram for specified input and output path.
+  Scenario: Output PlantUML sequence diagram for specified input file and output path.
   
       Given The {{puml.input.architecture-file}} contains a valid model.
       And The positional argument {{puml.input.output-directory}} contains a valid file path.
