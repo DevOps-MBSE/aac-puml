@@ -42,18 +42,10 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
         output_directory (str): Output directory for the PlantUML (.puml) diagram file.
     """
     architecture_file_path = path.abspath(architecture_file)
-    context: LanguageContext = LanguageContext()
     parsed_file = parse(architecture_file)
 
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
-    error_msg = ExecutionMessage(
-        "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
-        MessageLevel.ERROR,
-        None,
-        None,
-    )
-    messages.append(error_msg)
 
     def _generate_component_diagram(definitions: list[Definition]):
         for definition in parsed_file:
@@ -70,8 +62,33 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
                         "models": [model_properties],
                     }
                 )
-
             return models
+
+    try:
+        generate_to_file = generate_diagram_to_file(architecture_file_path=architecture_file_path,
+                                               output_directory=output_directory,
+                                               puml_type=COMPONENT_STRING,
+                                               property_generator=_generate_component_diagram)
+        generation_result_msg = ExecutionMessage(
+            generate_to_file,
+            MessageLevel.INFO,
+            None,
+            None,
+        )
+
+    else:
+        generation_result_msg = ExecutionMessage(
+            "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
+            MessageLevel.ERROR,
+            None,
+            None,
+        )
+    
+    messages.append(generation_result_msg)
+
+
+        
+    
 
     with plugin_result(
         plugin_name,
