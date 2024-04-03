@@ -49,19 +49,7 @@ def before_puml_component_check(
     Returns:
         The results of the execution of the check command.
     """
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the pre check for puml-component",
-        MessageLevel.INFO,
-        None,
-        None,
-    )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-component", status, messages)
-    # return run_check(architecture_file, False, False)
-
+    return run_check(architecture_file, False, False)
 
 
 def puml_component(architecture_file, output_directory) -> ExecutionResult:
@@ -135,7 +123,7 @@ def after_puml_component_generate(
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML component diagram.
@@ -175,18 +163,7 @@ def before_puml_sequence_check(
     Returns:
         The results of the execution of the check command.
     """
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the pre check for puml-sequence",
-        MessageLevel.INFO,
-        None,
-        None,
-    )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
-    # return run_check(architecture_file, False, False)
+    return run_check(architecture_file, False, False)
 
 
 def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
@@ -224,7 +201,7 @@ def after_puml_sequence_generate(
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which to
                                  generate a PlantUML sequence diagram.
@@ -264,18 +241,7 @@ def before_puml_object_check(
     Returns:
         The results of the execution of the check command.
     """
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the pre check for puml-object",
-        MessageLevel.INFO,
-        None,
-        None,
-    )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-object", status, messages)
-    # return run_check(architecture_file, False, False)
+    return run_check(architecture_file, False, False)
 
 
 def puml_object(architecture_file, output_directory) -> ExecutionResult:
@@ -313,7 +279,7 @@ def after_puml_object_generate(
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-object command.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML object diagram.
@@ -353,18 +319,7 @@ def before_puml_requirements_check(
     Returns:
         The results of the execution of the check command.
     """
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the pre check for puml-requirements",
-        MessageLevel.INFO,
-        None,
-        None,
-    )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-requirements", status, messages)
-    # return run_check(architecture_file, False, False)
+    return run_check(architecture_file, False, False)
 
 
 def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
