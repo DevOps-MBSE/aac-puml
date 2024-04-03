@@ -17,6 +17,7 @@ from aac.execute.aac_execution_result import (
     MessageLevel,
 )
 from aac.in_out.files.aac_file import AaCFile
+from aac.in_out.parser._parse_source import parse
 
 from puml.puml_helpers import (
     generate_diagram_to_file,
@@ -64,17 +65,50 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
     Returns:
         The results of the execution of the puml-component command.
     """
+    architecture_file_path = path.abspath(architecture_file)
+    parsed_file = parse(architecture_file)
 
-    # TODO: implement plugin logic here
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
-    error_msg = ExecutionMessage(
-        "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
-        MessageLevel.ERROR,
-        None,
-        None,
-    )
-    messages.append(error_msg)
+
+    def _generate_component_diagram(definitions: list[Definition]):
+        for definition in parsed_file:
+            if definition.get_root_key() == "model":
+                models = []
+                model_name = definition.name
+                model_properties = get_model_content(definition, set())
+                aac_file_name = extract_aac_file_name(architecture_file)
+                generated_file_name = get_generated_file_name(aac_file_name, COMPONENT_STRING, model_name, output_directory)
+                models.append(
+                    {
+                        "filename": generated_file_name,
+                        "title": model_name,
+                        "models": [model_properties],
+                    }
+                )
+            return models
+
+    try:
+        generate_to_file = generate_diagram_to_file(architecture_file_path=architecture_file_path,
+                                               output_directory=output_directory,
+                                               puml_type=COMPONENT_STRING,
+                                               property_generator=_generate_component_diagram)
+        generation_result_msg = ExecutionMessage(
+            generate_to_file,
+            MessageLevel.INFO,
+            None,
+            None,
+        )
+
+    except Exception:
+        generation_result_msg = ExecutionMessage(
+            "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
+            MessageLevel.ERROR,
+            None,
+            None,
+        )
+
+    messages.append(generation_result_msg)
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 
