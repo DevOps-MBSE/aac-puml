@@ -49,7 +49,19 @@ def before_puml_component_check(
     Returns:
         The results of the execution of the check command.
     """
-    return run_check(architecture_file, False, False)
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the pre check for puml-component",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
+
+    return ExecutionResult(plugin_name, "puml-component", status, messages)
+    # return run_check(architecture_file, False, False)
+
 
 
 def puml_component(architecture_file, output_directory) -> ExecutionResult:
@@ -113,6 +125,36 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
                     MessageLevel.INFO,
                     None,
                     None))
+    status = ExecutionStatus.SUCCESS
+
+    return ExecutionResult(plugin_name, "puml-component", status, messages)
+
+
+def after_puml_component_generate(
+    architecture_file: str, output_directory: str, run_generate
+) -> ExecutionResult:
+    """
+    Run the Generate generate command after the puml-component command.
+    
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML component diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
+
+    Returns:
+        The results of the execution of the check command.
+    """
+    # TODO: configure and call the generate after command using puml-component command inputs
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the post generate for puml-component",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 
@@ -133,7 +175,18 @@ def before_puml_sequence_check(
     Returns:
         The results of the execution of the check command.
     """
-    return run_check(architecture_file, False, False)
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the pre check for puml-sequence",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
+
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    # return run_check(architecture_file, False, False)
 
 
 def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
@@ -153,15 +206,44 @@ def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
     """
 
     # TODO: implement plugin logic here
-    status = ExecutionStatus.GENERAL_FAILURE
+    status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
     error_msg = ExecutionMessage(
-        "The puml-sequence command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
+        "Made it through puml-sequence command.",
         MessageLevel.ERROR,
         None,
         None,
     )
     messages.append(error_msg)
+
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+
+
+def after_puml_sequence_generate(
+    architecture_file: str, output_directory: str, run_generate
+) -> ExecutionResult:
+    """
+    Run the Generate generate command after the puml-sequence command.
+    
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which to
+                                 generate a PlantUML sequence diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
+
+    Returns:
+        The results of the execution of the generate command.
+    """
+    # TODO: configure and call the generate after command using puml-sequence command inputs
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the post generate for puml-sequence",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
@@ -182,7 +264,18 @@ def before_puml_object_check(
     Returns:
         The results of the execution of the check command.
     """
-    return run_check(architecture_file, False, False)
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the pre check for puml-object",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
+
+    return ExecutionResult(plugin_name, "puml-object", status, messages)
+    # return run_check(architecture_file, False, False)
 
 
 def puml_object(architecture_file, output_directory) -> ExecutionResult:
@@ -202,7 +295,7 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
     """
 
     # TODO: implement plugin logic here
-    status = ExecutionStatus.GENERAL_FAILURE
+    status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
     error_msg = ExecutionMessage(
         "The puml-object command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
@@ -211,6 +304,35 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
         None,
     )
     messages.append(error_msg)
+
+    return ExecutionResult(plugin_name, "puml-object", status, messages)
+
+
+def after_puml_object_generate(
+    architecture_file: str, output_directory: str, run_generate
+) -> ExecutionResult:
+    """
+    Run the Generate generate command after the puml-object command.
+    
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML object diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
+
+    Returns:
+        The results of the execution of the generate command.
+    """
+    # TODO: configure and call the generate after command using puml-object command inputs
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the post generate for puml-object",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-object", status, messages)
 
@@ -231,7 +353,18 @@ def before_puml_requirements_check(
     Returns:
         The results of the execution of the check command.
     """
-    return run_check(architecture_file, False, False)
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the pre check for puml-requirements",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
+
+    return ExecutionResult(plugin_name, "puml-requirements", status, messages)
+    # return run_check(architecture_file, False, False)
 
 
 def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
@@ -250,7 +383,7 @@ def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
     """
 
     # TODO: implement plugin logic here
-    status = ExecutionStatus.GENERAL_FAILURE
+    status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
     error_msg = ExecutionMessage(
         "The puml-requirements command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
@@ -259,5 +392,35 @@ def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
         None,
     )
     messages.append(error_msg)
+
+    return ExecutionResult(plugin_name, "puml-requirements", status, messages)
+
+
+def after_puml_requirements_generate(
+    architecture_file: str, output_directory: str, run_generate
+) -> ExecutionResult:
+    """
+    Run the Generate generate command after the puml-requirements command.
+
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML requirements diagram.
+
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
+
+    Returns:
+        The results of the execution of the generate command.
+    """
+     # TODO: configure and call the generate after command using puml-requirements command inputs
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the post generate for puml-requirements",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-requirements", status, messages)

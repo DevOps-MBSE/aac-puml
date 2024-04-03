@@ -19,18 +19,23 @@ from aac.context.language_context import LanguageContext
 from aac.context.source_location import SourceLocation
 from aac.in_out.files.aac_file import AaCFile
 from aac.plugins.check import run_check
+from aac.plugins.generate import run_generate
 
 
 from puml.generate_plantuml_diagrams_impl import (
     plugin_name,
     puml_component,
     before_puml_component_check,
+    after_puml_component_generate,
     puml_sequence,
     before_puml_sequence_check,
+    after_puml_sequence_generate,
     puml_object,
     before_puml_object_check,
+    after_puml_object_generate,
     puml_requirements,
     before_puml_requirements_check,
+    after_puml_requirements_generate,
 )
 
 generate_plantuml_diagrams_aac_file_name = "generate_plantuml_diagrams.aac"
@@ -71,6 +76,14 @@ def run_puml_component(
     else:
         result.add_messages(puml_component_result.messages)
 
+    puml_component_generate_result = after_puml_component_generate(
+        architecture_file, output_directory, run_generate
+    )
+    if not puml_component_generate_result.is_success():
+        return puml_component_generate_result
+    else:
+        result.add_messages(puml_component_generate_result.messages)
+
     return result
 
 
@@ -107,6 +120,14 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
     else:
         result.add_messages(puml_sequence_result.messages)
 
+    puml_sequence_generate_result = after_puml_sequence_generate(
+        architecture_file, output_directory, run_generate
+    )
+    if not puml_sequence_generate_result.is_success():
+        return puml_sequence_generate_result
+    else:
+        result.add_messages(puml_sequence_generate_result.messages)
+
     return result
 
 
@@ -142,6 +163,14 @@ def run_puml_object(architecture_file: str, output_directory: str) -> ExecutionR
         return puml_object_result
     else:
         result.add_messages(puml_object_result.messages)
+
+    puml_object_generate_result = after_puml_object_generate(
+        architecture_file, output_directory, run_generate
+    )
+    if not puml_object_generate_result.is_success():
+        return puml_object_generate_result
+    else:
+        result.add_messages(puml_object_generate_result.messages)
 
     return result
 
@@ -182,6 +211,14 @@ def run_puml_requirements(
         return puml_requirements_result
     else:
         result.add_messages(puml_requirements_result.messages)
+
+    puml_requirements_generate_result = after_puml_requirements_generate(
+        architecture_file, output_directory, run_generate
+    )
+    if not puml_requirements_generate_result.is_success():
+        return puml_requirements_generate_result
+    else:
+        result.add_messages(puml_requirements_generate_result.messages)
 
     return result
 
