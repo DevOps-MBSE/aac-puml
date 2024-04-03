@@ -4,8 +4,8 @@ import os
 
 from typing import Callable
 
-from aac.lang.active_context_lifecycle_manager import get_active_context
-from aac.lang.definitions.definition import Definition
+from aac.context.language_context import LanguageContext
+from aac.context.definition import Definition
 from aac.lang.definitions.search import search_definition
 from aac.templates.engine import generate_templates, load_templates, write_generated_templates_to_file
 from aac.validate import validated_source
