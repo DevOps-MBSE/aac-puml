@@ -76,19 +76,19 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
             None,
         )
 
-    else:
+    except Exception:
         generation_result_msg = ExecutionMessage(
             "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
             MessageLevel.ERROR,
             None,
             None,
         )
-    
+
     messages.append(generation_result_msg)
 
 
-        
-    
+
+
 
     with plugin_result(
         plugin_name,
@@ -100,7 +100,7 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
     ) as result:
         return result
 
-    
+
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 

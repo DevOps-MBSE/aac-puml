@@ -6,30 +6,34 @@
 from os.path import join, dirname
 from copy import deepcopy
 from typing import Any
-from aac.execute.plugin_runner import AacCommand
+
+from aac.execute import hookimpl
+from aac.execute.plugin_runner import AacCommand, PluginRunner
 from aac.execute.aac_execution_result import (
     ExecutionResult,
     ExecutionStatus,
     ExecutionMessage,
 )
-from aac.execute import hookimpl
-from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
-from aac.in_out.files.aac_file import AaCFile
-from aac.execute.plugin_runner import PluginRunner
+from aac.context.language_context import LanguageContext
 from aac.context.source_location import SourceLocation
+from aac.in_out.files.aac_file import AaCFile
+from aac.plugins.check import run_check
 
 
-from puml.gen_puml_impl import (
+from puml.generate_plantuml_diagrams_impl import (
     plugin_name,
     puml_component,
+    before_puml_component_check,
     puml_sequence,
+    before_puml_sequence_check,
     puml_object,
+    before_puml_object_check,
     puml_requirements,
+    before_puml_requirements_check,
 )
 
-
-gen_puml_aac_file_name = "gen_puml.aac"
+generate_plantuml_diagrams_aac_file_name = "generate_plantuml_diagrams.aac"
 
 
 def run_puml_component(
@@ -52,6 +56,14 @@ def run_puml_component(
     """
 
     result = ExecutionResult(plugin_name, "puml-component", ExecutionStatus.SUCCESS, [])
+
+    puml_component_check_result = before_puml_component_check(
+        architecture_file, output_directory, run_check
+    )
+    if not puml_component_check_result.is_success():
+        return puml_component_check_result
+    else:
+        result.add_messages(puml_component_check_result.messages)
 
     puml_component_result = puml_component(architecture_file, output_directory)
     if not puml_component_result.is_success():
@@ -81,6 +93,14 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
 
     result = ExecutionResult(plugin_name, "puml-sequence", ExecutionStatus.SUCCESS, [])
 
+    puml_sequence_check_result = before_puml_sequence_check(
+        architecture_file, output_directory, run_check
+    )
+    if not puml_sequence_check_result.is_success():
+        return puml_sequence_check_result
+    else:
+        result.add_messages(puml_sequence_check_result.messages)
+
     puml_sequence_result = puml_sequence(architecture_file, output_directory)
     if not puml_sequence_result.is_success():
         return puml_sequence_result
@@ -108,6 +128,14 @@ def run_puml_object(architecture_file: str, output_directory: str) -> ExecutionR
     """
 
     result = ExecutionResult(plugin_name, "puml-object", ExecutionStatus.SUCCESS, [])
+
+    puml_object_check_result = before_puml_object_check(
+        architecture_file, output_directory, run_check
+    )
+    if not puml_object_check_result.is_success():
+        return puml_object_check_result
+    else:
+        result.add_messages(puml_object_check_result.messages)
 
     puml_object_result = puml_object(architecture_file, output_directory)
     if not puml_object_result.is_success():
@@ -141,6 +169,14 @@ def run_puml_requirements(
         plugin_name, "puml-requirements", ExecutionStatus.SUCCESS, []
     )
 
+    puml_requirements_check_result = before_puml_requirements_check(
+        architecture_file, output_directory, run_check
+    )
+    if not puml_requirements_check_result.is_success():
+        return puml_requirements_check_result
+    else:
+        result.add_messages(puml_requirements_check_result.messages)
+
     puml_requirements_result = puml_requirements(architecture_file, output_directory)
     if not puml_requirements_result.is_success():
         return puml_requirements_result
@@ -157,21 +193,21 @@ def register_plugin() -> None:
     """
 
     active_context = LanguageContext()
-    gen_puml_aac_file = join(
-        dirname(__file__), gen_puml_aac_file_name
+    generate_plantuml_diagrams_aac_file = join(
+        dirname(__file__), generate_plantuml_diagrams_aac_file_name
     )
-    definitions = active_context.parse_and_load(gen_puml_aac_file)
+    definitions = active_context.parse_and_load(generate_plantuml_diagrams_aac_file)
 
-    gen_puml_plugin_definition = [
+    generate_plantuml_diagrams_plugin_definition = [
         definition for definition in definitions if definition.name == plugin_name
     ][0]
 
-    plugin_instance = gen_puml_plugin_definition.instance
+    plugin_instance = generate_plantuml_diagrams_plugin_definition.instance
     for file_to_load in plugin_instance.definition_sources:
         active_context.parse_and_load(file_to_load)
 
     plugin_runner = PluginRunner(
-        plugin_definition=gen_puml_plugin_definition
+        plugin_definition=generate_plantuml_diagrams_plugin_definition
     )
     plugin_runner.add_command_callback("puml-component", run_puml_component)
     plugin_runner.add_command_callback("puml-sequence", run_puml_sequence)

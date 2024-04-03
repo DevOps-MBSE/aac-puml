@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "aac-puml"
 version = "0.0.1"
 authors = [
-	{ name="Patrick Malone", email="patrick.malone@ngc.com" },
+	{ name="Patrick Malone", email="" },
 ]
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
 requires-python = "== 3.9.13"
