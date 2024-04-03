@@ -8,8 +8,11 @@ plugin:
     - name: puml-component
       help_text: Converts an AaC-defined system to a PlantUML component diagram.
       run_before:
-          - plugin: Check AaC
-            command: check
+        - plugin: Check AaC
+          command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
@@ -37,6 +40,9 @@ plugin:
       run_before:
         - plugin: Check AaC
           command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
@@ -64,6 +70,9 @@ plugin:
       run_before:
         - plugin: Check AaC
           command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
@@ -91,6 +100,9 @@ plugin:
       run_before:
         - plugin: Check AaC
           command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
