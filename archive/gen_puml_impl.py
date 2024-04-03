@@ -78,29 +78,13 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
 
     except Exception:
         generation_result_msg = ExecutionMessage(
-            "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
+            "The puml-component command for the Generate PlantUML Diagrams failed.",
             MessageLevel.ERROR,
             None,
             None,
         )
 
     messages.append(generation_result_msg)
-
-
-
-
-
-    with plugin_result(
-        plugin_name,
-        generate_diagram_to_file,
-        architecture_file_path,
-        output_directory,
-        COMPONENT_STRING,
-        _generate_component_diagram,
-    ) as result:
-        return result
-
-
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 

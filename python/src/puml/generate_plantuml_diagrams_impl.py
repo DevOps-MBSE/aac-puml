@@ -19,12 +19,12 @@ from aac.execute.aac_execution_result import (
 from aac.in_out.files.aac_file import AaCFile
 from aac.in_out.parser._parse_source import parse
 
-from puml.puml_helpers import (
-    generate_diagram_to_file,
-    get_model_content,
-    get_generated_file_name,
-    extract_aac_file_name,
-)
+# from puml.puml_helpers import (
+#     generate_diagram_to_file,
+#     get_model_content,
+#     get_generated_file_name,
+#     extract_aac_file_name,
+# )
 
 
 plugin_name = "Generate PlantUML Diagrams"
@@ -55,7 +55,7 @@ def before_puml_component_check(
 def puml_component(architecture_file, output_directory) -> ExecutionResult:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML component diagram.
@@ -71,44 +71,48 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    def _generate_component_diagram(definitions: list[Definition]):
-        for definition in parsed_file:
-            if definition.get_root_key() == "model":
-                models = []
-                model_name = definition.name
-                model_properties = get_model_content(definition, set())
-                aac_file_name = extract_aac_file_name(architecture_file)
-                generated_file_name = get_generated_file_name(aac_file_name, COMPONENT_STRING, model_name, output_directory)
-                models.append(
-                    {
-                        "filename": generated_file_name,
-                        "title": model_name,
-                        "models": [model_properties],
-                    }
-                )
-            return models
+    # def _generate_component_diagram(definitions: list[Definition]):
+    #     for definition in parsed_file:
+    #         if definition.get_root_key() == "model":
+    #             models = []
+    #             model_name = definition.name
+    #             model_properties = get_model_content(definition, set())
+    #             aac_file_name = extract_aac_file_name(architecture_file)
+    #             generated_file_name = get_generated_file_name(aac_file_name, COMPONENT_STRING, model_name, output_directory)
+    #             models.append(
+    #                 {
+    #                     "filename": generated_file_name,
+    #                     "title": model_name,
+    #                     "models": [model_properties],
+    #                 }
+    #             )
+    #         return models
 
-    try:
-        generate_to_file = generate_diagram_to_file(architecture_file_path=architecture_file_path,
-                                               output_directory=output_directory,
-                                               puml_type=COMPONENT_STRING,
-                                               property_generator=_generate_component_diagram)
-        generation_result_msg = ExecutionMessage(
-            generate_to_file,
-            MessageLevel.INFO,
-            None,
-            None,
-        )
+    # try:
+    #     generate_to_file = generate_diagram_to_file(architecture_file_path=architecture_file_path,
+    #                                            output_directory=output_directory,
+    #                                            puml_type=COMPONENT_STRING,
+    #                                            property_generator=_generate_component_diagram)
+    #     generation_result_msg = ExecutionMessage(
+    #         generate_to_file,
+    #         MessageLevel.INFO,
+    #         None,
+    #         None,
+    #     )
 
-    except Exception:
-        generation_result_msg = ExecutionMessage(
-            "The puml-component command for the Generate PlantUML Diagrams failed.",
-            MessageLevel.ERROR,
-            None,
-            None,
-        )
+    # except Exception:
+    #     generation_result_msg = ExecutionMessage(
+    #         "The puml-component command for the Generate PlantUML Diagrams failed.",
+    #         MessageLevel.ERROR,
+    #         None,
+    #         None,
+    #     )
 
-    messages.append(generation_result_msg)
+    # messages.append(generation_result_msg)
+    messages.append(ExecutionMessage("Made it to puml-component command",
+                    MessageLevel.INFO,
+                    None,
+                    None))
 
     return ExecutionResult(plugin_name, "puml-component", status, messages)
 
@@ -135,7 +139,7 @@ def before_puml_sequence_check(
 def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined usecase to PlantUML sequence diagram.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which
                                  to generate a PlantUML sequence diagram.
@@ -143,7 +147,7 @@ def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
 
-    
+
     Returns:
         The results of the execution of the puml-sequence command.
     """
@@ -184,7 +188,7 @@ def before_puml_object_check(
 def puml_object(architecture_file, output_directory) -> ExecutionResult:
     """
     Business logic for allowing puml-object command to perform the conversion an AaC-defined system to PlantUML object diagram.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML object diagram.
@@ -192,7 +196,7 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
 
-    
+
     Returns:
         The results of the execution of the puml-object command.
     """
@@ -233,14 +237,14 @@ def before_puml_requirements_check(
 def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
     """
     Business logic for allowing puml-requirements command to perform the conversion of an AaC-defined system to a requirements diagram in PlantUML format.
-    
+
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML requirements diagram.
 
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-    
+
     Returns:
         The results of the execution of the puml-requirements command.
     """
