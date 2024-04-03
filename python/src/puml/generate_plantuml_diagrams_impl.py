@@ -102,7 +102,7 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 
     except Exception:
         generation_result_msg = ExecutionMessage(
-            "The puml-component command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
+            "The puml-component command for the Generate PlantUML Diagrams failed.",
             MessageLevel.ERROR,
             None,
             None,
