@@ -7,6 +7,9 @@ plugin:
   commands:
     - name: puml-component
       help_text: Converts an AaC-defined system to a PlantUML component diagram.
+      run_before:
+          - plugin: Check AaC
+            command: check
       input:
         - name: architecture-file
           type: file
@@ -31,6 +34,9 @@ plugin:
               - A PlantUML component diagram of the model is written to the output directory.
     - name: puml-sequence
       help_text: Converts an AaC-defined usecase to PlantUML sequence diagram.
+      run_before:
+        - plugin: Check AaC
+          command: check
       input:
         - name: architecture-file
           type: file
@@ -55,6 +61,9 @@ plugin:
               - A PlantUML sequence diagram of the use case is written to the output directory.
     - name: puml-object
       help_text: Convert an AaC-defined system to PlantUML object diagram.
+      run_before:
+        - plugin: Check AaC
+          command: check
       input:
         - name: architecture-file
           type: file
@@ -79,6 +88,9 @@ plugin:
               - A PlantUML object diagram of the model is written to the output directory.
     - name: puml-requirements
       help_text: Convert an AaC-defined system to a requirements diagram in PlantUML format.
+      run_before:
+        - plugin: Check AaC
+          command: check
       input:
         - name: architecture-file
           type: file
