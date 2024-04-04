@@ -133,18 +133,19 @@ def after_puml_component_generate(
     Returns:
         The results of the execution of the check command.
     """
-    # TODO: configure and call the generate after command using puml-component command inputs
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the post generate for puml-component",
-        MessageLevel.INFO,
-        None,
-        None,
+    puml_component_generator_file = path.abspath(
+        path.join(path.dirname(__file__), "./generators/component_generator.aac")
     )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-component", status, messages)
+    return generate(
+        aac_plugin_file,
+        puml_component_generator_file,
+        code_output,
+        test_output,
+        doc_output,
+        no_prompt,
+        force_overwrite,
+        evaluate,
+    )
 
 
 def before_puml_sequence_check(
@@ -154,7 +155,7 @@ def before_puml_sequence_check(
     Run the Check AaC command before the puml-sequence command.
 
     Args:
-        architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which
+        architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
                                  to generate a PlantUML sequence diagram.
 
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
@@ -168,10 +169,10 @@ def before_puml_sequence_check(
 
 def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
     """
-    Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined usecase to PlantUML sequence diagram.
+    Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
     Args:
-        architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which
+        architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
                                  to generate a PlantUML sequence diagram.
 
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
@@ -203,7 +204,7 @@ def after_puml_sequence_generate(
     Run the Generate generate command after the puml-sequence command.
 
     Args:
-        architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which to
+        architecture_file (str): A path to a YAML file containing an AaC-defined use case from which to
                                  generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
@@ -211,18 +212,19 @@ def after_puml_sequence_generate(
     Returns:
         The results of the execution of the generate command.
     """
-    # TODO: configure and call the generate after command using puml-sequence command inputs
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the post generate for puml-sequence",
-        MessageLevel.INFO,
-        None,
-        None,
+    puml_sequence_generator_file = path.abspath(
+        path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
     )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    return generate(
+        aac_plugin_file,
+        puml_sequence_generator_file,
+        code_output,
+        test_output,
+        doc_output,
+        no_prompt,
+        force_overwrite,
+        evaluate,
+    )
 
 
 def before_puml_object_check(
@@ -289,18 +291,19 @@ def after_puml_object_generate(
     Returns:
         The results of the execution of the generate command.
     """
-    # TODO: configure and call the generate after command using puml-object command inputs
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the post generate for puml-object",
-        MessageLevel.INFO,
-        None,
-        None,
+    puml_object_generator_file = path.abspath(
+        path.join(path.dirname(__file__), "./generators/object_generator.aac")
     )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-object", status, messages)
+    return generate(
+        aac_plugin_file,
+        puml_object_generator_file,
+        code_output,
+        test_output,
+        doc_output,
+        no_prompt,
+        force_overwrite,
+        evaluate,
+    )
 
 
 def before_puml_requirements_check(
@@ -367,15 +370,16 @@ def after_puml_requirements_generate(
     Returns:
         The results of the execution of the generate command.
     """
-     # TODO: configure and call the generate after command using puml-requirements command inputs
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the post generate for puml-requirements",
-        MessageLevel.INFO,
-        None,
-        None,
+     puml_requirements_generator_file = path.abspath(
+        path.join(path.dirname(__file__), "./generators/requirements_generator.aac")
     )
-    messages.append(msg)
-
-    return ExecutionResult(plugin_name, "puml-requirements", status, messages)
+    return generate(
+        aac_plugin_file,
+        puml_requirements_generator_file,
+        code_output,
+        test_output,
+        doc_output,
+        no_prompt,
+        force_overwrite,
+        evaluate,
+    )

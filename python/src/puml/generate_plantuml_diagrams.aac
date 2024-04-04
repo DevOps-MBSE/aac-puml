@@ -36,7 +36,7 @@ plugin:
             then:
               - A PlantUML component diagram of the model is written to the output directory.
     - name: puml-sequence
-      help_text: Converts an AaC-defined usecase to PlantUML sequence diagram.
+      help_text: Converts an AaC-defined use case to PlantUML sequence diagram.
       run_before:
         - plugin: Check AaC
           command: check
@@ -47,7 +47,7 @@ plugin:
         - name: architecture-file
           type: file
           description: |
-            A path to a YAML file containing an AaC-defined usecase from which
+            A path to a YAML file containing an AaC-defined use case from which
             to generate a PlantUML sequence diagram.
         - name: output-directory
           type: directory
