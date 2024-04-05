@@ -6,6 +6,7 @@
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 from os import path, makedirs
 from typing import Any
+from typing import Callable
 
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
@@ -119,7 +120,7 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_component_generate(
-    architecture_file: str, output_directory: str, run_generate
+    architecture_file: str, output_directory: str, generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
@@ -198,7 +199,7 @@ def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_sequence_generate(
-    architecture_file: str, output_directory: str, run_generate
+    architecture_file: str, output_directory: str, generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -277,7 +278,7 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_object_generate(
-    architecture_file: str, output_directory: str, run_generate
+    architecture_file: str, output_directory: str, generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-object command.
@@ -355,7 +356,7 @@ def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_requirements_generate(
-    architecture_file: str, output_directory: str, run_generate
+    architecture_file: str, output_directory: str, generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-requirements command.
@@ -370,7 +371,7 @@ def after_puml_requirements_generate(
     Returns:
         The results of the execution of the generate command.
     """
-     puml_requirements_generator_file = path.abspath(
+    puml_requirements_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/requirements_generator.aac")
     )
     return generate(
