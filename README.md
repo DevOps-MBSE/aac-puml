@@ -29,9 +29,11 @@ pyproject.toml vs setup.py
     instructions below).
 
    To coincide with these changes, some changes to tox.ini and the addition of a MANIFEST.ini file were also necessary.
+
     These lines were added to tox.ini:
         isolated_build = True
         skipsdist = True
+
     A MANIFEST file with these lines was added:
         graft src
         graft tests
