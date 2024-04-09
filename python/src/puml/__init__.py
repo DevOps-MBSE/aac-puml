@@ -45,21 +45,17 @@ def run_puml_component(
     architecture_file: str, output_directory: str
 ) -> ExecutionResult:
     """
-        Converts an AaC-defined system to a PlantUML component diagram.
+    Converts an AaC-defined system to a PlantUML component diagram.
 
-        Args:
-            architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
-    generate a PlantUML component diagram.
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML component diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
 
-            output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-    will be written.
-
-
-
-       Returns:
-            The results of the execution of the plugin command.
+    Returns:
+        The results of the execution of the plugin puml-component command.
     """
-
     result = ExecutionResult(plugin_name, "puml-component", ExecutionStatus.SUCCESS, [])
 
     puml_component_check_result = before_puml_component_check(
@@ -89,21 +85,17 @@ def run_puml_component(
 
 def run_puml_sequence(architecture_file: str, output_directory: str) -> ExecutionResult:
     """
-        Converts an AaC-defined usecase to PlantUML sequence diagram.
+    Converts an AaC-defined use case to PlantUML sequence diagram.
 
-        Args:
-            architecture_file (str): A path to a YAML file containing an AaC-defined usecase from which
-    to generate a PlantUML sequence diagram.
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
+                                 to generate a PlantUML sequence diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
 
-            output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-    will be written.
-
-
-
-       Returns:
-            The results of the execution of the plugin command.
+    Returns:
+        The results of the execution of the plugin puml-sequence command.
     """
-
     result = ExecutionResult(plugin_name, "puml-sequence", ExecutionStatus.SUCCESS, [])
 
     puml_sequence_check_result = before_puml_sequence_check(
@@ -114,11 +106,11 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
     else:
         result.add_messages(puml_sequence_check_result.messages)
 
-    puml_sequence_result = puml_sequence(architecture_file, output_directory)
-    if not puml_sequence_result.is_success():
-        return puml_sequence_result
-    else:
-        result.add_messages(puml_sequence_result.messages)
+    # puml_sequence_result = puml_sequence(architecture_file, output_directory)
+    # if not puml_sequence_result.is_success():
+    #     return puml_sequence_result
+    # else:
+    #     result.add_messages(puml_sequence_result.messages)
 
     puml_sequence_generate_result = after_puml_sequence_generate(
         architecture_file, output_directory, run_generate
@@ -133,21 +125,17 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
 
 def run_puml_object(architecture_file: str, output_directory: str) -> ExecutionResult:
     """
-        Convert an AaC-defined system to PlantUML object diagram.
+    Convert an AaC-defined system to PlantUML object diagram.
 
-        Args:
-            architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
-    generate a PlantUML object diagram.
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML object diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
 
-            output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-    will be written.
-
-
-
-       Returns:
-            The results of the execution of the plugin command.
+    Returns:
+        The results of the execution of the plugin puml-object command.
     """
-
     result = ExecutionResult(plugin_name, "puml-object", ExecutionStatus.SUCCESS, [])
 
     puml_object_check_result = before_puml_object_check(
@@ -179,21 +167,17 @@ def run_puml_requirements(
     architecture_file: str, output_directory: str
 ) -> ExecutionResult:
     """
-        Convert an AaC-defined system to a requirements diagram in PlantUML format.
+    Convert an AaC-defined system to a requirements diagram in PlantUML format.
 
-        Args:
-            architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
-    generate a PlantUML requirements diagram.
+    Args:
+        architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
+                                 generate a PlantUML requirements diagram.
+        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
+                                will be written.
 
-            output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-    will be written.
-
-
-
-       Returns:
-            The results of the execution of the plugin command.
+    Returns:
+        The results of the execution of the plugin puml-requirements command.
     """
-
     result = ExecutionResult(
         plugin_name, "puml-requirements", ExecutionStatus.SUCCESS, []
     )

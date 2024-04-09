@@ -53,16 +53,16 @@ def _model_sort(models: List[dict]) -> List[dict]:
         model_interfaces = set()
 
         model_inputs = []
-        for input in model.structure["model"]["behavior"]["input"]:
+        for input in model.instance.behavior.input:
             input_name = input.name
             input_type = input.type
-            model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
+            model_inputs.append({"name": input_name, "type": input_type, "target": model_name})
 
             if input_type not in model_interfaces:
                 model_interfaces.add(input_type)
 
         model_outputs = []
-        for output in model.structure["model"]["behavior"]["output"]:
+        for output in model.instance.behavior.output:
             output_name = output.name
             output_type = output.type
             model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
@@ -71,7 +71,7 @@ def _model_sort(models: List[dict]) -> List[dict]:
                 model_interfaces.add(output_type)
 
         model_components = []
-        for component in model.structure["model"]["components"]:
+        for component in model.instance.components:
             component_type = component.type
             model_components.append(_model_sort(context.get_definitions_by_name(component_type)))
 
@@ -217,7 +217,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> ExecutionResult:
+def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -228,32 +228,71 @@ def puml_sequence(architecture_file: str, output_directory: str) -> ExecutionRes
                                 will be written.
 
     Returns:
-        The results of the execution of the puml-sequence command.
+        properties (List[dict]): The sorted use case definition components to use in generating the output sequence diagram.
     """
     parsed_file = parse(architecture_file)
-    sequence_data = _model_sort(parsed_file)
+    properties: List[dict] = []
+    use_case_definitions: List[Definition] = []
 
-    status = ExecutionStatus.GENERAL_FAILURE
-    messages: list[ExecutionMessage] = []
+    for definition in parsed_file:
+        if definition.get_root_key() == "usecase":
+            use_case_definitions.append(definition.instance)
 
-    if len(sequence_data) > 0:
-        status = ExecutionStatus.SUCCESS
-        msg = ExecutionMessage(
-            "Made it through puml-sequence command.",
-            MessageLevel.INFO,
-            None,
-            None,
+    for use_case_definition in use_case_definitions:
+        participants = []
+        sequences = []
+
+        use_case_title = use_case_definition.name
+        # declare participants
+        use_case_participants = use_case_definition.usecase.participants
+        for use_case_participant in use_case_participants:  # each participant is a field type
+            participants.append(
+                {
+                    "type": use_case_participant.model,
+                    "name": use_case_participant.name,
+                }
+            )
+
+        # process steps
+        steps = use_case_definition.usecase.steps
+        for step in steps:  # each step of a step type
+            sequences.append(
+                {
+                    "name": step.name,
+                    "source": step.source,
+                    "target": step.target,
+                    "action": step.action,
+                }
+            )
+        properties.append(
+            {
+                "title": use_case_title,
+                "participants": participants,
+                "sequences": sequences,
+            }
         )
-    else:
-        msg = ExecutionMessage(
-            "No applicable model content to generate a sequence diagram.",
-            MessageLevel.ERROR,
-            None,
-            None,
-        )
-    messages.append(msg)
 
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    # status = ExecutionStatus.GENERAL_FAILURE
+    # messages: list[ExecutionMessage] = []
+
+    # if len(use_case_definitions) > 0:
+    #     status = ExecutionStatus.SUCCESS
+    #     msg = ExecutionMessage(
+    #         "Made it through puml-sequence command.",
+    #         MessageLevel.INFO,
+    #         None,
+    #         None,
+    #     )
+    # else:
+    #     msg = ExecutionMessage(
+    #         "No applicable use case definitions to generate a sequence diagram.",
+    #         MessageLevel.ERROR,
+    #         None,
+    #         None,
+    #     )
+    # messages.append(msg)
+
+    return properties
 
 
 def after_puml_sequence_generate(
