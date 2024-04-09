@@ -217,7 +217,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
+def puml_sequence(architecture_file: str, output_directory: str) -> tuple[List[dict], ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -312,7 +312,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
         )
     messages.append(msg)
 
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    return properties, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_sequence_generate(
@@ -330,12 +330,12 @@ def after_puml_sequence_generate(
     Returns:
         The results of the execution of the generate command.
     """
-    # arch_file_content = puml_component(architecture_file=architecture_file,
-    #                                    output_directory=output_directory)
-    # puml_sequence_generator_file = path.abspath(
-    #     path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
-    # )
-    # code_output = output_directory
+    arch_file_content, sequence_result = puml_sequence(architecture_file=architecture_file,
+                                       output_directory=output_directory)
+    puml_sequence_generator_file = path.abspath(
+        path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
+    )
+    code_output = output_directory
 
     # return run_generate(
     #     arch_file_content,
@@ -348,6 +348,9 @@ def after_puml_sequence_generate(
     #     False,
     # )
 
+    file_content = ExecutionMessage(f"parsed file content {arch_file_content}", MessageLevel.INFO,
+                                    None, None,)
+
     # TODO: configure and call the generate after command using puml-sequence command inputs
     status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
@@ -357,6 +360,7 @@ def after_puml_sequence_generate(
         None,
         None,
     )
+    messages.append(file_content)
     messages.append(msg)
     return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
