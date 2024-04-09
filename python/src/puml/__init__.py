@@ -106,11 +106,11 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
     else:
         result.add_messages(puml_sequence_check_result.messages)
 
-    # puml_sequence_result = puml_sequence(architecture_file, output_directory)
-    # if not puml_sequence_result.is_success():
-    #     return puml_sequence_result
-    # else:
-    #     result.add_messages(puml_sequence_result.messages)
+    puml_sequence_result = puml_sequence(architecture_file, output_directory)
+    if not puml_sequence_result.is_success():
+        return puml_sequence_result
+    else:
+        result.add_messages(puml_sequence_result.messages)
 
     puml_sequence_generate_result = after_puml_sequence_generate(
         architecture_file, output_directory, run_generate

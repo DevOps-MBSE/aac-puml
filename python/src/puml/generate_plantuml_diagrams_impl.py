@@ -230,50 +230,58 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
     Returns:
         properties (List[dict]): The sorted use case definition components to use in generating the output sequence diagram.
     """
+    # status = ExecutionStatus.GENERAL_FAILURE
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+
     parsed_file = parse(architecture_file)
-    properties: List[dict] = []
+    properties: dict = {}
     use_case_definitions: List[Definition] = []
 
     for definition in parsed_file:
         if definition.get_root_key() == "usecase":
-            use_case_definitions.append(definition.structure)
+            use_case_definitions.append(definition)
 
     for use_case_definition in use_case_definitions:
         participants = []
         sequences = []
 
-        use_case_title = use_case_definition.name
-        # declare participants
-        use_case_participants = use_case_definition["usecase"]["participants"]
-        for use_case_participant in use_case_participants:  # each participant is a field type
-            participants.append(
-                {
-                    "type": use_case_participant.model,
-                    "name": use_case_participant.name,
-                }
-            )
+        messages.append(ExecutionMessage(
+                f"found use case definitions {use_case_definition}",
+                MessageLevel.INFO,
+                None,
+                None,))
 
-        # process steps
-        steps = use_case_definition["usecase"]["steps"]
-        for step in steps:  # each step of a step type
-            sequences.append(
-                {
-                    "name": step.name,
-                    "source": step.source,
-                    "target": step.target,
-                    "action": step.action,
-                }
-            )
-        properties.append(
-            {
-                "title": use_case_title,
-                "participants": participants,
-                "sequences": sequences,
-            }
-        )
 
-    status = ExecutionStatus.GENERAL_FAILURE
-    messages: list[ExecutionMessage] = []
+        # use_case_title = use_case_definition.name
+    #     # declare participants
+    #     use_case_participants = use_case_definition["usecase"]["participants"]
+    #     for use_case_participant in use_case_participants:  # each participant is a field type
+    #         participants.append(
+    #             {
+    #                 "type": use_case_participant.model,
+    #                 "name": use_case_participant.name,
+    #             }
+    #         )
+
+    #     # process steps
+    #     steps = use_case_definition["usecase"]["steps"]
+    #     for step in steps:  # each step of a step type
+    #         sequences.append(
+    #             {
+    #                 "name": step.name,
+    #                 "source": step.source,
+    #                 "target": step.target,
+    #                 "action": step.action,
+    #             }
+    #         )
+    #     properties.append(
+    #         {
+    #             "title": use_case_title,
+    #             "participants": participants,
+    #             "sequences": sequences,
+    #         }
+    #     )
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
@@ -327,7 +335,7 @@ def after_puml_sequence_generate(
     #     True,
     #     False,
     # )
-    
+
     # TODO: configure and call the generate after command using puml-sequence command inputs
     status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
