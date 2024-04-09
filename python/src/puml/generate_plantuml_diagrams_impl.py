@@ -267,9 +267,9 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
                 None,))
 
 
-    #     # process steps
-    #     steps = use_case_definition["usecase"]["steps"]
-    #     for step in steps:  # each step of a step type
+        # process steps
+        steps = use_case_definition.instance.steps
+        for step in steps:  # each step of a step type
     #         sequences.append(
     #             {
     #                 "name": step.name,
@@ -285,6 +285,12 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
     #             "sequences": sequences,
     #         }
     #     )
+
+            messages.append(ExecutionMessage(
+                f"found use case steps  {step}",
+                MessageLevel.INFO,
+                None,
+                None,))
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
