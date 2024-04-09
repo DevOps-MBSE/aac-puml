@@ -236,7 +236,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
 
     for definition in parsed_file:
         if definition.get_root_key() == "usecase":
-            use_case_definitions.append(definition.instance)
+            use_case_definitions.append(definition.structure)
 
     for use_case_definition in use_case_definitions:
         participants = []
@@ -244,7 +244,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
 
         use_case_title = use_case_definition.name
         # declare participants
-        use_case_participants = use_case_definition.usecase.participants
+        use_case_participants = use_case_definition["usecase"]["participants"]
         for use_case_participant in use_case_participants:  # each participant is a field type
             participants.append(
                 {
@@ -254,7 +254,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
             )
 
         # process steps
-        steps = use_case_definition.usecase.steps
+        steps = use_case_definition["usecase"]["steps"]
         for step in steps:  # each step of a step type
             sequences.append(
                 {
