@@ -230,14 +230,11 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
     Returns:
         properties (List[dict]): The sorted use case definition components to use in generating the output sequence diagram.
     """
-    # status = ExecutionStatus.GENERAL_FAILURE
-    status = ExecutionStatus.SUCCESS
+    status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    context = LanguageContext()
-
-    parsed_file = context.parse_and_load(architecture_file)
-    properties: dict = {}
+    parsed_file = parse(architecture_file)
+    properties: List[dict] = []
     use_case_definitions: dict = {}
     use_case_actors: dict = {}
     use_case_steps: dict = {}
@@ -251,25 +248,14 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
             use_case_steps[definition.name] = definition
 
     for use_case_definition in use_case_definitions:
-        participants = []
-        sequences = []
+        participants: List[dict] = []
+        sequences: List[dict] = []
 
         use_case_title = use_case_definitions[use_case_definition].name
         use_case = use_case_definitions[use_case_definition].structure["usecase"]
 
-        messages.append(ExecutionMessage(
-                f"found use case title  {use_case_title}",
-                MessageLevel.INFO,
-                None,
-                None,))
-
         # declare participants
         use_case_participants = use_case["participants"]
-        messages.append(ExecutionMessage(
-                f"found use case participants {use_case['participants']}",
-                MessageLevel.INFO,
-                None,
-                None,))
         for use_case_participant in use_case_participants:  # each participant is a field type
             if use_case_participant in use_case_actors.keys():
                 participant = use_case_actors[use_case_participant].structure["actor"]
@@ -288,37 +274,26 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
                         }
                     )
 
-            messages.append(ExecutionMessage(
-                f"found use case participant info {participants}",
-                MessageLevel.INFO,
-                None,
-                None,))
-
-
         # process steps
         steps = use_case["steps"]
         for step in steps:  # each step of a step type
-    #         sequences.append(
-    #             {
-    #                 "name": step.name,
-    #                 "source": step.source,
-    #                 "target": step.target,
-    #                 "action": step.action,
-    #             }
-    #         )
-    #     properties.append(
-    #         {
-    #             "title": use_case_title,
-    #             "participants": participants,
-    #             "sequences": sequences,
-    #         }
-    #     )
-
-            messages.append(ExecutionMessage(
-                f"found use case steps  {step}",
-                MessageLevel.INFO,
-                None,
-                None,))
+            if step in use_case_steps.keys():
+                use_case_step = use_case_steps[step].structure["usecase_step"]
+            sequences.append(
+                {
+                    "name": use_case_step["name"],
+                    "source": use_case_step["source"],
+                    "target": use_case_step["target"],
+                    "action": use_case_step["action"],
+                }
+            )
+        properties.append(
+            {
+                "title": use_case_title,
+                "participants": participants,
+                "sequences": sequences,
+            }
+        )
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
