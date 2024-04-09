@@ -248,22 +248,24 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
         participants = []
         sequences = []
 
-        messages.append(ExecutionMessage(
-                f"found use case definitions {use_case_definition}",
+        use_case_title = use_case_definition.name
+
+        # declare participants
+        use_case_participants = use_case_definition.instance.participants
+        for use_case_participant in use_case_participants:  # each participant is a field type
+            # participants.append(
+            #     {
+            #         "type": use_case_participants[use_case_participants].model,
+            #         "name": use_case_participants[use_case_participant].name,
+            #     }
+            # )
+
+            messages.append(ExecutionMessage(
+                f"found use case participant  {use_case_participant}",
                 MessageLevel.INFO,
                 None,
                 None,))
 
-        # use_case_title = use_case_definition.name
-    #     # declare participants
-    #     use_case_participants = use_case_definition["usecase"]["participants"]
-    #     for use_case_participant in use_case_participants:  # each participant is a field type
-    #         participants.append(
-    #             {
-    #                 "type": use_case_participant.model,
-    #                 "name": use_case_participant.name,
-    #             }
-    #         )
 
     #     # process steps
     #     steps = use_case_definition["usecase"]["steps"]
