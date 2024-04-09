@@ -5,8 +5,7 @@
 
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 from os import path, makedirs
-from typing import Any
-from typing import Callable
+from typing import Any, List
 
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
@@ -35,8 +34,58 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
+def _model_sort(models: List[dict]) -> List[dict]:
+    """
+    Helper method to ingest the models parsed from the provided input architecture file and return
+    the sorted contents to use in populating the Jinja2 templates of the diagram templates.
+
+    Args:
+        models (List[dict]): The list of models that were parsed from the provided architecture file
+                             to the PUML command.
+
+    Returns:
+        The list of sorted model content to use in populating the diagram based on the Jinja2 template.
+    """
+    definitions = []
+    context = LanguageContext()
+    for model in models:
+        model_name = model.name
+        model_interfaces = set()
+
+        model_inputs = []
+        for input in model.structure["model"]["behavior"]["input"]:
+            input_name = input.name
+            input_type = input.type
+            model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
+
+            if input_type not in model_interfaces:
+                model_interfaces.add(input_type)
+
+        model_outputs = []
+        for output in model.structure["model"]["behavior"]["output"]:
+            output_name = output.name
+            output_type = output.type
+            model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
+
+            if output_type not in model_interfaces:
+                model_interfaces.add(output_type)
+
+        model_components = []
+        for component in model.structure["model"]["components"]:
+            component_type = component.type
+            model_components.append(_model_sort(context.get_definitions_by_name(component_type)))
+
+        definitions.append({"name": model_name,
+                            "interfaces": model_interfaces,
+                            "components": model_components,
+                            "inputs": model_inputs,
+                            "outputs": model_outputs})
+
+    return definitions
+
+
 def before_puml_component_check(
-    architecture_file: str, output_directory: str, run_check
+    architecture_file: str, output_directory: str, run_check: Any
 ) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-component command.
@@ -120,7 +169,7 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_component_generate(
-    architecture_file: str, output_directory: str, generate: Callable
+    architecture_file: str, output_directory: str, run_generate: Any
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
@@ -137,7 +186,7 @@ def after_puml_component_generate(
     puml_component_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/component_generator.aac")
     )
-    return generate(
+    return run_generate(
         aac_plugin_file,
         puml_component_generator_file,
         code_output,
@@ -150,7 +199,7 @@ def after_puml_component_generate(
 
 
 def before_puml_sequence_check(
-    architecture_file: str, output_directory: str, run_check
+    architecture_file: str, output_directory: str, run_check: Any
 ) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-sequence command.
@@ -168,38 +217,47 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file, output_directory) -> ExecutionResult:
+def puml_sequence(architecture_file: str, output_directory: str) -> ExecutionResult:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
                                  to generate a PlantUML sequence diagram.
-
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-
 
     Returns:
         The results of the execution of the puml-sequence command.
     """
+    parsed_file = parse(architecture_file)
+    sequence_data = _model_sort(parsed_file)
 
-    # TODO: implement plugin logic here
-    status = ExecutionStatus.SUCCESS
+    status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
-    error_msg = ExecutionMessage(
-        "Made it through puml-sequence command.",
-        MessageLevel.ERROR,
-        None,
-        None,
-    )
-    messages.append(error_msg)
+
+    if len(sequence_data) > 0:
+        status = ExecutionStatus.SUCCESS
+        msg = ExecutionMessage(
+            "Made it through puml-sequence command.",
+            MessageLevel.INFO,
+            None,
+            None,
+        )
+    else:
+        msg = ExecutionMessage(
+            "No applicable model content to generate a sequence diagram.",
+            MessageLevel.ERROR,
+            None,
+            None,
+        )
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_sequence_generate(
-    architecture_file: str, output_directory: str, generate: Callable
+    architecture_file: str, output_directory: str, run_generate: Any
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -213,18 +271,22 @@ def after_puml_sequence_generate(
     Returns:
         The results of the execution of the generate command.
     """
+    arch_file_content = puml_component(architecture_file=architecture_file,
+                                       output_directory=output_directory)
     puml_sequence_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
     )
-    return generate(
-        aac_plugin_file,
+    code_output = output_directory
+
+    return run_generate(
+        arch_file_content,
         puml_sequence_generator_file,
         code_output,
-        test_output,
-        doc_output,
-        no_prompt,
-        force_overwrite,
-        evaluate,
+        "",
+        "",
+        True,
+        True,
+        False,
     )
 
 
@@ -278,7 +340,7 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_object_generate(
-    architecture_file: str, output_directory: str, generate: Callable
+    architecture_file: str, output_directory: str, run_generate: Any
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-object command.
@@ -295,7 +357,7 @@ def after_puml_object_generate(
     puml_object_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/object_generator.aac")
     )
-    return generate(
+    return run_generate(
         aac_plugin_file,
         puml_object_generator_file,
         code_output,
@@ -356,7 +418,7 @@ def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_requirements_generate(
-    architecture_file: str, output_directory: str, generate: Callable
+    architecture_file: str, output_directory: str, run_generate: Any
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-requirements command.
@@ -374,7 +436,7 @@ def after_puml_requirements_generate(
     puml_requirements_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/requirements_generator.aac")
     )
-    return generate(
+    return run_generate(
         aac_plugin_file,
         puml_requirements_generator_file,
         code_output,
