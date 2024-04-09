@@ -5,7 +5,7 @@
 
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 from os import path, makedirs
-from typing import Any, List
+from typing import Any
 
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
@@ -34,13 +34,13 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
-def _model_sort(models: List[dict]) -> List[dict]:
+def _model_sort(models: list[Definition]) -> list[dict]:
     """
     Helper method to ingest the models parsed from the provided input architecture file and return
     the sorted contents to use in populating the Jinja2 templates of the diagram templates.
 
     Args:
-        models (List[dict]): The list of models that were parsed from the provided architecture file
+        models (list[Definition]): The list of models that were parsed from the provided architecture file
                              to the PUML command.
 
     Returns:
@@ -207,7 +207,6 @@ def before_puml_sequence_check(
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
                                  to generate a PlantUML sequence diagram.
-
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
 
@@ -217,7 +216,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> tuple[List[dict], ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[dict], ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -228,13 +227,14 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[List[d
                                 will be written.
 
     Returns:
-        properties (List[dict]): The sorted use case definition components to use in generating the output sequence diagram.
+        properties (list[dict]): The sorted use case definition components to use in generating the output sequence diagram.
+        ExecutionResult of the puml-sequence command for the PUML plugin.
     """
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    parsed_file = parse(architecture_file)
-    properties: List[dict] = []
+    parsed_file: list = parse(architecture_file)
+    properties: list[dict] = []
     use_case_definitions: dict = {}
     use_case_actors: dict = {}
     use_case_steps: dict = {}
@@ -248,8 +248,8 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[List[d
             use_case_steps[definition.name] = definition
 
     for use_case_definition in use_case_definitions:
-        participants: List[dict] = []
-        sequences: List[dict] = []
+        participants: list[dict] = []
+        sequences: list[dict] = []
 
         use_case_title = use_case_definitions[use_case_definition].name
         use_case = use_case_definitions[use_case_definition].structure["usecase"]
@@ -331,38 +331,37 @@ def after_puml_sequence_generate(
         The results of the execution of the generate command.
     """
     arch_file_content, sequence_result = puml_sequence(architecture_file=architecture_file,
-                                       output_directory=output_directory)
+                                                       output_directory=output_directory)
     puml_sequence_generator_file = path.abspath(
-        path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
+        path.join(path.dirname(__file__), "./generators/sequence_diagram_generator.aac")
     )
-    code_output = output_directory
 
-    # return run_generate(
-    #     arch_file_content,
-    #     puml_sequence_generator_file,
-    #     code_output,
-    #     "",
-    #     "",
-    #     True,
-    #     True,
-    #     False,
+    return run_generate(
+        aac_plugin_file=architecture_file,
+        generator_file=puml_sequence_generator_file,
+        code_output=output_directory,
+        test_output="",
+        doc_output="",
+        no_prompt=False,
+        force_overwrite=True,
+        evaluate=False,
+    )
+
+    # file_content = ExecutionMessage(f"parsed file content {arch_file_content}", MessageLevel.INFO,
+    #                                 None, None,)
+
+    # # TODO: configure and call the generate after command using puml-sequence command inputs
+    # status = ExecutionStatus.SUCCESS
+    # messages: list[ExecutionMessage] = []
+    # msg = ExecutionMessage(
+    #     "Made it through the post generate for puml-sequence",
+    #     MessageLevel.INFO,
+    #     None,
+    #     None,
     # )
-
-    file_content = ExecutionMessage(f"parsed file content {arch_file_content}", MessageLevel.INFO,
-                                    None, None,)
-
-    # TODO: configure and call the generate after command using puml-sequence command inputs
-    status = ExecutionStatus.SUCCESS
-    messages: list[ExecutionMessage] = []
-    msg = ExecutionMessage(
-        "Made it through the post generate for puml-sequence",
-        MessageLevel.INFO,
-        None,
-        None,
-    )
-    messages.append(file_content)
-    messages.append(msg)
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    # messages.append(file_content)
+    # messages.append(msg)
+    # return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def before_puml_object_check(
