@@ -234,7 +234,9 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
     status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
 
-    parsed_file = parse(architecture_file)
+    context = LanguageContext()
+
+    parsed_file = context.parse_and_load(architecture_file)
     properties: dict = {}
     use_case_definitions: List[Definition] = []
 
@@ -251,7 +253,6 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
                 MessageLevel.INFO,
                 None,
                 None,))
-
 
         # use_case_title = use_case_definition.name
     #     # declare participants
