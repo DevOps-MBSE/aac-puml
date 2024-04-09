@@ -272,27 +272,27 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
             }
         )
 
-    # status = ExecutionStatus.GENERAL_FAILURE
-    # messages: list[ExecutionMessage] = []
+    status = ExecutionStatus.GENERAL_FAILURE
+    messages: list[ExecutionMessage] = []
 
-    # if len(use_case_definitions) > 0:
-    #     status = ExecutionStatus.SUCCESS
-    #     msg = ExecutionMessage(
-    #         "Made it through puml-sequence command.",
-    #         MessageLevel.INFO,
-    #         None,
-    #         None,
-    #     )
-    # else:
-    #     msg = ExecutionMessage(
-    #         "No applicable use case definitions to generate a sequence diagram.",
-    #         MessageLevel.ERROR,
-    #         None,
-    #         None,
-    #     )
-    # messages.append(msg)
+    if len(use_case_definitions) > 0:
+        status = ExecutionStatus.SUCCESS
+        msg = ExecutionMessage(
+            "Made it through puml-sequence command.",
+            MessageLevel.INFO,
+            None,
+            None,
+        )
+    else:
+        msg = ExecutionMessage(
+            "No applicable use case definitions to generate a sequence diagram.",
+            MessageLevel.ERROR,
+            None,
+            None,
+        )
+    messages.append(msg)
 
-    return properties
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_sequence_generate(
@@ -310,23 +310,35 @@ def after_puml_sequence_generate(
     Returns:
         The results of the execution of the generate command.
     """
-    arch_file_content = puml_component(architecture_file=architecture_file,
-                                       output_directory=output_directory)
-    puml_sequence_generator_file = path.abspath(
-        path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
-    )
-    code_output = output_directory
+    # arch_file_content = puml_component(architecture_file=architecture_file,
+    #                                    output_directory=output_directory)
+    # puml_sequence_generator_file = path.abspath(
+    #     path.join(path.dirname(__file__), "./generators/sequence_generator.aac")
+    # )
+    # code_output = output_directory
 
-    return run_generate(
-        arch_file_content,
-        puml_sequence_generator_file,
-        code_output,
-        "",
-        "",
-        True,
-        True,
-        False,
+    # return run_generate(
+    #     arch_file_content,
+    #     puml_sequence_generator_file,
+    #     code_output,
+    #     "",
+    #     "",
+    #     True,
+    #     True,
+    #     False,
+    # )
+    
+    # TODO: configure and call the generate after command using puml-sequence command inputs
+    status = ExecutionStatus.SUCCESS
+    messages: list[ExecutionMessage] = []
+    msg = ExecutionMessage(
+        "Made it through the post generate for puml-sequence",
+        MessageLevel.INFO,
+        None,
+        None,
     )
+    messages.append(msg)
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def before_puml_object_check(
