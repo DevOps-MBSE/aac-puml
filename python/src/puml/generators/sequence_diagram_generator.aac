@@ -3,11 +3,11 @@ generator:
     description: A sequence diagram generation action for Gen-PUML plugin.
     sources:
         - name: PUML Sequence diagram
-          data_source: sequence
+          data_source: usecase
           templates:
             - name: SequenceDiagram
               description: Converts an AaC-defined use case to a PlantUML Sequence Diagram.
-              template_file: ./templates/sequence/sequence_diagram.puml.jinja2
+              template_file: ../templates/sequence/sequence_diagram.puml.jinja2
               overwrite: OVERWRITE
               output_target: CODE
               output_path_uses_data_source_package: true
