@@ -238,37 +238,65 @@ def puml_sequence(architecture_file: str, output_directory: str) -> List[dict]:
 
     parsed_file = context.parse_and_load(architecture_file)
     properties: dict = {}
-    use_case_definitions: List[Definition] = []
+    use_case_definitions: dict = {}
+    use_case_actors: dict = {}
+    use_case_steps: dict = {}
 
     for definition in parsed_file:
         if definition.get_root_key() == "usecase":
-            use_case_definitions.append(definition)
+            use_case_definitions[definition.name] = definition
+        if definition.get_root_key() == "actor":
+            use_case_actors[definition.name] = definition
+        if definition.get_root_key() == "usecase_step":
+            use_case_steps[definition.name] = definition
 
     for use_case_definition in use_case_definitions:
         participants = []
         sequences = []
 
-        use_case_title = use_case_definition.name
+        use_case_title = use_case_definitions[use_case_definition].name
+        use_case = use_case_definitions[use_case_definition].structure["usecase"]
+
+        messages.append(ExecutionMessage(
+                f"found use case title  {use_case_title}",
+                MessageLevel.INFO,
+                None,
+                None,))
 
         # declare participants
-        use_case_participants = use_case_definition.instance.participants
+        use_case_participants = use_case["participants"]
+        messages.append(ExecutionMessage(
+                f"found use case participants {use_case['participants']}",
+                MessageLevel.INFO,
+                None,
+                None,))
         for use_case_participant in use_case_participants:  # each participant is a field type
-            # participants.append(
-            #     {
-            #         "type": use_case_participants[use_case_participants].model,
-            #         "name": use_case_participants[use_case_participant].name,
-            #     }
-            # )
+            if use_case_participant in use_case_actors.keys():
+                participant = use_case_actors[use_case_participant].structure["actor"]
+                if "model" in participant.keys():
+                    participants.append(
+                        {
+                            "type": participant["model"],
+                            "name": participant["name"],
+                        }
+                    )
+                else:
+                    participants.append(
+                        {
+                            "type": "External",
+                            "name": participant["name"],
+                        }
+                    )
 
             messages.append(ExecutionMessage(
-                f"found use case participant  {use_case_participant}",
+                f"found use case participant info {participants}",
                 MessageLevel.INFO,
                 None,
                 None,))
 
 
         # process steps
-        steps = use_case_definition.instance.steps
+        steps = use_case["steps"]
         for step in steps:  # each step of a step type
     #         sequences.append(
     #             {
