@@ -76,7 +76,7 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
                                 will be written.
 
     Returns:
-        The definition contents as a list
+        results of the execution of the puml-component command.
     """
     messages = []
     # architecture_file_path = path.abspath(architecture_file)
