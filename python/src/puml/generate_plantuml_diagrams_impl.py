@@ -65,7 +65,7 @@ def before_puml_component_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_component(architecture_file: str, output_directory:str) -> ExecutionResult:
+def puml_component(architecture_file: str, output_directory: str) -> ExecutionResult:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
 
