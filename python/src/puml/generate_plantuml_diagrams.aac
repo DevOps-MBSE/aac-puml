@@ -1,12 +1,18 @@
 plugin:
   name: Generate PlantUML Diagrams
-  package: aac.plugins.puml
+  package: puml
   description: |
     An AaC plugin that enables PlantUML diagrams to be generated from AaC
     definitions.
   commands:
     - name: puml-component
       help_text: Converts an AaC-defined system to a PlantUML component diagram.
+      run_before:
+        - plugin: Check AaC
+          command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
@@ -21,7 +27,7 @@ plugin:
       acceptance:
         name: Component Diagram Test
         scenarios:
-          - name: Output PlantUML component diagram for specified input and output path.
+          - name: Output PlantUML component diagram for specified input file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -30,12 +36,18 @@ plugin:
             then:
               - A PlantUML component diagram of the model is written to the output directory.
     - name: puml-sequence
-      help_text: Converts an AaC-defined usecase to PlantUML sequence diagram.
+      help_text: Converts an AaC-defined use case to PlantUML sequence diagram.
+      run_before:
+        - plugin: Check AaC
+          command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
           description: |
-            A path to a YAML file containing an AaC-defined usecase from which
+            A path to a YAML file containing an AaC-defined use case from which
             to generate a PlantUML sequence diagram.
         - name: output-directory
           type: directory
@@ -45,7 +57,7 @@ plugin:
       acceptance:
         name: Sequence Diagram Test
         scenarios:
-          - name: Output PlantUML sequence diagram for specified input and output path.
+          - name: Output PlantUML sequence diagram for specified input file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -55,6 +67,12 @@ plugin:
               - A PlantUML sequence diagram of the use case is written to the output directory.
     - name: puml-object
       help_text: Convert an AaC-defined system to PlantUML object diagram.
+      run_before:
+        - plugin: Check AaC
+          command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file
@@ -69,7 +87,7 @@ plugin:
       acceptance:
         name: Object Diagram Test
         scenarios:
-          - name: Output PlantUML object diagram for specified input and output path.
+          - name: Output PlantUML object diagram for specified input file and output path.
             given:
               - The {{puml.input.architecture-file}} contains a valid model.
               - The positional argument {{puml.input.output-directory}} contains a valid file path.
@@ -79,6 +97,12 @@ plugin:
               - A PlantUML object diagram of the model is written to the output directory.
     - name: puml-requirements
       help_text: Convert an AaC-defined system to a requirements diagram in PlantUML format.
+      run_before:
+        - plugin: Check AaC
+          command: check
+      run_after:
+        - plugin: Generate
+          command: generate
       input:
         - name: architecture-file
           type: file

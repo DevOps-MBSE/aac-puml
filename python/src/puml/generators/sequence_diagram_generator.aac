@@ -1,0 +1,14 @@
+generator:
+    name: Sequence Diagram Generator
+    description: A sequence diagram generation action for Gen-PUML plugin.
+    sources:
+        - name: PUML Sequence diagram
+          data_source: usecase
+          templates:
+            - name: SequenceDiagram
+              description: Converts an AaC-defined use case to a PlantUML Sequence Diagram.
+              template_file: ../templates/sequence/sequence_diagram.puml.jinja2
+              overwrite: OVERWRITE
+              output_target: CODE
+              output_file_suffix: _sequence_diagram
+              output_file_extension: puml

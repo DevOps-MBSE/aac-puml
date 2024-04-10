@@ -1,0 +1,5 @@
+graft src
+graft tests
+
+include tox.ini
+include src/puml/generate_plantuml_diagrams.aac

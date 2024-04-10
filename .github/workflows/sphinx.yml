@@ -40,7 +40,7 @@ jobs:
       - name: Build Documentation
         uses: ammaraskar/sphinx-action@0.4
         with:
-          pre-build-command: "pip install aac-puml"
+          pre-build-command: "pip install ."
           docs-folder: "docs/"
 
       - name: Upload Artifact

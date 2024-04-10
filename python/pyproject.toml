@@ -1,12 +1,14 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "aac"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "aac-puml"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
-	{ name="Patrick Malone", email="patrick.malone@ngc.com" },
+	{ name="crazynewidea", email="asdfasdf@mail.com" },
+    { name="lizzcondrey", email="asdfasdfd@mail.com" },
+    { name="bunchw", email="asdfdas@mail.com" }
 ]
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
 requires-python = "== 3.9.13"
@@ -21,7 +23,15 @@ classifiers = [
 	"License :: OSI Approved :: MIT License",
 	"Operating System :: OS Independent",
 ]
-
+[project.entry-points."aac"]
+puml-component = "puml"
 [project.urls]
 Homepage = "https://github.com/DevOps-MBSE/aac-puml"
 Issues = "https://github.com/DevOps-MBSE/aac-puml/issues"
+
+[tool.setuptools]
+include-package-data = true
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+mypkg = ["**/*.aac", "**/*.jinja2", "*.yaml"]

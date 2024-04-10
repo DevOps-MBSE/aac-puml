@@ -1,0 +1,14 @@
+generator:
+    name: Component Diagram Generator
+    description: A component diagram generation action for Gen-PUML plugin.
+    sources:
+        - name: PUML Component diagram
+          data_source: model
+          templates:
+            - name: ComponentDiagram
+              description: Converts an AaC-defined system to a PlantUML Component Diagram.
+              template_file: ../templates/component/component_diagram.puml.jinja2
+              overwrite: OVERWRITE
+              output_target: CODE
+              output_file_suffix: _component_diagram
+              output_file_extension: puml
