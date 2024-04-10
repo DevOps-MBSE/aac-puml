@@ -97,7 +97,7 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
 
 
 def after_puml_component_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
+    architecture_file: str, output_directory: str, run_generate
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
