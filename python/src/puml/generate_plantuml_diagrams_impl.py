@@ -105,9 +105,6 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
     Returns:
         The results of the execution of the puml-component command.
     """
-    architecture_file_path = path.abspath(architecture_file)
-    parsed_file = parse(architecture_file)
-
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
@@ -306,11 +303,11 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
         sequences = _get_use_case_steps(usecase=use_case)
 
         properties = {"usecase": {
-                        "title": use_case_title,
-                        "participants": participants,
-                        "sequences": sequences,
-                    }
-                    }
+            "title": use_case_title,
+            "participants": participants,
+            "sequences": sequences,
+            }
+        }
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
