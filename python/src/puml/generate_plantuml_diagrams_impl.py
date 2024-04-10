@@ -24,58 +24,31 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
-def _model_sort(models: list[Definition]) -> list[dict]:
-    """
-    Helper method to ingest the models parsed from the provided input architecture file and return
-    the sorted contents to use in populating the Jinja2 templates of the diagram templates.
-
-    Args:
-        models (list[Definition]): The list of models that were parsed from the provided architecture file
-                             to the PUML command.
-
-    Returns:
-        The list of sorted model content to use in populating the diagram based on the Jinja2 template.
-    """
-    definitions = []
-    context = LanguageContext()
-    for model in models:
-        model_name = model.name
-        model_interfaces = set()
-
-        model_inputs = []
-        for input in model.instance.behavior.input:
-            input_name = input.name
-            input_type = input.type
-            model_inputs.append({"name": input_name, "type": input_type, "target": model_name})
-
-            if input_type not in model_interfaces:
-                model_interfaces.add(input_type)
-
-        model_outputs = []
-        for output in model.instance.behavior.output:
-            output_name = output.name
-            output_type = output.type
-            model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
-
-            if output_type not in model_interfaces:
-                model_interfaces.add(output_type)
-
-        model_components = []
-        for component in model.instance.components:
-            component_type = component.type
-            model_components.append(_model_sort(context.get_definitions_by_name(component_type)))
-
-        definitions.append({"name": model_name,
-                            "interfaces": model_interfaces,
-                            "components": model_components,
-                            "inputs": model_inputs,
-                            "outputs": model_outputs})
-
-    return definitions
+# def _model_sort(models: List[dict]) -> List[dict]:
+#     context = LanguageContext()
+#     for model in models:
+#         if model.get_root_key() == "model":
+#             model_name = model.name
+#             model_inputs = []
+#             for input in model.structure["model"]["behavior"]["input"]:
+#                 input_name = input.name
+#                 input_type = input.type
+#                 model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
+#             model_outputs = []
+#             for output in model.structure["model"]["behavior"]["output"]:
+#                 output_name = output.name
+#                 output_type = output.type
+#                 model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
+#             model_components = []
+#             for component in model.structure["model"]["components"]:
+#                 component_type = component.type
+#                 model_components.append(_model_sort(context.get_definitions_by_name(component_type), diagram_type, archfile_path))
+#             definitions.append({"name": model_name, "interfaces": model_interfaces, "components": model_components, "inputs": model_inputs, "outputs": model_outputs})
+#     return definitions
 
 
 def before_puml_component_check(
-    architecture_file: str, output_directory: str, run_check: Any
+    architecture_file: str, output_directory: str, run_check
 ) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-component command.
@@ -103,60 +76,28 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
                                 will be written.
 
     Returns:
-        The results of the execution of the puml-component command.
+        The definition contents as a list
     """
-    status = ExecutionStatus.GENERAL_FAILURE
-    messages: list[ExecutionMessage] = []
+    messages = []
+    architecture_file_path = path.abspath(architecture_file)
+    parsed_file = parse(architecture_file)
 
-    # def _generate_component_diagram(definitions: list[Definition]):
-    #     for definition in parsed_file:
-    #         if definition.get_root_key() == "model":
-    #             models = []
-    #             model_name = definition.name
-    #             model_properties = get_model_content(definition, set())
-    #             aac_file_name = extract_aac_file_name(architecture_file)
-    #             generated_file_name = get_generated_file_name(aac_file_name, COMPONENT_STRING, model_name, output_directory)
-    #             models.append(
-    #                 {
-    #                     "filename": generated_file_name,
-    #                     "title": model_name,
-    #                     "models": [model_properties],
-    #                 }
-    #             )
-    #         return models
+    # component_data = _model_sort(parsed_file)
 
-    # try:
-    #     generate_to_file = generate_diagram_to_file(architecture_file_path=architecture_file_path,
-    #                                            output_directory=output_directory,
-    #                                            puml_type=COMPONENT_STRING,
-    #                                            property_generator=_generate_component_diagram)
-    #     generation_result_msg = ExecutionMessage(
-    #         generate_to_file,
-    #         MessageLevel.INFO,
-    #         None,
-    #         None,
-    #     )
-
-    # except Exception:
-    #     generation_result_msg = ExecutionMessage(
-    #         "The puml-component command for the Generate PlantUML Diagrams failed.",
-    #         MessageLevel.ERROR,
-    #         None,
-    #         None,
-    #     )
-
-    # messages.append(generation_result_msg)
-    messages.append(ExecutionMessage("Made it to puml-component command",
-                    MessageLevel.INFO,
-                    None,
-                    None))
     status = ExecutionStatus.SUCCESS
+    msg = ExecutionMessage(
+        f"Wrote PUML Component Diagram(s) to {output_directory}/.",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
+    messages.append(msg)
 
-    return ExecutionResult(plugin_name, "puml-component", status, messages)
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_component_generate(
-    architecture_file: str, output_directory: str, run_generate: Any
+    architecture_file: str, output_directory: str, run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
@@ -170,18 +111,22 @@ def after_puml_component_generate(
     Returns:
         The results of the execution of the check command.
     """
+
+    code = output_directory
+    # arch_file_content = puml_component(architecture_file, output_directory)
+
     puml_component_generator_file = path.abspath(
-        path.join(path.dirname(__file__), "./generators/component_generator.aac")
+        path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
     )
     return run_generate(
-        aac_plugin_file=architecture_file,
-        generator_file=puml_component_generator_file,
-        code_output=output_directory,
-        test_output="",
-        doc_output="",
-        no_prompt=False,
-        force_overwrite=True,
-        evaluate=False,
+        architecture_file,
+        puml_component_generator_file,
+        code,
+        "",
+        "",
+        True,
+        True,
+        False,
     )
 
 
