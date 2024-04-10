@@ -58,7 +58,7 @@ def before_puml_component_check(
                                  generate a PlantUML component diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        run_check (Callable): Callback reference to the run_check method from the Check plugin. 
+        run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
         The results of the execution of the check command.
@@ -108,7 +108,7 @@ def after_puml_component_generate(
                                  generate a PlantUML component diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        run_generate (Callable): Callback reference to the run_reference method from the Generate plugin. 
+        run_generate (Callable): Callback reference to the run_reference method from the Generate plugin.
 
     Returns:
         The results of the execution of the check command.
@@ -141,7 +141,7 @@ def before_puml_sequence_check(
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        run_check (Callable): Callback reference to the run_check method from the Check plugin.                 
+        run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
         The results of the execution of the check command.
@@ -320,10 +320,9 @@ def before_puml_object_check(
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML object diagram.
-
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        run_check (Callable): Callback reference to the run_check method from the Check plugin. 
+        run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
         The results of the execution of the check command.
@@ -401,7 +400,7 @@ def before_puml_requirements_check(
                                  generate a PlantUML requirements diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        run_check (Callable): Callback reference to the run_check method from the Check plugin. 
+        run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
         The results of the execution of the check command.
