@@ -229,20 +229,17 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     use_case_actors: dict = {}
     use_case_steps: dict = {}
 
-    for definition in parsed_file:
-        if definition.get_root_key() == "usecase":
-            use_case_definitions[definition.name] = definition
-        if definition.get_root_key() == "actor":
-            use_case_actors[definition.name] = definition
-        if definition.get_root_key() == "usecase_step":
-            use_case_steps[definition.name] = definition
+    def _get_use_case_participants(usecase: Any) -> list[dict]:
+        """
+        Helper method for extracting the participants from a use case definition.
 
-    for use_case_definition in use_case_definitions:
+        Args:
+            usecase (Any): The use case definition from which to extract participants.
+
+        Returns:
+            The list of participants and their data within the use case definition.
+        """
         participants: list[dict] = []
-        sequences: list[dict] = []
-
-        use_case_title = use_case_definitions[use_case_definition].name
-        use_case = use_case_definitions[use_case_definition].structure["usecase"]
 
         # declare participants
         use_case_participants = use_case["participants"]
@@ -263,6 +260,19 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
                             "name": participant["name"],
                         }
                     )
+        return participants
+
+    def _get_use_case_steps(usecase: Any) -> list[dict]:
+        """
+        Helper method for extracting the participants from a use case definition.
+
+        Args:
+            usecase (Any): The use case definition from which to extract participants.
+
+        Returns:
+            The list of participants and their data within the use case definition.
+        """
+        sequences: list[dict] = []
 
         # process steps
         steps = use_case["steps"]
@@ -277,17 +287,35 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
                     "action": use_case_step["action"],
                 }
             )
+
+        return sequences
+
+    for definition in parsed_file:
+        if definition.get_root_key() == "usecase":
+            use_case_definitions[definition.name] = definition
+        if definition.get_root_key() == "actor":
+            use_case_actors[definition.name] = definition
+        if definition.get_root_key() == "usecase_step":
+            use_case_steps[definition.name] = definition
+
+    for use_case_definition in use_case_definitions:
+        use_case_title = use_case_definitions[use_case_definition].name
+        use_case = use_case_definitions[use_case_definition].structure["usecase"]
+
+        participants = _get_use_case_participants(usecase=use_case)
+        sequences = _get_use_case_steps(usecase=use_case)
+
         properties = {"usecase": {
-                            "title": use_case_title,
-                            "participants": participants,
-                            "sequences": sequences,
-                        }
-                      }
+                        "title": use_case_title,
+                        "participants": participants,
+                        "sequences": sequences,
+                    }
+                    }
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
         msg = ExecutionMessage(
-            "Made it through puml-sequence command.",
+            f"Wrote PUML Sequence Diagram(s) to {output_directory}/.",
             MessageLevel.INFO,
             None,
             None,

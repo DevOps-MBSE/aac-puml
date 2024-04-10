@@ -10,6 +10,5 @@ generator:
               template_file: ../templates/sequence/sequence_diagram.puml.jinja2
               overwrite: OVERWRITE
               output_target: CODE
-              output_path_uses_data_source_package: true
               output_file_suffix: _sequence_diagram
               output_file_extension: puml
