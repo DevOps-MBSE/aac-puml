@@ -3,13 +3,12 @@ generator:
     description: An object diagram generation action for Gen-PUML plugin.
     sources:
         - name: PUML Object diagram
-        data_source: model
-        templates:
+          data_source: model
+          templates:
             - name: ObjectDiagram
               description: Converts an AaC-defined system to a PlantUML Object Diagram.
               template_file: ../templates/object/object_diagram.puml.jinja2
               overwrite: OVERWRITE
               output_target: CODE
-              output_path_uses_data_source_package: true
               output_file_suffix: _object_diagram
               output_file_extension: puml

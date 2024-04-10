@@ -79,8 +79,8 @@ def puml_component(architecture_file, output_directory) -> ExecutionResult:
         The definition contents as a list
     """
     messages = []
-    architecture_file_path = path.abspath(architecture_file)
-    parsed_file = parse(architecture_file)
+    # architecture_file_path = path.abspath(architecture_file)
+    # parsed_file = parse(architecture_file)
 
     # component_data = _model_sort(parsed_file)
 
@@ -119,14 +119,14 @@ def after_puml_component_generate(
         path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
     )
     return run_generate(
-        architecture_file,
-        puml_component_generator_file,
-        code,
-        "",
-        "",
-        True,
-        True,
-        False,
+        aac_plugin_file=architecture_file,
+        generator_file=puml_component_generator_file,
+        code_output=output_directory,
+        test_output="",
+        doc_output="",
+        no_prompt=True,
+        force_overwrite=True,
+        evaluate=False,
     )
 
 
@@ -197,7 +197,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
         msg = ExecutionMessage(
-            f"Wrote PUML Sequence Diagram(s) to {output_directory}/.",
+            f"Wrote PUML Sequence Diagram(s) to {output_directory}",
             MessageLevel.INFO,
             None,
             None,
@@ -303,7 +303,7 @@ def after_puml_sequence_generate(
         code_output=output_directory,
         test_output="",
         doc_output="",
-        no_prompt=False,
+        no_prompt=True,
         force_overwrite=True,
         evaluate=False,
     )
@@ -347,13 +347,13 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
     # TODO: implement plugin logic here
     status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
-    error_msg = ExecutionMessage(
-        "The puml-object command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
-        MessageLevel.ERROR,
+    msg = ExecutionMessage(
+        f"Wrote PUML Object Diagram(s) to {output_directory}",
+        MessageLevel.INFO,
         None,
         None,
     )
-    messages.append(error_msg)
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-object", status, messages)
 
@@ -374,7 +374,7 @@ def after_puml_object_generate(
         The results of the execution of the generate command.
     """
     puml_object_generator_file = path.abspath(
-        path.join(path.dirname(__file__), "./generators/object_generator.aac")
+        path.join(path.dirname(__file__), "./generators/object_diagram_generator.aac")
     )
     return run_generate(
         aac_plugin_file=architecture_file,
@@ -382,7 +382,7 @@ def after_puml_object_generate(
         code_output=output_directory,
         test_output="",
         doc_output="",
-        no_prompt=False,
+        no_prompt=True,
         force_overwrite=True,
         evaluate=False,
     )
@@ -425,13 +425,13 @@ def puml_requirements(architecture_file, output_directory) -> ExecutionResult:
     # TODO: implement plugin logic here
     status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
-    error_msg = ExecutionMessage(
-        "The puml-requirements command for the Generate PlantUML Diagrams plugin has not been implemented yet.",
-        MessageLevel.ERROR,
+    msg = ExecutionMessage(
+        f"Wrote PUML Requirement Diagram(s) to {output_directory}",
+        MessageLevel.INFO,
         None,
         None,
     )
-    messages.append(error_msg)
+    messages.append(msg)
 
     return ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
@@ -453,7 +453,7 @@ def after_puml_requirements_generate(
         The results of the execution of the generate command.
     """
     puml_requirements_generator_file = path.abspath(
-        path.join(path.dirname(__file__), "./generators/requirements_generator.aac")
+        path.join(path.dirname(__file__), "./generators/requirements_diagram_generator.aac")
     )
     return run_generate(
         aac_plugin_file=architecture_file,
@@ -461,7 +461,7 @@ def after_puml_requirements_generate(
         code_output=output_directory,
         test_output="",
         doc_output="",
-        no_prompt=False,
+        no_prompt=True,
         force_overwrite=True,
         evaluate=False,
     )
