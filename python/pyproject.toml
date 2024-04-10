@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "aac"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "aac-puml"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
 	{ name="crazynewidea", email="asdfasdf@mail.com" },
     { name="lizzcondrey", email="asdfasdfd@mail.com" },
@@ -25,11 +25,13 @@ classifiers = [
 ]
 [project.entry-points."aac"]
 puml-component = "puml"
-#puml-object = "puml"
-#puml-requirements = "puml"
-#puml-sequence = "puml"
-
 [project.urls]
 Homepage = "https://github.com/DevOps-MBSE/aac-puml"
 Issues = "https://github.com/DevOps-MBSE/aac-puml/issues"
 
+[tool.setuptools]
+include-package-data = true
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+mypkg = ["**/*.aac", "**/*.jinja2", "*.yaml"]
