@@ -7,7 +7,7 @@
 from os import path
 from typing import Any
 
-from aac.context.language_context import LanguageContext
+# from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 from aac.execute.aac_execution_result import (
     ExecutionResult,
@@ -65,7 +65,7 @@ def before_puml_component_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_component(architecture_file, output_directory) -> ExecutionResult:
+def puml_component(architecture_file: str, output_directory:str) -> ExecutionResult:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
 
@@ -111,8 +111,6 @@ def after_puml_component_generate(
     Returns:
         The results of the execution of the check command.
     """
-
-    code = output_directory
     # arch_file_content = puml_component(architecture_file, output_directory)
 
     puml_component_generator_file = path.abspath(
@@ -165,7 +163,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    parsed_definitions: list = parse(architecture_file)
+    parsed_definitions: list[Definition] = parse(architecture_file)
     use_case_definitions: dict = {}
     use_case_actors: dict = {}
     use_case_steps: dict = {}
