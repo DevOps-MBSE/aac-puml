@@ -220,11 +220,35 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    parsed_file: list = parse(architecture_file)
-    properties: dict = {}
+    parsed_definitions: list = parse(architecture_file)
     use_case_definitions: dict = {}
     use_case_actors: dict = {}
     use_case_steps: dict = {}
+    properties: dict = {}
+
+    def _sort_parsed_definitions(parsed_definitions: list) -> tuple[str, dict]:
+        """
+        Helper method for sorting the parsed definitions in to their various dictionaries.
+
+        Args:
+            parsed_definitions (list): The list of definitions parsed from the architecture file.
+
+        Returns:
+            A tuple of the three dictionaries to sort the definitions into.
+        """
+        for definition in parsed_definitions:
+            if definition.get_root_key() == "usecase":
+                use_case_definitions[definition.name] = definition
+            if definition.get_root_key() == "actor":
+                use_case_actors[definition.name] = definition
+            if definition.get_root_key() == "usecase_step":
+                use_case_steps[definition.name] = definition
+
+        for use_case_definition in use_case_definitions:
+            use_case_title = use_case_definitions[use_case_definition].name
+            use_case = use_case_definitions[use_case_definition].structure["usecase"]
+
+        return use_case_title, use_case
 
     def _get_use_case_participants(usecase: Any) -> list[dict]:
         """
@@ -287,27 +311,17 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
 
         return sequences
 
-    for definition in parsed_file:
-        if definition.get_root_key() == "usecase":
-            use_case_definitions[definition.name] = definition
-        if definition.get_root_key() == "actor":
-            use_case_actors[definition.name] = definition
-        if definition.get_root_key() == "usecase_step":
-            use_case_steps[definition.name] = definition
+    use_case_title, use_case = _sort_parsed_definitions(parsed_definitions=parsed_definitions)
+    participants = _get_use_case_participants(usecase=use_case)
+    sequences = _get_use_case_steps(usecase=use_case)
 
-    for use_case_definition in use_case_definitions:
-        use_case_title = use_case_definitions[use_case_definition].name
-        use_case = use_case_definitions[use_case_definition].structure["usecase"]
-
-        participants = _get_use_case_participants(usecase=use_case)
-        sequences = _get_use_case_steps(usecase=use_case)
-
-        properties = {"usecase": {
-            "title": use_case_title,
-            "participants": participants,
-            "sequences": sequences,
-            }
+    properties = {"usecase": {
+        "title": use_case_title,
+        "participants": participants,
+        "sequences": sequences}
         }
+
+    messages.append(ExecutionMessage(f"use case properties: {properties}", MessageLevel.INFO, None, None))
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
