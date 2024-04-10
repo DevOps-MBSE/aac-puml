@@ -226,100 +226,26 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     use_case_steps: dict = {}
     properties: dict = {}
 
-    def _sort_parsed_definitions(parsed_definitions: list) -> tuple[str, dict]:
-        """
-        Helper method for sorting the parsed definitions in to their various dictionaries.
+    for definition in parsed_definitions:
+        if definition.get_root_key() == "usecase":
+            use_case_definitions[definition.name] = definition
+        if definition.get_root_key() == "actor":
+            use_case_actors[definition.name] = definition
+        if definition.get_root_key() == "usecase_step":
+            use_case_steps[definition.name] = definition
 
-        Args:
-            parsed_definitions (list): The list of definitions parsed from the architecture file.
+    for use_case_definition in use_case_definitions:
+        use_case_title = use_case_definitions[use_case_definition].name
+        use_case = use_case_definitions[use_case_definition].structure["usecase"]
 
-        Returns:
-            A tuple of the three dictionaries to sort the definitions into.
-        """
-        for definition in parsed_definitions:
-            if definition.get_root_key() == "usecase":
-                use_case_definitions[definition.name] = definition
-            if definition.get_root_key() == "actor":
-                use_case_actors[definition.name] = definition
-            if definition.get_root_key() == "usecase_step":
-                use_case_steps[definition.name] = definition
-
-        for use_case_definition in use_case_definitions:
-            use_case_title = use_case_definitions[use_case_definition].name
-            use_case = use_case_definitions[use_case_definition].structure["usecase"]
-
-        return use_case_title, use_case
-
-    def _get_use_case_participants(usecase: Any) -> list[dict]:
-        """
-        Helper method for extracting the participants from a use case definition.
-
-        Args:
-            usecase (Any): The use case definition from which to extract participants.
-
-        Returns:
-            The list of participants and their data within the use case definition.
-        """
-        participants: list[dict] = []
-
-        # declare participants
-        use_case_participants = use_case["participants"]
-        for use_case_participant in use_case_participants:  # each participant is a field type
-            if use_case_participant in use_case_actors.keys():
-                participant = use_case_actors[use_case_participant].structure["actor"]
-                if "model" in participant.keys():
-                    participants.append(
-                        {
-                            "type": participant["model"],
-                            "name": participant["name"],
-                        }
-                    )
-                else:
-                    participants.append(
-                        {
-                            "type": "External",
-                            "name": participant["name"],
-                        }
-                    )
-        return participants
-
-    def _get_use_case_steps(usecase: Any) -> list[dict]:
-        """
-        Helper method for extracting the participants from a use case definition.
-
-        Args:
-            usecase (Any): The use case definition from which to extract participants.
-
-        Returns:
-            The list of participants and their data within the use case definition.
-        """
-        sequences: list[dict] = []
-
-        # process steps
-        steps = use_case["steps"]
-        for step in steps:  # each step of a step type
-            if step in use_case_steps.keys():
-                use_case_step = use_case_steps[step].structure["usecase_step"]
-            sequences.append(
-                {
-                    "name": use_case_step["name"],
-                    "source": use_case_step["source"],
-                    "target": use_case_step["target"],
-                    "action": use_case_step["action"],
-                }
-            )
-
-        return sequences
-
-    use_case_title, use_case = _sort_parsed_definitions(parsed_definitions=parsed_definitions)
-    participants = _get_use_case_participants(usecase=use_case)
-    sequences = _get_use_case_steps(usecase=use_case)
+    participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
+    sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
 
     properties = {"usecase": {
         "title": use_case_title,
         "participants": participants,
         "sequences": sequences}
-        }
+    }
 
     messages.append(ExecutionMessage(f"use case properties: {properties}", MessageLevel.INFO, None, None))
 
@@ -341,6 +267,70 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     messages.append(msg)
 
     return properties, ExecutionResult(plugin_name, "puml-sequence", status, messages)
+
+
+def _get_use_case_participants(use_case: Any, use_case_actors: dict) -> list[dict]:
+    """
+    Helper method for extracting the participants from a use case definition.
+
+    Args:
+        use_case (Any): The use case definition from which to extract participants.
+        use_case_actors (dict): The dictionary of actors within the use case definition.
+
+    Returns:
+        The list of participants and their data within the use case definition.
+    """
+    participants: list[dict] = []
+
+    # declare participants
+    use_case_participants = use_case["participants"]
+    for use_case_participant in use_case_participants:  # each participant is a field type
+        if use_case_participant in use_case_actors.keys():
+            participant = use_case_actors[use_case_participant].structure["actor"]
+            if "model" in participant.keys():
+                participants.append(
+                    {
+                        "type": participant["model"],
+                        "name": participant["name"],
+                    }
+                )
+            else:
+                participants.append(
+                    {
+                        "type": "External",
+                        "name": participant["name"],
+                    }
+                )
+    return participants
+
+
+def _get_use_case_steps(use_case: Any, use_case_steps: dict) -> list[dict]:
+    """
+    Helper method for extracting the participants from a use case definition.
+
+    Args:
+        use_case (Any): The use case definition from which to extract participants.
+        use_case_steps (dict): The dictionary of steps within the use case definition.
+    Returns:
+        The list of participants and their data within the use case definition.
+    """
+    sequences: list[dict] = []
+
+    # process steps
+    steps = use_case["steps"]
+    for step in steps:  # each step of a step type
+        if step in use_case_steps.keys():
+            use_case_step = use_case_steps[step].structure["usecase_step"]
+        sequences.append(
+            {
+                "name": use_case_step["name"],
+                "source": use_case_step["source"],
+                "target": use_case_step["target"],
+                "action": use_case_step["action"],
+            }
+        )
+
+    return sequences
 
 
 def after_puml_sequence_generate(
