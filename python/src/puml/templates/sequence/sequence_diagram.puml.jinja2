@@ -12,7 +12,8 @@ participant {{participant.type}} as {{participant.name}}
 @startuml {{usecase.name}} Sequence Diagram
 title {{usecase.name}} Sequence Diagram
 {% for participant in usecase.participants %}
-participant {{participant}}
+
+participant {{get_use_case_participants(usecase, actor)}}
 {% endfor %}
 
 {% for step in usecase.steps %}

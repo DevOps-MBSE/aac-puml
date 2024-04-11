@@ -4,17 +4,19 @@ generator:
     sources:
         - name: PUML Sequence diagram
           data_source: usecase
+          data_source: actor
+          data_source: usecase_step
           templates:
             - name: SequenceDiagram
               description: Converts an AaC-defined use case to a PlantUML Sequence Diagram.
               template_file: ../templates/sequence/sequence_diagram.puml.jinja2
               overwrite: OVERWRITE
-            #   helper_functions:
-            #     - name: Extract Sequence Data
-            #       description: Extracts pertinent data from the AaC use case definition.
-            #       package: puml
-            #       module: puml
-            #       function: puml_sequence
+              # helper_functions:
+              #   - name: Extract Sequence Data
+              #     description: Extracts pertinent data from the AaC use case definition.
+              #     package: puml
+              #     module: helpers
+              #     function: puml_sequence
               output_target: CODE
               output_file_suffix: _sequence_diagram
               output_file_extension: puml
