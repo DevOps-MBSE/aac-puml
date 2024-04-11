@@ -13,7 +13,7 @@ participant {{participant.type}} as {{participant.name}}
 title {{usecase.name}} Sequence Diagram
 {% for participant in usecase.participants %}
 
-participant {{get_use_case_participants(usecase, actor)}}
+participant {{get_use_case_participant(usecase, actor)}}
 {% endfor %}
 
 {% for step in usecase.steps %}
