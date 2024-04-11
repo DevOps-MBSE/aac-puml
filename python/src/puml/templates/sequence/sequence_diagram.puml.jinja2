@@ -11,10 +11,11 @@ participant {{participant.type}} as {{participant.name}}
 
 @startuml {{usecase.name}} Sequence Diagram
 title {{usecase.name}} Sequence Diagram
-{$ for participant in usecase.participants %}
+{% for participant in usecase.participants %}
 participant {{participant}}
 {% endfor %}
 
 {% for step in usecase.steps %}
 {{step}}
 {% endfor %}
+@enduml
