@@ -6,7 +6,7 @@
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 import yaml
 
-from os import path
+from os import path, remove
 from typing import Callable
 
 # from aac.context.language_context import LanguageContext
@@ -27,29 +27,6 @@ COMPONENT_STRING = "component"
 OBJECT_STRING = "object"
 SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
-
-
-# def _model_sort(models: List[dict]) -> List[dict]:
-#     context = LanguageContext()
-#     for model in models:
-#         if model.get_root_key() == "model":
-#             model_name = model.name
-#             model_inputs = []
-#             for input in model.structure["model"]["behavior"]["input"]:
-#                 input_name = input.name
-#                 input_type = input.type
-#                 model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
-#             model_outputs = []
-#             for output in model.structure["model"]["behavior"]["output"]:
-#                 output_name = output.name
-#                 output_type = output.type
-#                 model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
-#             model_components = []
-#             for component in model.structure["model"]["components"]:
-#                 component_type = component.type
-#                 model_components.append(_model_sort(context.get_definitions_by_name(component_type), diagram_type, archfile_path))
-#             definitions.append({"name": model_name, "interfaces": model_interfaces, "components": model_components, "inputs": model_inputs, "outputs": model_outputs})
-#     return definitions
 
 
 def before_puml_component_check(
@@ -85,10 +62,6 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
         results of the execution of the puml-component command.
     """
     messages = []
-    # architecture_file_path = path.abspath(architecture_file)
-    # parsed_file = parse(architecture_file)
-
-    # component_data = _model_sort(parsed_file)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -118,7 +91,6 @@ def after_puml_component_generate(
     Returns:
         The results of the execution of the check command.
     """
-    # arch_file_content = puml_component(architecture_file, output_directory)
 
     puml_component_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
@@ -154,7 +126,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[str], ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -168,7 +140,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
         sequence_files (list[str]): The list of sequence yaml file(s) to use in generating the output sequence diagram(s).
         ExecutionResult of the puml-sequence command for the PUML plugin.
     """
-    # Initialize Execution state for the puml-sequence command
+    # Initialize ExecutionResult for the puml-sequence command
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
@@ -206,13 +178,13 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
         }
 
         # Write use case data to new temp file for populating the diagram from in generate
-        new_sequence_file = path.abspath(path.join(path.dirname(__file__), f"./tmp/{use_case_title}_sequence_diagram_content.yaml"))
+        new_sequence_file = path.abspath(path.join(path.dirname(__file__), f"./{use_case_title}_sequence_diagram_content.yaml"))
         properties_yaml = yaml.dump(properties, default_flow_style=False)
         write_file(uri=new_sequence_file, content=properties_yaml, overwrite=True)
 
         sequence_files.append(new_sequence_file)
 
-    # Check for if the passed file actually contained usecase definitions to use
+    # Check for if the passed file actually contained use case definitions and update ExecutionResult
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
         msg = ExecutionMessage(
@@ -255,16 +227,18 @@ def after_puml_sequence_generate(
     sequence_files, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory)
 
     for sequence_file in sequence_files:
-        return run_generate(
-            aac_plugin_file=sequence_file,
-            generator_file=puml_sequence_generator_file,
-            code_output=output_directory,
-            test_output="",
-            doc_output="",
-            no_prompt=True,
-            force_overwrite=True,
-            evaluate=False,
-        )
+        generate_result = run_generate(
+                            aac_plugin_file=sequence_file,
+                            generator_file=puml_sequence_generator_file,
+                            code_output=output_directory,
+                            test_output="",
+                            doc_output="",
+                            no_prompt=True,
+                            force_overwrite=True,
+                            evaluate=False,
+                            )
+        remove(sequence_file)
+    return generate_result
 
 
 def before_puml_object_check(

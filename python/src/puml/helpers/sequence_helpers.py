@@ -17,9 +17,8 @@ def _get_use_case_participants(use_case: dict, use_case_actors: dict) -> list[di
     """
     participants: list[dict] = []
 
-    # declare participants
     use_case_participants = use_case["participants"]
-    for use_case_participant in use_case_participants:  # each participant is a field type
+    for use_case_participant in use_case_participants:
         if use_case_participant in use_case_actors.keys():
             participant = use_case_actors[use_case_participant].structure["actor"]
             if "model" in participant.keys():
@@ -51,9 +50,8 @@ def _get_use_case_steps(use_case: dict, use_case_steps: dict) -> list[dict]:
     """
     sequences: list[dict] = []
 
-    # process steps
     steps = use_case["steps"]
-    for step in steps:  # each step of a step type
+    for step in steps:
         if step in use_case_steps.keys():
             use_case_step = use_case_steps[step].structure["usecase_step"]
         sequences.append(
