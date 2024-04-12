@@ -167,33 +167,36 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     messages: list[ExecutionMessage] = []
 
     parsed_definitions: list[Definition] = parse(architecture_file)
-    use_case_definitions: dict = {}
-    use_case_actors: dict = {}
-    use_case_steps: dict = {}
-    properties: dict = {}
+    use_case_definitions: list[Definition] = []
+    use_case_actors: list[Definition] = []
+    use_case_steps: list[Definition] = []
+    properties: list[Definition] = []
 
     for definition in parsed_definitions:
         if definition.get_root_key() == "usecase":
-            use_case_definitions[definition.name] = definition
+            use_case_definitions.append(definition)
         if definition.get_root_key() == "actor":
-            use_case_actors[definition.name] = definition
+            use_case_actors.append(definition)
         if definition.get_root_key() == "usecase_step":
-            use_case_steps[definition.name] = definition
+            use_case_steps.append(definition)
 
     for use_case_definition in use_case_definitions:
-        use_case_title = use_case_definitions[use_case_definition].name
-        use_case = use_case_definitions[use_case_definition].structure["usecase"]
+        use_case_title = use_case_definition.name
+        use_case = use_case_definition.structure["usecase"]
 
     participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
-    sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
+    # sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
 
-    properties = {"usecase": {
-        "title": use_case_title,
-        "participants": participants,
-        "sequences": sequences}
-    }
-
-    messages.append(ExecutionMessage(f"use case properties: {properties}", MessageLevel.INFO, None, None))
+    # properties = {"usecase": {
+    #     "title": use_case_title,
+    #     "participants": participants,
+    #     "sequences": sequences}
+    # }
+    messages.append(ExecutionMessage(f"use case title {use_case_title}", MessageLevel.INFO, None, None))
+    messages.append(ExecutionMessage(f"use case {use_case}", MessageLevel.INFO, None, None))
+    messages.append(ExecutionMessage(f"use case type {type(use_case)}", MessageLevel.INFO, None, None))
+    # messages.append(ExecutionMessage(f"use case properties: {properties}", MessageLevel.INFO, None, None))
+    # messages.append(ExecutionMessage(f"properties is of type: {type(properties)}", MessageLevel.INFO, None, None))
 
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
@@ -215,7 +218,8 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
     return properties, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
-def _get_use_case_participants(use_case: Any, use_case_actors: dict) -> list[dict]:
+# def _get_use_case_participants(use_case: Any, use_case_actors: dict) -> list[dict]:
+def _get_use_case_participants(use_case: dict, use_case_actors: list[Definition]) -> list[dict]:
     """
     Helper method for extracting the participants from a use case definition.
 
@@ -231,26 +235,29 @@ def _get_use_case_participants(use_case: Any, use_case_actors: dict) -> list[dic
     # declare participants
     use_case_participants = use_case["participants"]
     for use_case_participant in use_case_participants:  # each participant is a field type
-        if use_case_participant in use_case_actors.keys():
-            participant = use_case_actors[use_case_participant].structure["actor"]
-            if "model" in participant.keys():
-                participants.append(
-                    {
-                        "type": participant["model"],
-                        "name": participant["name"],
-                    }
-                )
-            else:
-                participants.append(
-                    {
-                        "type": "External",
-                        "name": participant["name"],
-                    }
-                )
+        # if use_case_participant in use_case_actors.keys():
+        for use_case_actor in use_case_actors:
+            if use_case_participant == use_case_actor.name:
+            # participant = use_case_actors[use_case_participant].structure["actor"]
+                participant = use_case_actor.structure["actor"]
+                if "model" in participant.keys():
+                    participants.append(
+                        {
+                            "type": participant["model"],
+                            "name": participant["name"],
+                        }
+                    )
+                else:
+                    participants.append(
+                        {
+                            "type": "External",
+                            "name": participant["name"],
+                        }
+                    )
     return participants
 
 
-def _get_use_case_steps(use_case: Any, use_case_steps: dict) -> list[dict]:
+def _get_use_case_steps(use_case: dict, use_case_steps: dict) -> list[dict]:
     """
     Helper method for extracting the participants from a use case definition.
 
@@ -298,17 +305,24 @@ def after_puml_sequence_generate(
     puml_sequence_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/sequence_diagram_generator.aac")
     )
+    parsed_file = parse(architecture_file)
 
-    return run_generate(
-        aac_plugin_file=architecture_file,
-        generator_file=puml_sequence_generator_file,
-        code_output=output_directory,
-        test_output="",
-        doc_output="",
-        no_prompt=True,
-        force_overwrite=True,
-        evaluate=False,
-    )
+    status = ExecutionStatus.SUCCESS
+    messages = []
+    messages.append(ExecutionMessage(f"parsed file is of type: {type(parsed_file)}", MessageLevel.INFO, None, None))
+
+    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+
+    # return run_generate(
+    #     aac_plugin_file=architecture_file,
+    #     generator_file=puml_sequence_generator_file,
+    #     code_output=output_directory,
+    #     test_output="",
+    #     doc_output="",
+    #     no_prompt=True,
+    #     force_overwrite=True,
+    #     evaluate=False,
+    # )
 
 
 def before_puml_object_check(

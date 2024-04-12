@@ -8,12 +8,12 @@ generator:
             - name: Sequence Diagram
               description: Converts an AaC-defined use case to a PlantUML Sequence Diagram.
               template_file: ../templates/sequence/sequence_diagram.puml.jinja2
-              helper_functions:
-                - name: Extract Use Case Participant
-                  description: Extracts use case participant data from the model.
-                  package: puml.helpers
-                  module: sequence_helpers
-                  function: get_use_case_participant
+            #   helper_functions:
+            #     - name: Extract Use Case Participant
+            #       description: Extracts use case participant data from the model.
+            #       package: puml.helpers
+            #       module: sequence_helpers
+            #       function: get_use_case_participant
               overwrite: OVERWRITE
               output_target: CODE
               output_file_suffix: _sequence_diagram
