@@ -1,23 +1,10 @@
-@startuml {{title}} Sequence Diagram
-title {{title}} Sequence Diagram
-{% for participant in participants %}
-participant {{participant.type}} as {{participant.name}}
-{% endfor %}
-
-{% for sequence in sequences %}
-{{sequence.source}} -> {{sequence.target}} : {{sequence.action}}
-{% endfor %}
-@enduml
-
 @startuml {{usecase.name}} Sequence Diagram
 title {{usecase.name}} Sequence Diagram
 {% for participant in usecase.participants %}
-
-{# participant {{get_use_case_participant(usecase, actor)}} #}
-participant {{participant}}
+participant {{participant.type}} as {{participant.name}}
 {% endfor %}
 
-{% for step in usecase.steps %}
-{{step}}
+{% for sequence in usecase.sequences %}
+{{sequence.source}} -> {{sequence.target}} : {{sequence.action}}
 {% endfor %}
 @enduml

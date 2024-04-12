@@ -2,48 +2,60 @@
 Helper methods for extracting pertinent use case definition data for use in generating
 sequence diagrams in a PUML format.
 """
-from typing import Any
 
 
-def get_use_case_participant(use_case: Any, use_case_actor: dict) -> str:
+def _get_use_case_participants(use_case: dict, use_case_actors: dict) -> list[dict]:
     """
-    Helper method for extracting the matching participant information from a use case definition.
+    Helper method for extracting the participants from a use case definition.
 
     Args:
-        use_case (Any): The use case definition from which to extract participants.
-        use_case_actor (dict): The actor definition for a use case participant to match against.
+        use_case (dict): The use case definition from which to extract participants.
+        use_case_actors (dict): The dictionary of actors associated with the use case definition.
 
     Returns:
-        The participant actor model information.
+        The list of participants and their data within the use case definition.
     """
+    participants: list[dict] = []
+
     # declare participants
     use_case_participants = use_case["participants"]
     for use_case_participant in use_case_participants:  # each participant is a field type
-        if use_case_participant in use_case_actor.keys():
-            participant = use_case_actor.structure["actor"]
+        if use_case_participant in use_case_actors.keys():
+            participant = use_case_actors[use_case_participant].structure["actor"]
             if "model" in participant.keys():
-                return f"{participant['type']} as {participant['name']}"
+                participants.append(
+                    {
+                        "type": participant["model"],
+                        "name": participant["name"],
+                    }
+                )
             else:
-                return f"External as {participant['name']}"
+                participants.append(
+                    {
+                        "type": "External",
+                        "name": participant["name"],
+                    }
+                )
+    return participants
 
 
-def get_use_case_step(use_case: Any, use_case_step: dict) -> str:
+def _get_use_case_steps(use_case: dict, use_case_steps: dict) -> list[dict]:
     """
-    Helper method for extracting the matching step information from a use case definition.
+    Helper method for extracting the steps associated with a use case definition.
 
     Args:
-        use_case (Any): The use case definition from which to extract the steps.
-        use_case_step (dict): The dictionary of a use case step to match against.
+        use_case (dict): The use case definition from which to extract steps.
+        use_case_steps (dict): The dictionary of steps associated with the use case definition.
     Returns:
-        The use case step model information.
+        The list of steps and their data associated with the use case definition.
     """
     sequences: list[dict] = []
 
     # process steps
     steps = use_case["steps"]
     for step in steps:  # each step of a step type
-        if step in use_case_step.keys():
-            use_case_step = use_case_step.structure["usecase_step"]
+        if step in use_case_steps.keys():
+            use_case_step = use_case_steps[step].structure["usecase_step"]
         sequences.append(
             {
                 "name": use_case_step["name"],
