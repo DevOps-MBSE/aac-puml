@@ -108,7 +108,7 @@ def after_puml_component_generate(
 
 
 def before_puml_sequence_check(
-    architecture_file: str, output_directory: str, run_check: Callable
+    architecture_file: str, output_directory: str, classification: str, run_check: Callable
 ) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-sequence command.
@@ -118,6 +118,7 @@ def before_puml_sequence_check(
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -126,7 +127,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[str], ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str, classification: str) -> tuple[list[str], ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -135,6 +136,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[s
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
 
     Returns:
         sequence_files (list[str]): The list of sequence yaml file(s) to use in generating the output sequence diagram(s).
@@ -174,7 +176,8 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[s
         properties["usecase"] = {
             "name": use_case_title,
             "participants": participants,
-            "sequences": sequences
+            "sequences": sequences,
+            "classification": classification
         }
 
         # Write use case data to new temp file for populating the diagram from in generate
@@ -206,7 +209,7 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[list[s
 
 
 def after_puml_sequence_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
+    architecture_file: str, output_directory: str, classification: str, run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -216,6 +219,7 @@ def after_puml_sequence_generate(
                                  generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
@@ -224,7 +228,8 @@ def after_puml_sequence_generate(
     puml_sequence_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/sequence_diagram_generator.aac")
     )
-    sequence_files, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory)
+    sequence_files, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory,
+                                                     classification=classification)
 
     for sequence_file in sequence_files:
         generate_result = run_generate(

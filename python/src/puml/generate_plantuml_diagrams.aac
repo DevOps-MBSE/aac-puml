@@ -54,6 +54,10 @@ plugin:
           description: |
             The output directory into which the PlantUML (.puml) diagram file
             will be written.
+        - name: classification
+          type: string
+          description: |
+            The level of classification for the output diagram file.
       acceptance:
         name: Sequence Diagram Test
         scenarios:

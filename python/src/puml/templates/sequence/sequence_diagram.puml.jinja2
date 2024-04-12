@@ -1,3 +1,5 @@
+##### {{usecase.classification}} #####
+
 @startuml {{usecase.name}} Sequence Diagram
 title {{usecase.name}} Sequence Diagram
 {% for participant in usecase.participants %}
@@ -8,3 +10,5 @@ participant {{participant.type}} as {{participant.name}}
 {{sequence.source}} -> {{sequence.target}} : {{sequence.action}}
 {% endfor %}
 @enduml
+
+##### {{usecase.classification}} #####
