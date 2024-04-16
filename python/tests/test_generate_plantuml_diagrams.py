@@ -58,21 +58,21 @@ class TestGeneratePlantUMLDiagrams(TestCase):
     def test_cli_puml_sequence(self):
         """Test the puml-sequence CLI command for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
-            aac_file_path = path.abspath("./alarm_clock/usecase.yaml")
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/usecase.yaml")
+            # aac_file_path = path.abspath("./alarm_clock/usecase.yaml")
 
             args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
 
             exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
 
             self.assertEqual(0, exit_code)  # asserts the command ran successfully
-            self.assertGreater(len(output_message) > 0)  # asserts the command produced output
-            self.assertIn("All AaC constraint Checks were successful", output_message)  # asserts the check command ran successful
+            self.assertGreater(len(output_message), 0)  # asserts the command produced output
+            self.assertIn("All AaC constraint checks were successful.", output_message)  # asserts the check command ran successful
             self.assertIn(temp_dir, output_message)  # asserts the generate command ran successfully
 
             # Make sure files were created correctly
             temp_dir_files = listdir(temp_dir)
             self.assertEqual(2, len(temp_dir_files))
-
 
     def test_puml_object(self):
 
