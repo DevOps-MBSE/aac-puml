@@ -55,11 +55,10 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         output_message = std_out.strip().replace("\x1b[0m", "")
         return exit_code, output_message
 
-    def test_cli_puml_sequence(self):
-        """Test the puml-sequence CLI command for the PUML Plugin."""
+    def test_cli_puml_sequence_success(self):
+        """Test the puml-sequence CLI command success for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/usecase.yaml")
-            # aac_file_path = path.abspath("./alarm_clock/usecase.yaml")
 
             args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
 
@@ -68,12 +67,25 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             self.assertEqual(0, exit_code)  # asserts the command ran successfully
             self.assertGreater(len(output_message), 0)  # asserts the command produced output
             self.assertIn("All AaC constraint checks were successful.", output_message)  # asserts the check command ran successful
-            self.assertIn(temp_dir, output_message)  # asserts the generate command ran successfully
+            self.assertIn(temp_dir, output_message)  # asserts the puml-sequence command ran successfully
 
             # Make sure files were created correctly
             temp_dir_files = listdir(temp_dir)
             self.assertEqual(2, len(temp_dir_files))
 
+    def test_cli_puml_sequence_failure(self):
+        """Test the puml-sequence CLI command failure for the PUML Plugin."""
+        with TemporaryDirectory() as temp_dir:
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
+
+            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+
+            exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
+
+            self.assertNotEqual(0, exit_code)  # asserts the command failed
+            self.assertGreater(len(output_message), 0)  # asserts the command produced output
+            self.assertIn("No applicable use case definitions to generate a sequence diagram", output_message)  # asserts the puml-sequence command run failed
+            
     def test_puml_object(self):
 
         # TODO: Write success and failure unit tests for puml_object

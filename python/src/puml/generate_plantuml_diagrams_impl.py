@@ -23,10 +23,6 @@ from aac.in_out.parser._parse_source import parse
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
 
 plugin_name = "Generate PlantUML Diagrams"
-COMPONENT_STRING = "component"
-OBJECT_STRING = "object"
-SEQUENCE_STRING = "sequence"
-REQUIREMENTS_STRING = "requirements"
 
 
 def before_puml_component_check(
