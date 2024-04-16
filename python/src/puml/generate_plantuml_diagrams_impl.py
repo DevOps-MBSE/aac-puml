@@ -237,7 +237,7 @@ def after_puml_sequence_generate(
                             no_prompt=True,
                             force_overwrite=True,
                             evaluate=False,
-                            )
+                        )
         remove(sequence_file)
     return generate_result
 
