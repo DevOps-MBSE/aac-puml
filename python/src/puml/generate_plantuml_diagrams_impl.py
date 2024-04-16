@@ -228,16 +228,15 @@ def after_puml_sequence_generate(
                                                      classification=classification)
 
     for sequence_file in sequence_files:
-        generate_result = run_generate(
-                            aac_plugin_file=sequence_file,
-                            generator_file=puml_sequence_generator_file,
-                            code_output=output_directory,
-                            test_output="",
-                            doc_output="",
-                            no_prompt=True,
-                            force_overwrite=True,
-                            evaluate=False,
-                        )
+        generate_result = run_generate(aac_plugin_file=sequence_file,
+                                       generator_file=puml_sequence_generator_file,
+                                       code_output=output_directory,
+                                       test_output="",
+                                       doc_output="",
+                                       no_prompt=True,
+                                       force_overwrite=True,
+                                       evaluate=False,
+                                       )
         remove(sequence_file)
     return generate_result
 
