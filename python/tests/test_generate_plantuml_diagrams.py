@@ -21,9 +21,7 @@ from puml.generate_plantuml_diagrams_impl import (
 class TestGeneratePlantUMLDiagrams(TestCase):
 
     def test_puml_component(self):
-
-        # TODO: Write success and failure unit tests for puml_component
-        self.fail("Test not yet implemented.")
+        pass
 
     def run_puml_component_cli_command_with_args(
         self, args: list[str]

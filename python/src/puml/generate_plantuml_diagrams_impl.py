@@ -5,7 +5,7 @@
 
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 import yaml
-from os import path
+from os import path, sys
 from typing import Any, Callable, List
 
 from aac.context.language_context import LanguageContext
@@ -25,10 +25,11 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
-def _model_sort(models: List[dict]) -> List[dict]:
+def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
     context = LanguageContext()
-    definitions = {}
+    definitions = []
     for model in models:
+        model_interfaces = set()
         dict = {}
         if model.get_root_key() == "model":
             model_name = model.name
@@ -40,6 +41,9 @@ def _model_sort(models: List[dict]) -> List[dict]:
                         input_name = input["name"]
                         input_type = input["type"]
                         model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
+                        if input_type not in defined_interfaces:
+                            defined_interfaces.add(input_type)
+                            model_interfaces.add(input_type)
                 dict["inputs"] = model_inputs
             model_outputs = []
             for behavior in model.structure["model"]["behavior"]:
@@ -48,15 +52,20 @@ def _model_sort(models: List[dict]) -> List[dict]:
                         output_name = output["name"]
                         output_type = output["type"]
                         model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
+                        if output_type not in defined_interfaces:
+                            defined_interfaces.add(output_type)
+                            model_interfaces.add(output_type)
                     dict["outputs"] = model_outputs
             model_components = []
             if "components" in model.content:
                 for component in model.structure["model"]["components"]:
                     component_type = component["model"]
-                    model_components.append(_model_sort(context.get_definitions_by_name(component_type)))
+                    model_components.append(_model_sort(context.get_definitions_by_name(component_type), defined_interfaces)[0])
                 dict["components"] = model_components
+            if model_interfaces:
+                dict["interfaces"] = list(model_interfaces)
 
-            definitions[model_name] = dict
+            definitions.append(dict)
     return definitions
 
 
@@ -96,9 +105,22 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
     # architecture_file_path = path.abspath(architecture_file)
     parsed_file = parse(architecture_file)
 
-    component_data = _model_sort(parsed_file)
+    component_data = _model_sort(parsed_file, set())
+    print(component_data)
 
-    new_file = yaml.dump(component_data, sort_keys=False)
+    yaml_list = []
+    for model in component_data:
+        yaml_list.append([{"model": model}])
+
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False,  explicit_start=True)
+    # new_file = yaml.safe_dump_all(yaml_list, default_flow_style=False, sort_keys=False,  explicit_start=True)
+    f = open("test_output.yaml", "w")
+    # f.write("".join(str(x) for x in yaml_list))
+    f.write(new_file)
+    f.close()
+    print(new_file)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
