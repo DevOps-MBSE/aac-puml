@@ -107,6 +107,8 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
 
     component_data = _model_sort(parsed_file, set())
     print(component_data)
+    if len(component_data) < 1:
+        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
 
     yaml_list = []
     for model in component_data:

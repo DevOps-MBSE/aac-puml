@@ -35,7 +35,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         output_message = std_out.strip().replace("\x1b[0m", "")
         return exit_code, output_message
 
-    def test_cli_puml_component(self):
+    def test_cli_puml_component_success(self):
         args = []
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
@@ -46,11 +46,35 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             self.assertIn("All AaC constraint checks were successful", output_message) # assert check ran successfully
 
             self.assertTrue(path.exists(path.join(temp_dir, "alarmclock_component_diagram.puml")))
+            with open(path.join(temp_dir, "alarmclock_component_diagram.puml")) as alarmclock_file:
+                self.assertIn("title AlarmClock Component Diagram", alarmclock_file)
+                self.assertIn('component "AlarmClock"', alarmclock_file)
+                self.assertIn("Timestamp --> ClockTimer : targetTime", alarmclock_file)
+
             self.assertTrue(path.exists(path.join(temp_dir, "clock_component_diagram.puml")))
+            with open(path.join(temp_dir, "clock_component_diagram.puml")) as clock_file:
+                self.assertIn("title Clock Component Diagram", clock_file)
+                self.assertIn('component "Clock"', clock_file)
+                self.assertIn("Clock --> Timestamp : currentTime", clock_file)
+
             self.assertTrue(path.exists(path.join(temp_dir, "clockalarm_component_diagram.puml")))
+            with open(path.join(temp_dir, "clockalarm_component_diagram.puml")) as clockalarm_file:
+                self.assertIn("title ClockAlarm Component Diagram", clockalarm_file)
+                self.assertIn('component "ClockAlarm"', clockalarm_file)
+                self.assertIn("ClockAlarm --> AlarmNoise : alarmNoise", clockalarm_file)
+
             self.assertTrue(path.exists(path.join(temp_dir, "clocktimer_component_diagram.puml")))
+            with open(path.join(temp_dir, "clocktimer_component_diagram.puml")) as clocktimer_file:
+                self.assertIn("title ClockTimer Component Diagram", clocktimer_file)
+                self.assertIn('component "ClockTimer"', clocktimer_file)
+                self.assertIn("ClockTimer --> TimerAlert : timerAlert", clocktimer_file)
 
-
+    def test_cli_puml_component_failure(self):
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/structures.yaml")
+            args = [aac_file_path, temp_dir]
+            exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
+            self.assertNotEqual(0, exit_code)
+            self.assertIn("No models found", output_message)
 
     def test_puml_sequence(self):
 
