@@ -37,15 +37,20 @@ class TestGeneratePlantUMLDiagrams(TestCase):
 
     def test_cli_puml_component(self):
         args = []
+        with TemporaryDirectory() as temp_dir:
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
+            args = [aac_file_path, temp_dir]
+            exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
 
-        # TODO: populate args list, or pass empty list for no args
+            self.assertEqual(0, exit_code) #assert the command ran successfully
+            self.assertIn("All AaC constraint checks were successful", output_message) # assert check ran successfully
 
-        exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
+            self.assertTrue(path.exists(path.join(temp_dir, "alarmclock_component_diagram.puml")))
+            self.assertTrue(path.exists(path.join(temp_dir, "clock_component_diagram.puml")))
+            self.assertTrue(path.exists(path.join(temp_dir, "clockalarm_component_diagram.puml")))
+            self.assertTrue(path.exists(path.join(temp_dir, "clocktimer_component_diagram.puml")))
 
-        # TODO:  perform assertions against the output message
-        self.assertEqual(0, exit_code)  # asserts the command ran successfully
-        self.assertTrue(len(output_message) > 0)  # asserts the command produced output
-        # TODO:  assert the output message is correct
+
 
     def test_puml_sequence(self):
 
