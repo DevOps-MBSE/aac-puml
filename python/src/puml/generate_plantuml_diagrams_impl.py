@@ -102,11 +102,9 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
         results of the execution of the puml-component command.
     """
     messages = []
-    # architecture_file_path = path.abspath(architecture_file)
     parsed_file = parse(architecture_file)
 
     component_data = _model_sort(parsed_file, set())
-    print(component_data)
     if len(component_data) < 1:
         return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
 
@@ -117,12 +115,6 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
     new_file = ""
     for yaml_object in yaml_list:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False,  explicit_start=True)
-    # new_file = yaml.safe_dump_all(yaml_list, default_flow_style=False, sort_keys=False,  explicit_start=True)
-    f = open("test_output.yaml", "w")
-    # f.write("".join(str(x) for x in yaml_list))
-    f.write(new_file)
-    f.close()
-    print(new_file)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
