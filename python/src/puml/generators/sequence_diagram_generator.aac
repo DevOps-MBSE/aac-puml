@@ -5,7 +5,7 @@ generator:
         - name: PUML Sequence diagram
           data_source: usecase
           templates:
-            - name: SequenceDiagram
+            - name: Sequence Diagram
               description: Converts an AaC-defined use case to a PlantUML Sequence Diagram.
               template_file: ../templates/sequence/sequence_diagram.puml.jinja2
               overwrite: OVERWRITE

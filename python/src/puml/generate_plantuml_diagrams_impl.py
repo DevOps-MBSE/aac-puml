@@ -5,8 +5,9 @@
 
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 import yaml
-from os import path
-from typing import Any, Callable, List
+
+from os import path, remove
+from typing import Callable, List
 
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
@@ -16,7 +17,10 @@ from aac.execute.aac_execution_result import (
     ExecutionMessage,
     MessageLevel,
 )
+from aac.in_out.writer import write_file
 from aac.in_out.parser._parse_source import parse
+
+from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
 
 plugin_name = "Generate PlantUML Diagrams"
 COMPONENT_STRING = "component"
@@ -174,7 +178,7 @@ def after_puml_component_generate(
 
 
 def before_puml_sequence_check(
-    architecture_file: str, output_directory: str, run_check: Callable
+    architecture_file: str, output_directory: str, classification: str, run_check: Callable
 ) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-sequence command.
@@ -184,6 +188,7 @@ def before_puml_sequence_check(
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -192,7 +197,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str, classification: str) -> tuple[list[str], ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -201,20 +206,27 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
 
     Returns:
-        properties (dict): The sorted use case definition components to use in generating the output sequence diagram.
+        sequence_files (list[str]): The list of sequence yaml file(s) to use in generating the output sequence diagram(s).
         ExecutionResult of the puml-sequence command for the PUML plugin.
     """
+    # Initialize ExecutionResult for the puml-sequence command
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    parsed_definitions: list[Definition] = parse(architecture_file)
+    # Establish necessary data holders for sorting through the definitions
     use_case_definitions: dict = {}
     use_case_actors: dict = {}
     use_case_steps: dict = {}
     properties: dict = {}
+    sequence_files: list[str] = []
 
+    # Parse the input file to extract the definitions to sort
+    parsed_definitions: list[Definition] = parse(architecture_file)
+
+    # Sort through the parsed definitions into their top level categories
     for definition in parsed_definitions:
         if definition.get_root_key() == "usecase":
             use_case_definitions[definition.name] = definition
@@ -223,21 +235,29 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
         if definition.get_root_key() == "usecase_step":
             use_case_steps[definition.name] = definition
 
+    # Take a single use case at a time to extract participant and step data
     for use_case_definition in use_case_definitions:
         use_case_title = use_case_definitions[use_case_definition].name
         use_case = use_case_definitions[use_case_definition].structure["usecase"]
 
-    participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
-    sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
+        participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
+        sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
 
-    properties = {"usecase": {
-        "title": use_case_title,
-        "participants": participants,
-        "sequences": sequences}
-    }
+        properties["usecase"] = {
+            "name": use_case_title,
+            "participants": participants,
+            "sequences": sequences,
+            "classification": classification
+        }
 
-    messages.append(ExecutionMessage(f"use case properties: {properties}", MessageLevel.INFO, None, None))
+        # Write use case data to new temp file for populating the diagram from in generate
+        new_sequence_file = path.abspath(path.join(path.dirname(__file__), f"./{use_case_title}_sequence_diagram_content.yaml"))
+        properties_yaml = yaml.dump(properties, default_flow_style=False)
+        write_file(uri=new_sequence_file, content=properties_yaml, overwrite=True)
 
+        sequence_files.append(new_sequence_file)
+
+    # Check for if the passed file actually contained use case definitions and update ExecutionResult
     if len(use_case_definitions) > 0:
         status = ExecutionStatus.SUCCESS
         msg = ExecutionMessage(
@@ -255,75 +275,11 @@ def puml_sequence(architecture_file: str, output_directory: str) -> tuple[dict, 
         )
     messages.append(msg)
 
-    return properties, ExecutionResult(plugin_name, "puml-sequence", status, messages)
-
-
-def _get_use_case_participants(use_case: Any, use_case_actors: dict) -> list[dict]:
-    """
-    Helper method for extracting the participants from a use case definition.
-
-    Args:
-        use_case (Any): The use case definition from which to extract participants.
-        use_case_actors (dict): The dictionary of actors within the use case definition.
-
-    Returns:
-        The list of participants and their data within the use case definition.
-    """
-    participants: list[dict] = []
-
-    # declare participants
-    use_case_participants = use_case["participants"]
-    for use_case_participant in use_case_participants:  # each participant is a field type
-        if use_case_participant in use_case_actors.keys():
-            participant = use_case_actors[use_case_participant].structure["actor"]
-            if "model" in participant.keys():
-                participants.append(
-                    {
-                        "type": participant["model"],
-                        "name": participant["name"],
-                    }
-                )
-            else:
-                participants.append(
-                    {
-                        "type": "External",
-                        "name": participant["name"],
-                    }
-                )
-    return participants
-
-
-def _get_use_case_steps(use_case: Any, use_case_steps: dict) -> list[dict]:
-    """
-    Helper method for extracting the participants from a use case definition.
-
-    Args:
-        use_case (Any): The use case definition from which to extract participants.
-        use_case_steps (dict): The dictionary of steps within the use case definition.
-    Returns:
-        The list of participants and their data within the use case definition.
-    """
-    sequences: list[dict] = []
-
-    # process steps
-    steps = use_case["steps"]
-    for step in steps:  # each step of a step type
-        if step in use_case_steps.keys():
-            use_case_step = use_case_steps[step].structure["usecase_step"]
-        sequences.append(
-            {
-                "name": use_case_step["name"],
-                "source": use_case_step["source"],
-                "target": use_case_step["target"],
-                "action": use_case_step["action"],
-            }
-        )
-
-    return sequences
+    return sequence_files, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_sequence_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
+    architecture_file: str, output_directory: str, classification: str, run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -333,6 +289,7 @@ def after_puml_sequence_generate(
                                  generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (str): The level of classification for the output diagram file.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
@@ -341,17 +298,21 @@ def after_puml_sequence_generate(
     puml_sequence_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/sequence_diagram_generator.aac")
     )
+    sequence_files, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory,
+                                                     classification=classification)
 
-    return run_generate(
-        aac_plugin_file=architecture_file,
-        generator_file=puml_sequence_generator_file,
-        code_output=output_directory,
-        test_output="",
-        doc_output="",
-        no_prompt=True,
-        force_overwrite=True,
-        evaluate=False,
-    )
+    for sequence_file in sequence_files:
+        generate_result = run_generate(aac_plugin_file=sequence_file,
+                                       generator_file=puml_sequence_generator_file,
+                                       code_output=output_directory,
+                                       test_output="",
+                                       doc_output="",
+                                       no_prompt=True,
+                                       force_overwrite=True,
+                                       evaluate=False,
+                                       )
+        remove(sequence_file)
+    return generate_result
 
 
 def before_puml_object_check(
