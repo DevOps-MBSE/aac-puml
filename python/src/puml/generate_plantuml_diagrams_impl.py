@@ -149,7 +149,6 @@ def after_puml_component_generate(
     puml_component_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
     )
-    print("gen")
     return run_generate(
         aac_plugin_file=arch_file_content,
         generator_file=puml_component_generator_file,
