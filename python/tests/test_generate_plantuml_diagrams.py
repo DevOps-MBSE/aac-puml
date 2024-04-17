@@ -72,6 +72,11 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             # Make sure files were created correctly
             temp_dir_files = listdir(temp_dir)
             self.assertEqual(2, len(temp_dir_files))
+            self.assertIn("_sequence_diagram.puml", temp_dir_files)
+            for temp_file in temp_dir_files:
+                temp_content = open(temp_file)
+                self.assertIn("Sequence Diagram", temp_content)
+
 
     def test_cli_puml_sequence_failure(self):
         """Test the puml-sequence CLI command failure for the PUML Plugin."""
