@@ -5,7 +5,7 @@
 
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 import yaml
-from os import path, sys
+from os import path
 from typing import Any, Callable, List
 
 from aac.context.language_context import LanguageContext
@@ -40,7 +40,7 @@ def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
                     for input in behavior["input"]:
                         input_name = input["name"]
                         input_type = input["type"]
-                        model_inputs.append({"name": input_name, "type" : input_type, "target": model_name})
+                        model_inputs.append({"name": input_name, "type": input_type, "target": model_name})
                         if input_type not in defined_interfaces:
                             defined_interfaces.add(input_type)
                             model_interfaces.add(input_type)
@@ -114,7 +114,7 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False,  explicit_start=True)
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
