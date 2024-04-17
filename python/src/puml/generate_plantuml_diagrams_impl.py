@@ -25,7 +25,7 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
-def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple(set, set, List):
+def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
     model_inputs = []
     for behavior in model.structure["model"]["behavior"]:
         for input in behavior["input"]:
@@ -38,7 +38,7 @@ def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: se
     return defined_interfaces, model_interfaces, model_inputs
 
 
-def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple(set, set, List):
+def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
     model_outputs = []
     for behavior in model.structure["model"]["behavior"]:
         if "output" in behavior:
