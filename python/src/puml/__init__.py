@@ -184,7 +184,7 @@ def run_puml_requirements(
     else:
         result.add_messages(puml_requirements_check_result.messages)
 
-    puml_requirements_result = puml_requirements(architecture_file, output_directory)
+    requirements_content, puml_requirements_result = puml_requirements(architecture_file, output_directory)
     if not puml_requirements_result.is_success():
         return puml_requirements_result
     else:
