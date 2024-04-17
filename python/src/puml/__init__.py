@@ -77,7 +77,7 @@ def run_puml_component(
     return result
 
 
-def run_puml_sequence(architecture_file: str, output_directory: str) -> ExecutionResult:
+def run_puml_sequence(architecture_file: str, output_directory: str, classification: str) -> ExecutionResult:
     """
     Converts an AaC-defined use case to PlantUML sequence diagram.
 
@@ -93,21 +93,21 @@ def run_puml_sequence(architecture_file: str, output_directory: str) -> Executio
     result = ExecutionResult(plugin_name, "puml-sequence", ExecutionStatus.SUCCESS, [])
 
     puml_sequence_check_result = before_puml_sequence_check(
-        architecture_file, output_directory, run_check
+        architecture_file, output_directory, classification, run_check
     )
     if not puml_sequence_check_result.is_success():
         return puml_sequence_check_result
     else:
         result.add_messages(puml_sequence_check_result.messages)
 
-    sequence_content, puml_sequence_result = puml_sequence(architecture_file, output_directory)
+    sequence_content, puml_sequence_result = puml_sequence(architecture_file, output_directory, classification)
     if not puml_sequence_result.is_success():
         return puml_sequence_result
     else:
         result.add_messages(puml_sequence_result.messages)
 
     puml_sequence_generate_result = after_puml_sequence_generate(
-        architecture_file, output_directory, run_generate
+        architecture_file, output_directory, classification, run_generate
     )
     if not puml_sequence_generate_result.is_success():
         return puml_sequence_generate_result
