@@ -25,6 +25,33 @@ SEQUENCE_STRING = "sequence"
 REQUIREMENTS_STRING = "requirements"
 
 
+def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple(set, set, List):
+    model_inputs = []
+    for behavior in model.structure["model"]["behavior"]:
+        for input in behavior["input"]:
+            input_name = input["name"]
+            input_type = input["type"]
+            model_inputs.append({"name": input_name, "type": input_type, "target": model.name})
+            if input_type not in defined_interfaces:
+                defined_interfaces.add(input_type)
+                model_interfaces.add(input_type)
+    return defined_interfaces, model_interfaces, model_inputs
+
+
+def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple(set, set, List):
+    model_outputs = []
+    for behavior in model.structure["model"]["behavior"]:
+        if "output" in behavior:
+            for output in behavior["output"]:
+                output_name = output["name"]
+                output_type = output["type"]
+                model_outputs.append({"name": output_name, "type": output_type, "source": model.name})
+                if output_type not in defined_interfaces:
+                    defined_interfaces.add(output_type)
+                    model_interfaces.add(output_type)
+    return defined_interfaces, model_interfaces, model_outputs
+
+
 def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
     context = LanguageContext()
     definitions = []
@@ -36,26 +63,11 @@ def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
             model_inputs = []
             dict["name"] = model_name
             if "input" in model.content:
-                for behavior in model.structure["model"]["behavior"]:
-                    for input in behavior["input"]:
-                        input_name = input["name"]
-                        input_type = input["type"]
-                        model_inputs.append({"name": input_name, "type": input_type, "target": model_name})
-                        if input_type not in defined_interfaces:
-                            defined_interfaces.add(input_type)
-                            model_interfaces.add(input_type)
+                defined_interfaces, model_interfaces, model_inputs = _input_sort(model, defined_interfaces, model_interfaces)
                 dict["inputs"] = model_inputs
             model_outputs = []
-            for behavior in model.structure["model"]["behavior"]:
-                if "output" in behavior:
-                    for output in behavior["output"]:
-                        output_name = output["name"]
-                        output_type = output["type"]
-                        model_outputs.append({"name": output_name, "type": output_type, "source": model_name})
-                        if output_type not in defined_interfaces:
-                            defined_interfaces.add(output_type)
-                            model_interfaces.add(output_type)
-                    dict["outputs"] = model_outputs
+            defined_interfaces, model_interfaces, model_outputs = _output_sort(model, defined_interfaces, model_interfaces)
+            dict["outputs"] = model_outputs
             model_components = []
             if "components" in model.content:
                 for component in model.structure["model"]["components"]:
