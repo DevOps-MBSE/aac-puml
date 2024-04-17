@@ -20,69 +20,8 @@ from aac.execute.aac_execution_result import (
 from aac.in_out.writer import write_file
 from aac.in_out.parser._parse_source import parse
 
+from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
-
-plugin_name = "Generate PlantUML Diagrams"
-COMPONENT_STRING = "component"
-OBJECT_STRING = "object"
-SEQUENCE_STRING = "sequence"
-REQUIREMENTS_STRING = "requirements"
-
-
-def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
-    model_inputs = []
-    for behavior in model.structure["model"]["behavior"]:
-        for input in behavior["input"]:
-            input_name = input["name"]
-            input_type = input["type"]
-            model_inputs.append({"name": input_name, "type": input_type, "target": model.name})
-            if input_type not in defined_interfaces:
-                defined_interfaces.add(input_type)
-                model_interfaces.add(input_type)
-    return defined_interfaces, model_interfaces, model_inputs
-
-
-def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
-    model_outputs = []
-    for behavior in model.structure["model"]["behavior"]:
-        if "output" in behavior:
-            for output in behavior["output"]:
-                output_name = output["name"]
-                output_type = output["type"]
-                model_outputs.append({"name": output_name, "type": output_type, "source": model.name})
-                if output_type not in defined_interfaces:
-                    defined_interfaces.add(output_type)
-                    model_interfaces.add(output_type)
-    return defined_interfaces, model_interfaces, model_outputs
-
-
-def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
-    context = LanguageContext()
-    definitions = []
-    for model in models:
-        model_interfaces = set()
-        dict = {}
-        if model.get_root_key() == "model":
-            model_name = model.name
-            model_inputs = []
-            dict["name"] = model_name
-            if "input" in model.content:
-                defined_interfaces, model_interfaces, model_inputs = _input_sort(model, defined_interfaces, model_interfaces)
-                dict["inputs"] = model_inputs
-            model_outputs = []
-            defined_interfaces, model_interfaces, model_outputs = _output_sort(model, defined_interfaces, model_interfaces)
-            dict["outputs"] = model_outputs
-            model_components = []
-            if "components" in model.content:
-                for component in model.structure["model"]["components"]:
-                    component_type = component["model"]
-                    model_components.append(_model_sort(context.get_definitions_by_name(component_type), defined_interfaces)[0])
-                dict["components"] = model_components
-            if model_interfaces:
-                dict["interfaces"] = list(model_interfaces)
-
-            definitions.append(dict)
-    return definitions
 
 
 def before_puml_component_check(
@@ -115,6 +54,7 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
                                 will be written.
 
     Returns:
+        yaml data to be passed to generate method
         results of the execution of the puml-component command.
     """
     messages = []

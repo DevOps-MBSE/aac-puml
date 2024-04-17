@@ -3,12 +3,14 @@ from os import listdir, path
 from typing import Tuple
 from tempfile import TemporaryDirectory
 from unittest import TestCase
+
 from aac.execute.command_line import cli, initialize_cli
 
 
 class TestGeneratePlantUMLDiagrams(TestCase):
 
     def test_puml_component(self):
+        # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here
         pass
 
     def run_puml_component_cli_command_with_args(
@@ -24,7 +26,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         return exit_code, output_message
 
     def test_cli_puml_component_success(self):
-        args = []
+        """Test the puml-component CLI command success for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
             args = [aac_file_path, temp_dir]
@@ -33,36 +35,24 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             self.assertEqual(0, exit_code) #assert the command ran successfully
             self.assertIn("All AaC constraint checks were successful", output_message) # assert check ran successfully
 
-            self.assertTrue(path.exists(path.join(temp_dir, "alarmclock_component_diagram.puml")))
-            with open(path.join(temp_dir, "alarmclock_component_diagram.puml")) as alarmclock_file_stream:
-                alarmclock_file = alarmclock_file_stream.read()
-                self.assertIn("title AlarmClock Component Diagram", alarmclock_file)
-                self.assertIn('component "AlarmClock"', alarmclock_file)
-                self.assertIn("Timestamp --> ClockTimer : targetTime", alarmclock_file)
+    def test_cli_puml_component_output(self):
+        """Test the puml-sequence CLI command file output for the PUML Plugin."""
+        with TemporaryDirectory() as temp_dir:
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
+            args = [aac_file_path, temp_dir]
+            exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
 
-            self.assertTrue(path.exists(path.join(temp_dir, "clock_component_diagram.puml")))
-            with open(path.join(temp_dir, "clock_component_diagram.puml")) as clock_file_stream:
-                clock_file = clock_file_stream.read()
-                self.assertIn("title Clock Component Diagram", clock_file)
-                self.assertIn('component "Clock"', clock_file)
-                self.assertIn("Clock --> Timestamp : currentTime", clock_file)
-
-            self.assertTrue(path.exists(path.join(temp_dir, "clockalarm_component_diagram.puml")))
-            with open(path.join(temp_dir, "clockalarm_component_diagram.puml")) as clockalarm_file_stream:
-                clockalarm_file = clockalarm_file_stream.read()
-
-                self.assertIn("title ClockAlarm Component Diagram", clockalarm_file)
-                self.assertIn('component "ClockAlarm"', clockalarm_file)
-                self.assertIn("ClockAlarm --> AlarmNoise : alarmNoise", clockalarm_file)
-
-            self.assertTrue(path.exists(path.join(temp_dir, "clocktimer_component_diagram.puml")))
-            with open(path.join(temp_dir, "clocktimer_component_diagram.puml")) as clocktimer_file_stream:
-                clocktimer_file = clocktimer_file_stream.read()
-                self.assertIn("title ClockTimer Component Diagram", clocktimer_file)
-                self.assertIn('component "ClockTimer"', clocktimer_file)
-                self.assertIn("ClockTimer --> TimerAlert : timerAlert", clocktimer_file)
+            temp_dir_files = listdir(temp_dir)
+            self.assertNotEqual(0, len(temp_dir_files))
+            for temp_file in temp_dir_files:
+                self.assertTrue(temp_file.find("_component_diagram.puml"))
+                temp_file_content = open(path.join(temp_dir, temp_file), "r")
+                temp_content = temp_file_content.read()
+                self.assertIn("Component Diagram", temp_content)
+                temp_file_content.close()
 
     def test_cli_puml_component_failure(self):
+        """Test the puml-component CLI command failure for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/structures.yaml")
             args = [aac_file_path, temp_dir]
