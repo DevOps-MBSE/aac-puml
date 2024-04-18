@@ -1,6 +1,6 @@
 import:
   files:
-    - ./structures.yaml
+    - ../alarm_clock/structures.yaml
 ---
 model:
   name: AlarmClock

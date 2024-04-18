@@ -9,7 +9,6 @@ import yaml
 from os import path, remove
 from typing import Callable
 
-# from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 from aac.execute.aac_execution_result import (
     ExecutionResult,
@@ -20,6 +19,7 @@ from aac.execute.aac_execution_result import (
 from aac.in_out.writer import write_file
 from aac.in_out.parser._parse_source import parse
 
+from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
 
 plugin_name = "Generate PlantUML Diagrams"
@@ -44,7 +44,7 @@ def before_puml_component_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_component(architecture_file: str, output_directory: str) -> ExecutionResult:
+def puml_component(architecture_file: str, output_directory: str) -> [str, ExecutionResult]:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
 
@@ -55,9 +55,23 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
                                 will be written.
 
     Returns:
+        yaml data to be passed to generate method
         results of the execution of the puml-component command.
     """
     messages = []
+    parsed_file = parse(architecture_file)
+
+    component_data = _model_sort(parsed_file, set())
+    if len(component_data) < 1:
+        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
+
+    yaml_list = []
+    for model in component_data:
+        yaml_list.append([{"model": model}])
+
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -68,7 +82,7 @@ def puml_component(architecture_file: str, output_directory: str) -> ExecutionRe
     )
     messages.append(msg)
 
-    return ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    return new_file, ExecutionResult(plugin_name, "puml-component", status, messages)
 
 
 def after_puml_component_generate(
@@ -87,12 +101,13 @@ def after_puml_component_generate(
     Returns:
         The results of the execution of the check command.
     """
+    arch_file_content, execution_status = puml_component(architecture_file, output_directory)
 
     puml_component_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
     )
     return run_generate(
-        aac_plugin_file=architecture_file,
+        aac_plugin_file=arch_file_content,
         generator_file=puml_component_generator_file,
         code_output=output_directory,
         test_output="",
