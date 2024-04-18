@@ -329,7 +329,7 @@ def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
     """
     messages: list[ExecutionMessage] = []
     parsed_file = parse(architecture_file)
-    object_data = _get_object_data(parsed_file) #gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
     if len(object_data) < 1:
         return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
 

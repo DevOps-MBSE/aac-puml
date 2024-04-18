@@ -34,7 +34,5 @@ def _get_object_data(models: List[dict]) -> List[dict]:
                     for child in object_compositions.get(parent, set()):
                         object_hierarchies.append({"parent": parent, "child": child})
 
-            definitions.append({"name": model_name,"objects": object_declarations, "object_hierarchies": object_hierarchies})
+            definitions.append({"name": model_name, "objects": object_declarations, "object_hierarchies": object_hierarchies})
     return definitions
-
-
