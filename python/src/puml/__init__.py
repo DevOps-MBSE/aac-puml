@@ -60,7 +60,7 @@ def run_puml_component(
     else:
         result.add_messages(puml_component_check_result.messages)
 
-    puml_component_result = puml_component(architecture_file, output_directory)
+    component_content, puml_component_result = puml_component(architecture_file, output_directory)
     if not puml_component_result.is_success():
         return puml_component_result
     else:
