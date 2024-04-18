@@ -351,6 +351,32 @@ def before_puml_requirements_check(
     """
     return run_check(architecture_file, False, False)
 
+# ----------------------------------
+#   LEGACY REFERENCE CODE
+# ----------------------------------
+# def puml_requirements(architecture_file: str, output_directory: str) -> PluginExecutionResult:
+#     """
+#     Generate a requirements diagram from the requirements of a system modeled with AaC.
+
+#     Args:
+#         architecture_file (str): Path to an AaC file containing modeled requirements from which to generate a requirements diagram.
+#         output_directory (str): Output directory for the PlantUML (.puml) diagram file.
+#     """
+#     architecture_file_path = os.path.abspath(architecture_file)
+
+#     def _generate_requirements_diagram(definitions: list[Definition]):
+#         return generate_requirements_diagram(architecture_file, output_directory, definitions)
+
+#     with plugin_result(
+#         plugin_name,
+#         generate_diagram_to_file,
+#         architecture_file_path,
+#         output_directory,
+#         REQUIREMENTS_STRING,
+#         _generate_requirements_diagram,
+#     ) as result:
+#         return result
+
 
 def puml_requirements(architecture_file, output_directory) -> tuple[list[str], ExecutionResult]:
     """
