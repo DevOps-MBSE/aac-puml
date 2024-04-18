@@ -140,7 +140,7 @@ def run_puml_object(architecture_file: str, output_directory: str) -> ExecutionR
     else:
         result.add_messages(puml_object_check_result.messages)
 
-    puml_object_result = puml_object(architecture_file, output_directory)
+    object_content, puml_object_result = puml_object(architecture_file, output_directory)
     if not puml_object_result.is_success():
         return puml_object_result
     else:
