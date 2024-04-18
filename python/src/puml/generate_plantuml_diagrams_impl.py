@@ -276,58 +276,6 @@ def before_puml_object_check(
     return run_check(architecture_file, False, False)
 
 
-# ----------------------------------
-#   LEGACY REFERENCE CODE
-# ----------------------------------
-# def puml_object(architecture_file: str, output_directory: str) -> PluginExecutionResult:
-#     """
-#     Convert an AaC model to Plant ULM object diagram.
-
-#     Args:
-#         architecture_file: str: Path to a yaml file containing an AaC usecase from which to generate a Plant UML object diagram.
-#         output_directory (str): Output directory for the PlantUML (.puml) diagram file (optional)
-#     """
-#     architecture_file_path = os.path.abspath(architecture_file)
-
-#     def generate_object_diagram(definitions: list[Definition]):
-#         model_definitions = get_definitions_by_root_key("model", definitions)
-
-#         object_declarations = []
-#         object_compositions = {}
-#         for model_definition in model_definitions:
-#             model_name = model_definition.name
-#             object_declarations.append(model_name)
-
-#             for component in search_definition(model_definition, ["model", "components", "type"]):
-#                 if model_name not in object_compositions:
-#                     object_compositions[model_name] = set()
-
-#                 object_compositions.get(model_name, set()).add(component)
-
-#         object_hierarchies = []
-#         for parent in object_compositions:
-#             for child in object_compositions.get(parent, {}):
-#                 object_hierarchies.append({"parent": parent, "child": child})
-
-#         aac_file_name = extract_aac_file_name(architecture_file)
-#         generated_filename = get_generated_file_name(aac_file_name, OBJECT_STRING, model_name, output_directory)
-#         return [
-#             {
-#                 "filename": generated_filename,
-#                 "objects": object_declarations,
-#                 "object_hierarchies": object_hierarchies,
-#             }
-#         ]
-
-#     with plugin_result(
-#         plugin_name,
-#         generate_diagram_to_file,
-#         architecture_file_path,
-#         output_directory,
-#         OBJECT_STRING,
-#         generate_object_diagram,
-#     ) as result:
-#         return result
 def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
     """
     Business logic for allowing puml-object command to perform the conversion an AaC-defined system to PlantUML object diagram.
