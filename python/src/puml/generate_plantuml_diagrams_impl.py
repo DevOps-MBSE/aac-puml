@@ -7,9 +7,8 @@
 import yaml
 
 from os import path, remove
-from typing import Callable, List
+from typing import Callable
 
-from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 from aac.execute.aac_execution_result import (
     ExecutionResult,
@@ -24,6 +23,7 @@ from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
 
 plugin_name = "Generate PlantUML Diagrams"
+
 
 def before_puml_component_check(
     architecture_file: str, output_directory: str, run_check: Callable

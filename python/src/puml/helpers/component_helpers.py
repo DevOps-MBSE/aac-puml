@@ -5,6 +5,10 @@ component diagrams in a PUML format.
 
 from typing import List
 
+from aac.context.language_context import LanguageContext
+from aac.context.definition import Definition
+
+
 def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
     """
     Method to extract input information from a model
