@@ -22,10 +22,8 @@
 {% endfor -%}
 {%- endmacro -%}
 
-@startuml {{title}} Component Diagram
-title {{title}} Component Diagram
+@startuml {{model.name}} Component Diagram
+title {{model.name}} Component Diagram
 
-{% for model in models -%}
 {{print_components(model, 0)}}
-{%- endfor %}
 @enduml
