@@ -172,10 +172,10 @@ class TestGeneratePlantUMLDiagrams(TestCase):
                 self.assertIn("Object Diagram", temp_content)
                 temp_file_content.close()
 
-    def test_cli_puml_sequence_failure(self):
+    def test_cli_puml_object_failure(self):
         """Test the puml-object CLI command failure for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
-            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/usecase.yaml")
+            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/structures.yaml")
 
             args = [aac_file_path, temp_dir]
 

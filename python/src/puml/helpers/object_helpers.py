@@ -10,7 +10,7 @@ def _get_object_data(models: List[dict]) -> List[dict]:
     Helper method for extracting data from a model
 
     Args:
-        models (List[dict]): A list f model definitions
+        models (List[dict]): A list of model definitions
 
     Returns:
         A list of dictionaries of organized data for diagram generation

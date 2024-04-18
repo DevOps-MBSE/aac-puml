@@ -1,10 +1,10 @@
 @startuml {{model.name}} Object Diagram
 title {{model.name}} Object Diagram
-{% for object in model.objects %}
+
+{% for object in model.objects -%}
 object {{object}}
 {% endfor %}
-
-{% for object_hierarchy in model.object_hierarchies %}
+{% for object_hierarchy in model.object_hierarchies -%}
 {{object_hierarchy.parent}} *-- {{object_hierarchy.child}}
 {% endfor %}
 @enduml
