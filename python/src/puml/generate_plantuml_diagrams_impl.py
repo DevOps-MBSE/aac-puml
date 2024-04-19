@@ -20,6 +20,7 @@ from aac.in_out.parser._parse_source import parse
 
 from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
+from .helpers.object_helpers import _get_object_data
 from .helpers.requirements_helpers import _get_requirements_defs
 
 plugin_name = "Generate PlantUML Diagrams"
@@ -275,7 +276,7 @@ def before_puml_object_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_object(architecture_file, output_directory) -> ExecutionResult:
+def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
     """
     Business logic for allowing puml-object command to perform the conversion an AaC-defined system to PlantUML object diagram.
 
@@ -286,12 +287,24 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
                                 will be written.
 
     Returns:
+        yaml data to be passed to the generate method
         The results of the execution of the puml-object command.
     """
-
-    # TODO: implement plugin logic here
-    status = ExecutionStatus.SUCCESS
     messages: list[ExecutionMessage] = []
+    parsed_file = parse(architecture_file)
+    object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    if len(object_data) < 1:
+        return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
+
+    yaml_list = []
+    for model in object_data:
+        yaml_list.append([{"model": model}])
+
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+
+    status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
         f"Wrote PUML Object Diagram(s) to {output_directory}",
         MessageLevel.INFO,
@@ -300,7 +313,7 @@ def puml_object(architecture_file, output_directory) -> ExecutionResult:
     )
     messages.append(msg)
 
-    return ExecutionResult(plugin_name, "puml-object", status, messages)
+    return new_file, ExecutionResult(plugin_name, "puml-object", status, messages)
 
 
 def after_puml_object_generate(
@@ -319,11 +332,13 @@ def after_puml_object_generate(
     Returns:
         The results of the execution of the generate command.
     """
+    arch_file_content, execution_status = puml_object(architecture_file, output_directory)
+
     puml_object_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/object_diagram_generator.aac")
     )
     return run_generate(
-        aac_plugin_file=architecture_file,
+        aac_plugin_file=arch_file_content,
         generator_file=puml_object_generator_file,
         code_output=output_directory,
         test_output="",
