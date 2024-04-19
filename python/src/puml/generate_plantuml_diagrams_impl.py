@@ -20,6 +20,7 @@ from aac.in_out.parser._parse_source import parse
 
 from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
+from .helpers.requirement_helpers import _get_requirements_defs
 
 plugin_name = "Generate PlantUML Diagrams"
 
@@ -351,32 +352,6 @@ def before_puml_requirements_check(
     """
     return run_check(architecture_file, False, False)
 
-# ----------------------------------
-#   LEGACY REFERENCE CODE
-# ----------------------------------
-# def puml_requirements(architecture_file: str, output_directory: str) -> PluginExecutionResult:
-#     """
-#     Generate a requirements diagram from the requirements of a system modeled with AaC.
-
-#     Args:
-#         architecture_file (str): Path to an AaC file containing modeled requirements from which to generate a requirements diagram.
-#         output_directory (str): Output directory for the PlantUML (.puml) diagram file.
-#     """
-#     architecture_file_path = os.path.abspath(architecture_file)
-
-#     def _generate_requirements_diagram(definitions: list[Definition]):
-#         return generate_requirements_diagram(architecture_file, output_directory, definitions)
-
-#     with plugin_result(
-#         plugin_name,
-#         generate_diagram_to_file,
-#         architecture_file_path,
-#         output_directory,
-#         REQUIREMENTS_STRING,
-#         _generate_requirements_diagram,
-#     ) as result:
-#         return result
-
 
 def puml_requirements(architecture_file, output_directory) -> tuple[list[str], ExecutionResult]:
     """
@@ -427,6 +402,19 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
                                                    status,
                                                    messages)
 
+    requirement_data = _get_requirements_defs(req_definitions)
+
+    if len(requirement_data) < 1:
+        return None, ExecutionResult(plugin_name, "puml-requirement", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No Requirements Found", MessageLevel.INFO, None, None)])
+
+    yaml_list = []
+    for req in requirement_data:
+        yaml_list.append([{"req_spec": req}])
+
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
         f"Wrote PUML Requirements Diagram(s) to {output_directory}",
@@ -436,7 +424,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
     )
     messages.append(msg)
 
-    return requirements_files, ExecutionResult(plugin_name, "puml-requirements", status, messages)
+    return new_file, ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
 
 def after_puml_requirements_generate(
@@ -459,8 +447,9 @@ def after_puml_requirements_generate(
     puml_requirements_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/requirements_diagram_generator.aac")
     )
+    arch_file_content, result = puml_requirements(architecture_file, output_directory)
     return run_generate(
-        aac_plugin_file=architecture_file,
+        aac_plugin_file=arch_file_content,
         generator_file=puml_requirements_generator_file,
         code_output=output_directory,
         test_output="",
