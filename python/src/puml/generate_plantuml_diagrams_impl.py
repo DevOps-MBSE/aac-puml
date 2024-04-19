@@ -20,7 +20,7 @@ from aac.in_out.parser._parse_source import parse
 
 from .helpers.component_helpers import _model_sort
 from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
-from .helpers.requirement_helpers import _get_requirements_defs
+from .helpers.requirements_helpers import _get_requirements_defs
 
 plugin_name = "Generate PlantUML Diagrams"
 
