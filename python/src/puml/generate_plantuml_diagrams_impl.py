@@ -306,8 +306,6 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
     # Sort definitions into required data
     object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
 
-
-
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
     for model in object_data:
@@ -413,7 +411,6 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
     # Establish necessary data holders for sorting through the definitions
     req_spec_definitions: dict = {}
     req_definitions: dict = {}
-    requirements_files: list[str] = []
 
     # Parse the input file to extract the definitions to sort
     parsed_definitions: list[Definition] = parse(architecture_file)
