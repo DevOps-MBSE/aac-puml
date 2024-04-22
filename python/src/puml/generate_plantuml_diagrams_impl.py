@@ -58,22 +58,31 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
         The YAML string to use in generating the output component diagram(s).
         ExecutionResult of the puml-component command for the PUML plugin.
     """
+    # Initialize ExecutionResult for the puml-component command
+    status = ExecutionStatus.GENERAL_FAILURE
     messages = []
+
+    # Parse the input file to extract the definitions to sort
     parsed_file = parse(architecture_file)
 
+    # Sort definitions into required data
     component_data = _model_sort(parsed_file, set())
-    if len(component_data) < 1:
-        msg = ExecutionMessage("No applicable component definitions to generate a component diagram.", MessageLevel.INFO, None, None)
-        messages.append(msg)
-        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, messages)
 
+    # Create a List of strings containing the sorted data definitions
     yaml_list = []
     for model in component_data:
         yaml_list.append([{"model": model}])
 
+    # Concatenate data definitions into a single string in yaml format
     new_file = ""
     for yaml_object in yaml_list:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+
+    # Check for if the passed data actually contained model definitions and update ExecutionResult
+    if len(component_data) < 1:
+        msg = ExecutionMessage("No applicable component definitions to generate a component diagram.", MessageLevel.INFO, None, None)
+        messages.append(msg)
+        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, messages)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -177,7 +186,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         if definition.get_root_key() == "usecase_step":
             use_case_steps[definition.name] = definition
 
-    # Take a single use case at a time to extract participant and step data
+    # Take a single use case at a time to extract participant and step data in the form of a list of strings
     yaml_list = []
     for use_case_definition in use_case_definitions:
         use_case_title = use_case_definitions[use_case_definition].name
@@ -193,26 +202,28 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
             "classification": classification
         }
         yaml_list.append([properties])
+
+    # Concatenate data definitions into a single string in yaml format
     new_file = ""
     for yaml_object in yaml_list:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     # Check for if the passed file actually contained use case definitions and update ExecutionResult
-    if len(use_case_definitions) > 0:
-        status = ExecutionStatus.SUCCESS
-        msg = ExecutionMessage(
-            f"Wrote PUML Sequence Diagram(s) to {output_directory}",
-            MessageLevel.INFO,
-            None,
-            None,
-        )
-    else:
+    if len(use_case_definitions) < 0:
         msg = ExecutionMessage(
             "No applicable use case definitions to generate a sequence diagram.",
             MessageLevel.ERROR,
             None,
             None,
         )
+
+    status = ExecutionStatus.SUCCESS
+    msg = ExecutionMessage(
+        f"Wrote PUML Sequence Diagram(s) to {output_directory}",
+        MessageLevel.INFO,
+        None,
+        None,
+    )
     messages.append(msg)
 
     return new_file, ExecutionResult(plugin_name, "puml-sequence", status, messages)
@@ -285,10 +296,29 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
         The YAML string to use in generating the output object diagram(s).
         ExecutionResult of the puml-object command for the PUML plugin.
     """
+    # Initialize ExecutionResult for the puml-component command
+    status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
+
+    # Parse the input file to extract the definitions to sort
     parsed_file = parse(architecture_file)
+
+    # Sort definitions into required data
     object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
 
+
+
+    # Create a List of strings containing the sorted data definitions
+    yaml_list = []
+    for model in object_data:
+        yaml_list.append([{"model": model}])
+
+    # Concatenate data definitions into a single string in yaml format
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+
+    # Check for if the passed data actually contained model definitions and update ExecutionResult
     if len(object_data) < 1:
         msg = [(ExecutionMessage(
             "No applicable object definitions to generate an object diagram.",
@@ -297,14 +327,6 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
             None))]
         messages.append(msg)
         return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, messages)
-
-    yaml_list = []
-    for model in object_data:
-        yaml_list.append([{"model": model}])
-
-    new_file = ""
-    for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -381,7 +403,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
                                 will be written.
 
     Returns:
-        The  YAML string to use in generating the output requirements diagram(s).
+        The YAML string to use in generating the output requirements diagram(s).
         The results of the execution of the puml-requirements command.
     """
     # Initialize ExecutionResult for the puml-sequence command
@@ -403,6 +425,18 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
         if definition.get_root_key() == "req":
             req_definitions[definition.name] = definition
 
+    requirement_data = _get_requirements_defs(req_definitions)
+
+    # Create a List of strings containing the sorted data definitions
+    yaml_list = []
+    for req in requirement_data:
+        yaml_list.append([{"req_spec": req}])
+
+    # Concatenate data definitions into a single string in yaml format
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+
     # Check for if the passed file actually contained req_spec definitions and update ExecutionResult
     if len(req_spec_definitions) < 1:
         msg = ExecutionMessage(
@@ -412,18 +446,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
             None,
         )
         messages.append(msg)
-
-        return requirements_files, ExecutionResult(plugin_name, "puml-requirements", status, messages)
-
-    requirement_data = _get_requirements_defs(req_definitions)
-
-    yaml_list = []
-    for req in requirement_data:
-        yaml_list.append([{"req_spec": req}])
-
-    new_file = ""
-    for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+        return None, ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(

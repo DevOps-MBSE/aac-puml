@@ -1,3 +1,7 @@
+"""
+Helper methods for extracting and sorting pertinent model data for use in generating requirements
+diagrams in a PUML format.
+"""
 from typing import List, Optional
 
 
@@ -83,7 +87,7 @@ def _get_child_requirements(req_id: str, other_req: dict) -> Optional[dict]:
     Helper method that calls _get_requirement_ancestry() for requirements with children.
 
     Args:
-        req_id: The requirement ID of the requirement for which we are searching for children.
+        req_id: The requirement ID of the requirement for which to search for children.
         other_req (dict): The definition for the requirement currently being checked against req_id.
 
     Returns:
@@ -97,7 +101,7 @@ def _get_parent_requirements(req_id: str, other_req: dict) -> Optional[dict]:
     Helper method that calls _get_requirement_ancestry() for requirements with parents.
 
     Args:
-        req_id: The requirement ID of the requirement for which we are searching for parents.
+        req_id: The requirement ID of the requirement for which to search for parents.
         other_req (dict): The definition for the requirement currently being checked against req_id.
 
     Returns:
