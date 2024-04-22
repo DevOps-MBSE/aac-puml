@@ -424,7 +424,6 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
     new_file = ""
     for yaml_object in yaml_list:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
-        print(new_file)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(

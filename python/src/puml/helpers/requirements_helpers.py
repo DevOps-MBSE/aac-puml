@@ -16,16 +16,12 @@ def _get_requirements_defs(reqs: dict) -> List[dict]:
         for req_key in reqs:
             req = reqs[req_key]
             id = req.structure["req"]["id"]
-            print("ID: ")
-            print(id + "\n")
             attributes = req.structure["req"]["attributes"]
             tadi_type = _get_requirement_type(attributes)
             title = req.structure["req"]["name"]
             name = req.structure["req"]["name"]
-            print(name)
             shall = req.structure["req"]["shall"]
             connected = _get_connected_requirements(req, reqs)
-            print(connected)
             requirements.append({
                 "title": title,
                 "name": name,
