@@ -325,7 +325,7 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
             MessageLevel.INFO,
             None,
             None,
-            )
+        )
         messages.append(msg)
         return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, messages)
 
