@@ -2,7 +2,7 @@
 
 mainframe **req** [{{package | default('Package')}}] **{{title}}** [{{subtitle | default('Requirements')}}]
 
-object "<<{{req_spec.type}}>>{% if req_spec.title %}\n**{{req_spec.title}}**{% endif %}" as {{req_spec.name}} {
+object "<<{{req_spec.type}}>> **{{req_spec.title}}**" as {{req_spec.name}} {
     id = {{req_spec.id}}
     Text = {{req_spec.shall}}
     {% for attribute in req_spec.attributes -%}
