@@ -2,10 +2,9 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 object diagrams in a PUML format.
 """
-from typing import List
 
 
-def _get_object_data(models: List[dict]) -> List[dict]:
+def get_object_data(models: list[dict]) -> list[dict]:
     """
     Helper method for extracting data from a model
 

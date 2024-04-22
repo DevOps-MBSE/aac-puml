@@ -2,10 +2,10 @@
 Helper methods for extracting and sorting pertinent model data for use in generating requirements
 diagrams in a PUML format.
 """
-from typing import List, Optional
+from typing import Optional
 
 
-def _get_requirements_defs(reqs: dict) -> List[dict]:
+def get_requirements_defs(reqs: dict) -> list[dict]:
     """
     Helper method for extracting and sorting data from a requirement specification.
 
@@ -13,7 +13,7 @@ def _get_requirements_defs(reqs: dict) -> List[dict]:
         reqs (dict): A dictionary of requirement definitions.
 
     Returns:
-        A List of dictionaries of organized data for diagram generation.
+        A list of dictionaries of organized data for diagram generation.
     """
     requirements = []
     if reqs:
@@ -38,7 +38,7 @@ def _get_requirements_defs(reqs: dict) -> List[dict]:
     return requirements
 
 
-def _get_requirement_type(attributes: List[dict]) -> str:
+def _get_requirement_type(attributes: list[dict]) -> str:
     """
     Helper method for extracting the TADI type of a requirement.
 
@@ -55,7 +55,7 @@ def _get_requirement_type(attributes: List[dict]) -> str:
             return attribute["value"]
 
 
-def _get_connected_requirements(req: dict, reqs: dict) -> List[dict]:
+def _get_connected_requirements(req: dict, reqs: dict) -> list[dict]:
     """
     Helper method that finds the parent and child requirement definitions for a specified requirement.
 

@@ -17,10 +17,10 @@ from aac.execute.aac_execution_result import (
 )
 from aac.in_out.parser._parse_source import parse
 
-from .helpers.component_helpers import _model_sort
+from .helpers.component_helpers import model_sort
 from .helpers.sequence_helpers import sort_use_case_components
-from .helpers.object_helpers import _get_object_data
-from .helpers.requirements_helpers import _get_requirements_defs
+from .helpers.object_helpers import get_object_data
+from .helpers.requirements_helpers import get_requirements_defs
 
 plugin_name = "Generate PlantUML Diagrams"
 
@@ -66,7 +66,7 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    component_data = _model_sort(parsed_file, set())
+    component_data = model_sort(parsed_file, set())
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
@@ -283,7 +283,7 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    object_data = get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
@@ -402,7 +402,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
         if definition.get_root_key() == "req":
             req_definitions[definition.name] = definition
 
-    requirement_data = _get_requirements_defs(req_definitions)
+    requirement_data = get_requirements_defs(req_definitions)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
