@@ -209,13 +209,15 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     # Check for if the passed file actually contained use case definitions and update ExecutionResult
-    if len(use_case_definitions) < 0:
+    if len(use_case_definitions) < 1:
         msg = ExecutionMessage(
             "No applicable use case definitions to generate a sequence diagram.",
             MessageLevel.ERROR,
             None,
             None,
         )
+        messages.append(msg)
+        return None, ExecutionResult(plugin_name, "puml-sequence", ExecutionStatus.GENERAL_FAILURE, messages)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -318,11 +320,12 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
 
     # Check for if the passed data actually contained model definitions and update ExecutionResult
     if len(object_data) < 1:
-        msg = [(ExecutionMessage(
+        msg = ExecutionMessage(
             "No applicable object definitions to generate an object diagram.",
             MessageLevel.INFO,
             None,
-            None))]
+            None,
+            )
         messages.append(msg)
         return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, messages)
 
