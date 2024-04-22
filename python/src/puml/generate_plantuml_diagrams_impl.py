@@ -44,7 +44,7 @@ def before_puml_component_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_component(architecture_file: str, output_directory: str) -> [str, ExecutionResult]:
+def puml_component(architecture_file: str, output_directory: str) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
 
@@ -54,16 +54,18 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
 
-    Returns:
-        yaml data to be passed to generate method
-        results of the execution of the puml-component command.
+        Returns:
+        The YAML string to use in generating the output component diagram(s).
+        ExecutionResult of the puml-component command for the PUML plugin.
     """
     messages = []
     parsed_file = parse(architecture_file)
 
     component_data = _model_sort(parsed_file, set())
     if len(component_data) < 1:
-        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
+        msg = ExecutionMessage("No applicable component definitions to generate a component diagram.", MessageLevel.INFO, None, None)
+        messages.append(msg)
+        return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, messages)
 
     yaml_list = []
     for model in component_data:
@@ -71,7 +73,7 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -138,7 +140,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str, classification: str) -> tuple[list[str], ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str, classification: str) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -150,7 +152,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         classification (str): The level of classification for the output diagram file.
 
     Returns:
-        The list of sequence YAML file(s) to use in generating the output sequence diagram(s).
+        The YAML string to use in generating the output sequence diagram(s).
         ExecutionResult of the puml-sequence command for the PUML plugin.
     """
     # Initialize ExecutionResult for the puml-sequence command
@@ -193,7 +195,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         yaml_list.append([properties])
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     # Check for if the passed file actually contained use case definitions and update ExecutionResult
     if len(use_case_definitions) > 0:
@@ -269,7 +271,7 @@ def before_puml_object_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
+def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-object command to perform the conversion an AaC-defined system to PlantUML object diagram.
 
@@ -280,14 +282,21 @@ def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
                                 will be written.
 
     Returns:
-        yaml data to be passed to the generate method
-        The results of the execution of the puml-object command.
+        The YAML string to use in generating the output object diagram(s).
+        ExecutionResult of the puml-object command for the PUML plugin.
     """
     messages: list[ExecutionMessage] = []
     parsed_file = parse(architecture_file)
     object_data = _get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+
     if len(object_data) < 1:
-        return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No models found", MessageLevel.INFO, None, None)])
+        msg = [(ExecutionMessage(
+            "No applicable object definitions to generate an object diagram.",
+            MessageLevel.INFO,
+            None,
+            None))]
+        messages.append(msg)
+        return None, ExecutionResult(plugin_name, "puml-object", ExecutionStatus.GENERAL_FAILURE, messages)
 
     yaml_list = []
     for model in object_data:
@@ -295,7 +304,7 @@ def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -361,7 +370,7 @@ def before_puml_requirements_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_requirements(architecture_file, output_directory) -> tuple[list[str], ExecutionResult]:
+def puml_requirements(architecture_file, output_directory) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-requirements command to perform the conversion of an AaC-defined system to a requirements diagram in PlantUML format.
 
@@ -372,7 +381,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
                                 will be written.
 
     Returns:
-        The list of sequence YAML file(s) to use in generating the output requirement diagram(s).
+        The  YAML string to use in generating the output requirements diagram(s).
         The results of the execution of the puml-requirements command.
     """
     # Initialize ExecutionResult for the puml-sequence command
@@ -404,15 +413,9 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
         )
         messages.append(msg)
 
-        return requirements_files, ExecutionResult(plugin_name,
-                                                   "puml-requirements",
-                                                   status,
-                                                   messages)
+        return requirements_files, ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
     requirement_data = _get_requirements_defs(req_definitions)
-
-    if len(requirement_data) < 1:
-        return None, ExecutionResult(plugin_name, "puml-requirement", ExecutionStatus.GENERAL_FAILURE, [ExecutionMessage("No Requirements Found", MessageLevel.INFO, None, None)])
 
     yaml_list = []
     for req in requirement_data:
@@ -420,7 +423,8 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
+        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+        print(new_file)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(

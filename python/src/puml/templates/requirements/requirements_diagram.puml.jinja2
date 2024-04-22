@@ -1,4 +1,4 @@
-@startuml Requirements Diagram
+@startuml {{req_spec.title}} Diagram
 
 mainframe **req** [{{package | default('Package')}}] **{{title}}** [{{subtitle | default('Requirements')}}]
 
@@ -12,8 +12,6 @@ object "<<{{req_spec.type}}>>{% if req_spec.title %}\n**{{req_spec.title}}**{% e
 
 {% for r in req_spec.connected -%}
 {{r.parent}} {{r.arrow | safe}} {{r.child}}{% if r.relationship %} : <<{{r.relationship}}>>{% endif %}
-
-{% endfor %}
-
+{% endfor -%}
 
 @enduml

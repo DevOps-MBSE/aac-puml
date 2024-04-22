@@ -58,7 +58,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             args = [aac_file_path, temp_dir]
             exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
             self.assertNotEqual(0, exit_code)
-            self.assertIn("No models found", output_message)
+            self.assertIn("No applicable component definitions to generate a component diagram.", output_message)
 
     def test_puml_sequence(self):
         # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here
