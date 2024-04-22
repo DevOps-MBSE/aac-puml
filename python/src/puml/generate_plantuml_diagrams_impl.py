@@ -18,7 +18,7 @@ from aac.execute.aac_execution_result import (
 from aac.in_out.parser._parse_source import parse
 
 from .helpers.component_helpers import _model_sort
-from .helpers.sequence_helpers import _get_use_case_participants, _get_use_case_steps
+from .helpers.sequence_helpers import sort_use_case_components
 from .helpers.object_helpers import _get_object_data
 from .helpers.requirements_helpers import _get_requirements_defs
 
@@ -168,40 +168,17 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     status = ExecutionStatus.GENERAL_FAILURE
     messages: list[ExecutionMessage] = []
 
-    # Establish necessary data holders for sorting through the definitions
-    use_case_definitions: dict = {}
-    use_case_actors: dict = {}
-    use_case_steps: dict = {}
-    properties: dict = {}
-
     # Parse the input file to extract the definitions to sort
     parsed_definitions: list[Definition] = parse(architecture_file)
 
-    # Sort through the parsed definitions into their top level categories
-    for definition in parsed_definitions:
-        if definition.get_root_key() == "usecase":
-            use_case_definitions[definition.name] = definition
-        if definition.get_root_key() == "actor":
-            use_case_actors[definition.name] = definition
-        if definition.get_root_key() == "usecase_step":
-            use_case_steps[definition.name] = definition
+    # Sort definition data into required data
+    use_case_data = sort_use_case_components(parsed_file=parsed_definitions,
+                                             classification=classification)
 
     # Take a single use case at a time to extract participant and step data in the form of a list of strings
     yaml_list = []
-    for use_case_definition in use_case_definitions:
-        use_case_title = use_case_definitions[use_case_definition].name
-        use_case = use_case_definitions[use_case_definition].structure["usecase"]
-
-        participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
-        sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
-
-        properties["usecase"] = {
-            "name": use_case_title,
-            "participants": participants,
-            "sequences": sequences,
-            "classification": classification
-        }
-        yaml_list.append([properties])
+    for use_case in use_case_data:
+        yaml_list.append([{"usecase": use_case}])
 
     # Concatenate data definitions into a single string in yaml format
     new_file = ""
@@ -209,7 +186,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
 
     # Check for if the passed file actually contained use case definitions and update ExecutionResult
-    if len(use_case_definitions) < 1:
+    if len(use_case_data) < 1:
         msg = ExecutionMessage(
             "No applicable use case definitions to generate a sequence diagram.",
             MessageLevel.ERROR,
