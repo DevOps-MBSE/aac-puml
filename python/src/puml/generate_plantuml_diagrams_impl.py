@@ -54,7 +54,7 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
 
-        Returns:
+    Returns:
         The YAML string to use in generating the output component diagram(s).
         ExecutionResult of the puml-component command for the PUML plugin.
     """
@@ -80,7 +80,7 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
 
     # Check for if the passed data actually contained model definitions and update ExecutionResult
     if len(component_data) < 1:
-        msg = ExecutionMessage("No applicable component definitions to generate a component diagram.", MessageLevel.INFO, None, None)
+        msg = ExecutionMessage("No applicable model definitions to generate a component diagram.", MessageLevel.INFO, None, None)
         messages.append(msg)
         return None, ExecutionResult(plugin_name, "puml-component", ExecutionStatus.GENERAL_FAILURE, messages)
 
@@ -321,7 +321,7 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
     # Check for if the passed data actually contained model definitions and update ExecutionResult
     if len(object_data) < 1:
         msg = ExecutionMessage(
-            "No applicable object definitions to generate an object diagram.",
+            "No applicable model definitions to generate an object diagram.",
             MessageLevel.INFO,
             None,
             None,
@@ -440,7 +440,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
     # Check for if the passed file actually contained req_spec definitions and update ExecutionResult
     if len(req_spec_definitions) < 1:
         msg = ExecutionMessage(
-            "No applicable requirements definitions to generate a requirements diagram.",
+            "No applicable requirement specification definitions to generate a requirements diagram.",
             MessageLevel.ERROR,
             None,
             None,

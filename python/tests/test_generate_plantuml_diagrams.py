@@ -58,7 +58,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
             args = [aac_file_path, temp_dir]
             exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
             self.assertNotEqual(0, exit_code)
-            self.assertIn("No applicable component definitions to generate a component diagram.", output_message)
+            self.assertIn("No applicable model definitions to generate a component diagram.", output_message)
 
     def test_puml_sequence(self):
         # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here
@@ -182,7 +182,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
 
             self.assertNotEqual(0, exit_code)  # asserts the command failed
             self.assertGreater(len(output_message), 0)  # asserts the command produced output
-            self.assertIn("No applicable object definitions to generate an object diagram.", output_message)  # asserts the puml-object command run failed
+            self.assertIn("No applicable model definitions to generate an object diagram.", output_message)  # asserts the puml-object command run failed
 
     def test_puml_requirements(self):
         # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here
@@ -232,7 +232,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
                 self.assertTrue(temp_file.find("_requirements_diagram.puml"))
                 temp_file_content = open(path.join(temp_dir, temp_file), "r")
                 temp_content = temp_file_content.read()
-                # self.assertIn("Requirements Diagram", temp_content)
+                self.assertIn("Requirements Diagram", temp_content)
                 self.assertIn("id =", temp_content)
                 self.assertIn("Text =", temp_content)
                 temp_file_content.close()
@@ -248,4 +248,4 @@ class TestGeneratePlantUMLDiagrams(TestCase):
 
             self.assertNotEqual(0, exit_code)  # asserts the command failed
             self.assertGreater(len(output_message), 0)  # asserts the command produced output
-            self.assertIn("No applicable requirements definitions to generate a requirements diagram", output_message)  # asserts the puml-sequence command run failed
+            self.assertIn("No applicable requirement specification definitions to generate a requirements diagram", output_message)  # asserts the puml-sequence command run failed
