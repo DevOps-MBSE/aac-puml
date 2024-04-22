@@ -5,7 +5,7 @@
 # There may be some unused imports depending on the definition of the plugin...but that's ok
 import yaml
 
-from os import path, remove
+from os import path
 from typing import Callable
 
 from aac.context.definition import Definition
@@ -15,7 +15,6 @@ from aac.execute.aac_execution_result import (
     ExecutionMessage,
     MessageLevel,
 )
-from aac.in_out.writer import write_file
 from aac.in_out.parser._parse_source import parse
 
 from .helpers.component_helpers import _model_sort
@@ -72,7 +71,7 @@ def puml_component(architecture_file: str, output_directory: str) -> [str, Execu
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -163,7 +162,6 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     use_case_actors: dict = {}
     use_case_steps: dict = {}
     properties: dict = {}
-    sequence_files: list[str] = []
 
     # Parse the input file to extract the definitions to sort
     parsed_definitions: list[Definition] = parse(architecture_file)
@@ -178,6 +176,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
             use_case_steps[definition.name] = definition
 
     # Take a single use case at a time to extract participant and step data
+    yaml_list = []
     for use_case_definition in use_case_definitions:
         use_case_title = use_case_definitions[use_case_definition].name
         use_case = use_case_definitions[use_case_definition].structure["usecase"]
@@ -191,13 +190,10 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
             "sequences": sequences,
             "classification": classification
         }
-
-        # Write use case data to new temp file for populating the diagram from in generate
-        new_sequence_file = path.abspath(path.join(path.dirname(__file__), f"./{use_case_title}_sequence_diagram_content.yaml"))
-        properties_yaml = yaml.dump(properties, default_flow_style=False)
-        write_file(uri=new_sequence_file, content=properties_yaml, overwrite=True)
-
-        sequence_files.append(new_sequence_file)
+        yaml_list.append([properties])
+    new_file = ""
+    for yaml_object in yaml_list:
+        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
 
     # Check for if the passed file actually contained use case definitions and update ExecutionResult
     if len(use_case_definitions) > 0:
@@ -217,7 +213,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
         )
     messages.append(msg)
 
-    return sequence_files, ExecutionResult(plugin_name, "puml-sequence", status, messages)
+    return new_file, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
 def after_puml_sequence_generate(
@@ -240,21 +236,18 @@ def after_puml_sequence_generate(
     puml_sequence_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/sequence_diagram_generator.aac")
     )
-    sequence_files, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory,
-                                                     classification=classification)
+    arch_file_content, execution_status = puml_sequence(architecture_file=architecture_file, output_directory=output_directory, classification=classification)
 
-    for sequence_file in sequence_files:
-        generate_result = run_generate(aac_plugin_file=sequence_file,
-                                       generator_file=puml_sequence_generator_file,
-                                       code_output=output_directory,
-                                       test_output="",
-                                       doc_output="",
-                                       no_prompt=True,
-                                       force_overwrite=True,
-                                       evaluate=False,
-                                       )
-        remove(sequence_file)
-    return generate_result
+    return run_generate(
+        aac_plugin_file=arch_file_content,
+        generator_file=puml_sequence_generator_file,
+        code_output=output_directory,
+        test_output="",
+        doc_output="",
+        no_prompt=True,
+        force_overwrite=True,
+        evaluate=False,
+    )
 
 
 def before_puml_object_check(
@@ -302,7 +295,7 @@ def puml_object(architecture_file, output_directory) -> [str, ExecutionResult]:
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(
@@ -389,7 +382,6 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
     # Establish necessary data holders for sorting through the definitions
     req_spec_definitions: dict = {}
     req_definitions: dict = {}
-    properties: dict = {}
     requirements_files: list[str] = []
 
     # Parse the input file to extract the definitions to sort
@@ -405,7 +397,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
     # Check for if the passed file actually contained req_spec definitions and update ExecutionResult
     if len(req_spec_definitions) < 1:
         msg = ExecutionMessage(
-            "No applicable requirement specification definitions to generate a requirements diagram.",
+            "No applicable requirements definitions to generate a requirements diagram.",
             MessageLevel.ERROR,
             None,
             None,
@@ -428,7 +420,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[list[str], E
 
     new_file = ""
     for yaml_object in yaml_list:
-        new_file = new_file + yaml.safe_dump_all(yaml_object, default_flow_style=False, sort_keys=False, explicit_start=True)
+        new_file = new_file + yaml.dump_all(yaml_object, default_flow_style=False, sort_keys=False)
 
     status = ExecutionStatus.SUCCESS
     msg = ExecutionMessage(

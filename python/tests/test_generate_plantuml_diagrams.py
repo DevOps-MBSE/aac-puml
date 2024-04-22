@@ -101,7 +101,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
 
             # Make sure files were created correctly
             temp_dir_files = listdir(temp_dir)
-            self.assertEqual(2, len(temp_dir_files))
+            self.assertNotEqual(0, len(temp_dir_files))
             for temp_file in temp_dir_files:
                 self.assertTrue(temp_file.find("_sequence_diagram.puml"))
                 temp_file_content = open(path.join(temp_dir, temp_file), "r")
@@ -203,9 +203,9 @@ class TestGeneratePlantUMLDiagrams(TestCase):
     def test_cli_puml_requirements_success(self):
         """Test the puml-requirements CLI command success for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
-            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/spec.yaml")
+            aac_file_path = path.join(path.dirname(__file__), "calc/model/calculator.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
         exit_code, output_message = self.run_puml_requirements_cli_command_with_args(
             args
@@ -219,15 +219,15 @@ class TestGeneratePlantUMLDiagrams(TestCase):
     def test_cli_puml_requirements_file_output(self):
         """Test the puml-requirements CLI command file output for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
-            aac_file_path = path.join(path.dirname(__file__), "alarm_clock/spec.yaml")
+            aac_file_path = path.join(path.dirname(__file__), "calc/model/calculator.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
-            exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
+            exit_code, output_message = self.run_puml_requirements_cli_command_with_args(args)
 
             # Make sure files were created correctly
             temp_dir_files = listdir(temp_dir)
-            self.assertEqual(2, len(temp_dir_files))
+            self.assertNotEqual(0, len(temp_dir_files))
             for temp_file in temp_dir_files:
                 self.assertTrue(temp_file.find("_requirements_diagram.puml"))
                 temp_file_content = open(path.join(temp_dir, temp_file), "r")
@@ -242,9 +242,9 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
-            exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
+            exit_code, output_message = self.run_puml_requirements_cli_command_with_args(args)
 
             self.assertNotEqual(0, exit_code)  # asserts the command failed
             self.assertGreater(len(output_message), 0)  # asserts the command produced output

@@ -5,12 +5,12 @@ mainframe **req** [{{package | default('Package')}}] **{{title}}** [{{subtitle |
 object "<<{{req_spec.type}}>>{% if req_spec.title %}\n**{{req_spec.title}}**{% endif %}" as {{req_spec.name}} {
     id = {{req_spec.id}}
     Text = {{req_spec.shall}}
-    {% for attribute in req_spec.attributes %}
+    {% for attribute in req_spec.attributes -%}
     {{attribute.name}} = {{attribute.value}}
     {% endfor %}
 }
 
-{% for r in req_spec.connected %}
+{% for r in req_spec.connected -%}
 {{r.parent}} {{r.arrow | safe}} {{r.child}}{% if r.relationship %} : <<{{r.relationship}}>>{% endif %}
 
 {% endfor %}
