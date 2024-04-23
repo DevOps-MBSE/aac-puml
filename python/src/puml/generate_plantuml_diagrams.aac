@@ -24,6 +24,10 @@ plugin:
           description: |
             The output directory into which the PlantUML (.puml) diagram file
             will be written.
+        - name: --classification
+          type: string
+          description: |
+            The level of classification for the output diagram file.
       acceptance:
         name: Component Diagram Test
         scenarios:
@@ -54,7 +58,7 @@ plugin:
           description: |
             The output directory into which the PlantUML (.puml) diagram file
             will be written.
-        - name: classification
+        - name: --classification
           type: string
           description: |
             The level of classification for the output diagram file.
@@ -88,6 +92,10 @@ plugin:
           description: |
             The output directory into which the PlantUML (.puml) diagram file
             will be written.
+        - name: --classification
+          type: string
+          description: |
+            The level of classification for the output diagram file.
       acceptance:
         name: Object Diagram Test
         scenarios:
@@ -118,6 +126,10 @@ plugin:
           description: |
             The output directory into which the PlantUML (.puml) diagram file
             will be written.
+        - name: --classification
+          type: string
+          description: |
+            The level of classification for the output diagram file.
       acceptance:
         name: Requirement Diagram Test
         scenarios:
