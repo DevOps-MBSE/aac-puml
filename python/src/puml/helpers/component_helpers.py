@@ -2,6 +2,8 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 component diagrams in a PUML format.
 """
+from typing import Optional
+
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 
@@ -66,6 +68,7 @@ def model_sort(models: list[dict], defined_interfaces: set, classification: Opti
     Args:
         models (List[dict]): A list of model definitions
         defined_interfaces (set): a set of all the input and output types.  Passed in as an empty set usually, but used in recursion.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A List of dictionaries of organized data for diagram generation

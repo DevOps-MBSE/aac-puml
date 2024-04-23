@@ -11,6 +11,7 @@ def get_object_data(models: list[dict], classification: Optional[str]) -> list[d
 
     Args:
         models (List[dict]): A list of model definitions
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A list of dictionaries of organized data for diagram generation

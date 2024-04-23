@@ -5,12 +5,13 @@ diagrams in a PUML format.
 from typing import Optional
 
 
-def get_requirements_defs(reqs: dict) -> list[dict]:
+def get_requirements_defs(reqs: dict, classification: Optional[str]) -> list[dict]:
     """
     Helper method for extracting and sorting data from a requirement specification.
 
     Args:
         reqs (dict): A dictionary of requirement definitions.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A list of dictionaries of organized data for diagram generation.
@@ -18,6 +19,7 @@ def get_requirements_defs(reqs: dict) -> list[dict]:
     requirements = []
     if reqs:
         for req_key in reqs:
+            req_dict = {}
             req = reqs[req_key]
             id = req.structure["req"]["id"]
             attributes = req.structure["req"]["attributes"]
@@ -26,15 +28,17 @@ def get_requirements_defs(reqs: dict) -> list[dict]:
             name = req.structure["req"]["name"]
             shall = req.structure["req"]["shall"]
             connected = _get_connected_requirements(req, reqs)
-            requirements.append({
-                "title": title,
-                "name": name,
-                "id": id,
-                "shall": shall,
-                "attributes": attributes,
-                "type": tadi_type,
-                "connected": connected,
-            })
+
+            req_dict["title"] = title
+            req_dict["name"] = name
+            req_dict["id"] = id
+            req_dict["shall"] = shall
+            req_dict["attributes"] = attributes
+            req_dict["type"] = tadi_type
+            req_dict["connected"] = connected
+            if classification:
+                req_dict["classification"] = classification
+            requirements.append(req_dict)
     return requirements
 
 

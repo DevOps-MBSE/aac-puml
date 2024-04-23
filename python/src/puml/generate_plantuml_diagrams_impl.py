@@ -272,7 +272,8 @@ def puml_object(architecture_file: str, output_directory: str, classification: O
 
     # Sort definitions into required data
     classification = classification.upper()
-    object_data = get_object_data(parsed_file, classification)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    object_data = get_object_data(models=parsed_file, classification=classification)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
