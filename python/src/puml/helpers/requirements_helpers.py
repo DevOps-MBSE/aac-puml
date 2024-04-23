@@ -35,7 +35,7 @@ def get_requirements_defs(reqs: dict) -> list[dict]:
             req_dict["attributes"] = attributes
             req_dict["type"] = tadi_type
             req_dict["connected"] = connected
-            
+
             requirements.append(req_dict)
     return requirements
 

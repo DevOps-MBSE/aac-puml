@@ -2,8 +2,6 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 component diagrams in a PUML format.
 """
-from typing import Optional
-
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 

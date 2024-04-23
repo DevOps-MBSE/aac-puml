@@ -96,8 +96,7 @@ def puml_component(architecture_file: str, output_directory: str, classification
     return new_file, ExecutionResult(plugin_name, "puml-component", status, messages)
 
 
-def after_puml_component_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable
-) -> ExecutionResult:
+def after_puml_component_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
 
@@ -205,8 +204,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     return new_file, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
-def after_puml_sequence_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable
-) -> ExecutionResult:
+def after_puml_sequence_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
 
