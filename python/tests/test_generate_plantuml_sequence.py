@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from aac.execute.command_line import cli, initialize_cli
 
-def TestGeneratePlantUMLSequence(TestCase):
+class TestGeneratePlantUMLSequence(TestCase):
     def test_puml_sequence(self):
         # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here
         pass
