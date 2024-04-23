@@ -172,6 +172,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     parsed_definitions: list[Definition] = parse(architecture_file)
 
     # Sort definition data into required data
+    classification = classification.upper()
     use_case_data = sort_use_case_components(parsed_file=parsed_definitions,
                                              classification=classification)
 

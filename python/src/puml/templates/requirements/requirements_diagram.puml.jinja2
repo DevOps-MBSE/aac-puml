@@ -7,7 +7,7 @@ object "<<{{req_spec.type}}>> **{{req_spec.title}}**" as {{req_spec.name}} {
     Text = {{req_spec.shall}}
     {% for attribute in req_spec.attributes -%}
     {{attribute.name}} = {{attribute.value}}
-    {% endfor %}
+    {% endfor -%}
 }
 
 {% for r in req_spec.connected -%}
