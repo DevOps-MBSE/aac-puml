@@ -1,4 +1,4 @@
-{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+{% if req_spec.classification %}##### {{req_spec.classification}} #####{% endif %}
 
 @startuml {{req_spec.title}} Requirements Diagram
 
@@ -18,4 +18,4 @@ object "<<{{req_spec.type}}>> **{{req_spec.title}}**" as {{req_spec.name}} {
 
 @enduml
 
-{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+{% if req_spec.classification %}##### {{req_spec.classification}} #####{% endif %}

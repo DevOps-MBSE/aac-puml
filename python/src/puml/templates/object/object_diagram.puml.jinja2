@@ -1,4 +1,4 @@
-{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+{% if model.classification %}##### {{model.classification}} #####{% endif %}
 
 @startuml {{model.name}} Object Diagram
 title {{model.name}} Object Diagram
@@ -11,4 +11,4 @@ object {{object}}
 {% endfor %}
 @enduml
 
-{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+{% if model.classification %}##### {{model.classification}} #####{% endif %}
