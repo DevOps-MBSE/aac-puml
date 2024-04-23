@@ -59,7 +59,7 @@ def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: s
     return defined_interfaces, model_interfaces, model_outputs
 
 
-def model_sort(models: list[dict], defined_interfaces: set) -> list[dict]:
+def model_sort(models: list[dict], defined_interfaces: set, classification: Optional[str]) -> list[dict]:
     """
     Helper method for extracting and sorting data from a model
 
@@ -93,6 +93,8 @@ def model_sort(models: list[dict], defined_interfaces: set) -> list[dict]:
                 model_dict["components"] = model_components
             if model_interfaces:
                 model_dict["interfaces"] = list(model_interfaces)
+        if classification:
+            model_dict["classification"] = classification
 
             definitions.append(model_dict)
     return definitions

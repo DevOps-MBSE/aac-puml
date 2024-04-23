@@ -6,7 +6,7 @@
 import yaml
 
 from os import path
-from typing import Callable
+from typing import Callable, Optional
 
 from aac.context.definition import Definition
 from aac.execute.aac_execution_result import (
@@ -25,17 +25,13 @@ from .helpers.requirements_helpers import get_requirements_defs
 plugin_name = "Generate PlantUML Diagrams"
 
 
-def before_puml_component_check(
-    architecture_file: str, output_directory: str, run_check: Callable
-) -> ExecutionResult:
+def before_puml_component_check(architecture_file: str, run_check: Callable) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-component command.
 
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML component diagram.
-        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-                                will be written.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -44,7 +40,7 @@ def before_puml_component_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_component(architecture_file: str, output_directory: str) -> tuple[str, ExecutionResult]:
+def puml_component(architecture_file: str, output_directory: str, classification: Optional[str]) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-component command to perform the conversion of an AaC-defined system to a PlantUML component diagram.
 
@@ -53,6 +49,7 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
                                  generate a PlantUML component diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         The YAML string to use in generating the output component diagram(s).
@@ -66,7 +63,8 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    component_data = model_sort(parsed_file, set())
+    classification = classification.upper()
+    component_data = model_sort(models=parsed_file, defined_interfaces=set(), classification=classification)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
@@ -96,8 +94,7 @@ def puml_component(architecture_file: str, output_directory: str) -> tuple[str, 
     return new_file, ExecutionResult(plugin_name, "puml-component", status, messages)
 
 
-def after_puml_component_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
+def after_puml_component_generate(architecture_file: str, output_directory: str, run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
@@ -129,18 +126,13 @@ def after_puml_component_generate(
     )
 
 
-def before_puml_sequence_check(
-    architecture_file: str, output_directory: str, classification: str, run_check: Callable
-) -> ExecutionResult:
+def before_puml_sequence_check(architecture_file: str, run_check: Callable) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-sequence command.
 
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined use case from which
                                  to generate a PlantUML sequence diagram.
-        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-                                will be written.
-        classification (str): The level of classification for the output diagram file.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -149,7 +141,7 @@ def before_puml_sequence_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_sequence(architecture_file: str, output_directory: str, classification: str) -> tuple[str, ExecutionResult]:
+def puml_sequence(architecture_file: str, output_directory: str, classification: Optional[str]) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-sequence command to perform the conversion of an AaC-defined use case to PlantUML sequence diagram.
 
@@ -158,7 +150,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
                                  to generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        classification (str): The level of classification for the output diagram file.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         The YAML string to use in generating the output sequence diagram(s).
@@ -209,8 +201,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     return new_file, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
-def after_puml_sequence_generate(
-    architecture_file: str, output_directory: str, classification: str, run_generate: Callable
+def after_puml_sequence_generate(architecture_file: str, output_directory: str, run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -220,7 +211,6 @@ def after_puml_sequence_generate(
                                  generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
-        classification (str): The level of classification for the output diagram file.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
@@ -243,17 +233,13 @@ def after_puml_sequence_generate(
     )
 
 
-def before_puml_object_check(
-    architecture_file: str, output_directory: str, run_check: Callable
-) -> ExecutionResult:
+def before_puml_object_check(architecture_file: str, run_check: Callable) -> ExecutionResult:
     """
     Run the Check AaC  command before the puml-object command.
 
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML object diagram.
-        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-                                will be written.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -262,7 +248,7 @@ def before_puml_object_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResult]:
+def puml_object(architecture_file: str, output_directory: str, classification: Optional[str]) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-object command to perform the conversion an AaC-defined system to PlantUML object diagram.
 
@@ -271,6 +257,7 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
                                  generate a PlantUML object diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         The YAML string to use in generating the output object diagram(s).
@@ -284,7 +271,8 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    object_data = get_object_data(parsed_file)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
+    classification = classification.upper()
+    object_data = get_object_data(parsed_file, classification)  # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
@@ -319,9 +307,7 @@ def puml_object(architecture_file, output_directory) -> tuple[str, ExecutionResu
     return new_file, ExecutionResult(plugin_name, "puml-object", status, messages)
 
 
-def after_puml_object_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
-) -> ExecutionResult:
+def after_puml_object_generate(architecture_file: str, output_directory: str, run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-object command.
 
@@ -352,17 +338,13 @@ def after_puml_object_generate(
     )
 
 
-def before_puml_requirements_check(
-    architecture_file: str, output_directory: str, run_check: Callable
-) -> ExecutionResult:
+def before_puml_requirements_check(architecture_file: str, run_check: Callable) -> ExecutionResult:
     """
     Run the Check AaC command before the puml-requirements command.
 
     Args:
         architecture_file (str): A path to a YAML file containing an AaC-defined system from which to
                                  generate a PlantUML requirements diagram.
-        output_directory (str): The output directory into which the PlantUML (.puml) diagram file
-                                will be written.
         run_check (Callable): Callback reference to the run_check method from the Check plugin.
 
     Returns:
@@ -371,7 +353,7 @@ def before_puml_requirements_check(
     return run_check(architecture_file, False, False)
 
 
-def puml_requirements(architecture_file, output_directory) -> tuple[str, ExecutionResult]:
+def puml_requirements(architecture_file: str, output_directory: str, classification: Optional[str]) -> tuple[str, ExecutionResult]:
     """
     Business logic for allowing puml-requirements command to perform the conversion of an AaC-defined system to a requirements diagram in PlantUML format.
 
@@ -380,6 +362,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
                                  generate a PlantUML requirements diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         The YAML string to use in generating the output requirements diagram(s).
@@ -403,7 +386,8 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
         if definition.get_root_key() == "req":
             req_definitions[definition.name] = definition
 
-    requirement_data = get_requirements_defs(req_definitions)
+    classification = classification.upper()
+    requirement_data = get_requirements_defs(req_definitions, classification)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
@@ -438,9 +422,7 @@ def puml_requirements(architecture_file, output_directory) -> tuple[str, Executi
     return new_file, ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
 
-def after_puml_requirements_generate(
-    architecture_file: str, output_directory: str, run_generate: Callable
-) -> ExecutionResult:
+def after_puml_requirements_generate(architecture_file: str, output_directory: str, run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-requirements command.
 

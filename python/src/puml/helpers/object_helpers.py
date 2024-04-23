@@ -2,9 +2,10 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 object diagrams in a PUML format.
 """
+from typing import Optional
 
 
-def get_object_data(models: list[dict]) -> list[dict]:
+def get_object_data(models: list[dict], classification: Optional[str]) -> list[dict]:
     """
     Helper method for extracting data from a model
 
@@ -18,6 +19,7 @@ def get_object_data(models: list[dict]) -> list[dict]:
     for model in models:
         object_declarations = []
         object_compositions = {}
+        model_dict = {}
         if model.get_root_key() == "model":
             model_name = model.name
             object_declarations.append(model_name)
@@ -32,6 +34,11 @@ def get_object_data(models: list[dict]) -> list[dict]:
                 for parent in object_compositions:
                     for child in object_compositions.get(parent, set()):
                         object_hierarchies.append({"parent": parent, "child": child})
+            model_dict["name"] = model_name
+            model_dict["objects"] = object_declarations
+            model_dict["object_hierarchies"] = object_hierarchies
+            if classification:
+                model_dict["classification"] = classification
 
-            definitions.append({"name": model_name, "objects": object_declarations, "object_hierarchies": object_hierarchies})
+            definitions.append(model_dict)
     return definitions
