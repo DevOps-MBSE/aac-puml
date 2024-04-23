@@ -54,7 +54,7 @@ class TestGeneratePlantUMLComponent(TestCase):
         """Test the puml-sequence CLI command file output for the PUML Plugin."""
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir, "--classification", "UNCLASSIFIED"]
             exit_code, output_message = self.run_puml_component_cli_command_with_args(args)
 
             temp_dir_files = listdir(temp_dir)
