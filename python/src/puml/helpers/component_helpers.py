@@ -2,14 +2,11 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 component diagrams in a PUML format.
 """
-
-from typing import List
-
 from aac.context.language_context import LanguageContext
 from aac.context.definition import Definition
 
 
-def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
+def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple[set, set, list[dict]]:
     """
     Method to extract input information from a model
 
@@ -35,7 +32,7 @@ def _input_sort(model: Definition, defined_interfaces: set, model_interfaces: se
     return defined_interfaces, model_interfaces, model_inputs
 
 
-def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> [set, set, List]:
+def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: set) -> tuple[set, set, list[dict]]:
     """
     Method to extract output information from a model
 
@@ -62,7 +59,7 @@ def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: s
     return defined_interfaces, model_interfaces, model_outputs
 
 
-def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
+def model_sort(models: list[dict], defined_interfaces: set) -> list[dict]:
     """
     Helper method for extracting and sorting data from a model
 
@@ -77,25 +74,26 @@ def _model_sort(models: List[dict], defined_interfaces: set) -> List[dict]:
     definitions = []
     for model in models:
         model_interfaces = set()
-        dict = {}
+        model_dict = {}
         if model.get_root_key() == "model":
             model_name = model.name
             model_inputs = []
-            dict["name"] = model_name
+            model_dict["name"] = model_name
             if "input" in model.content:
                 defined_interfaces, model_interfaces, model_inputs = _input_sort(model, defined_interfaces, model_interfaces)
-                dict["inputs"] = model_inputs
+                model_dict["inputs"] = model_inputs
             model_outputs = []
             defined_interfaces, model_interfaces, model_outputs = _output_sort(model, defined_interfaces, model_interfaces)
-            dict["outputs"] = model_outputs
+            model_dict["outputs"] = model_outputs
             model_components = []
             if "components" in model.content:
                 for component in model.structure["model"]["components"]:
                     component_type = component["model"]
-                    model_components.append(_model_sort(context.get_definitions_by_name(component_type), defined_interfaces)[0])
-                dict["components"] = model_components
+                    model_components.append(model_sort(models=context.get_definitions_by_name(component_type),
+                                                       defined_interfaces=defined_interfaces)[0])
+                model_dict["components"] = model_components
             if model_interfaces:
-                dict["interfaces"] = list(model_interfaces)
+                model_dict["interfaces"] = list(model_interfaces)
 
-            definitions.append(dict)
+            definitions.append(model_dict)
     return definitions

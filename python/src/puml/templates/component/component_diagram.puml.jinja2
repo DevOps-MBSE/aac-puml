@@ -21,9 +21,12 @@
 {{space(indent_level)}}{{output.source}} --> {{output.type}} : {{output.name}}
 {% endfor -%}
 {%- endmacro -%}
+{% if model.classification %}##### {{model.classification}} #####{% endif %}
 
 @startuml {{model.name}} Component Diagram
 title {{model.name}} Component Diagram
 
 {{print_components(model, 0)}}
 @enduml
+
+{% if model.classification %}##### {{model.classification}} #####{% endif %}

@@ -1,21 +1,21 @@
-@startuml
+{% if req_spec.classification %}##### {{req_spec.classification}} #####{% endif %}
+
+@startuml {{req_spec.title}} Requirements Diagram
 
 mainframe **req** [{{package | default('Package')}}] **{{title}}** [{{subtitle | default('Requirements')}}]
 
-{% for req in requirements %}
-object "<<{{req.type}}>>{% if req.title %}\n**{{req.title}}**{% endif %}" as {{req.name}} {
-    id = {{req.id}}
-    Text = {{req.shall}}
-    {% for attribute in req.attributes %}
+object "<<{{req_spec.type}}>> **{{req_spec.title}}**" as {{req_spec.name}} {
+    id = {{req_spec.id}}
+    Text = {{req_spec.shall}}
+    {% for attribute in req_spec.attributes -%}
     {{attribute.name}} = {{attribute.value}}
-    {% endfor %}
+    {% endfor -%}
 }
 
-{% for r in req.connected %}
+{% for r in req_spec.connected -%}
 {{r.parent}} {{r.arrow | safe}} {{r.child}}{% if r.relationship %} : <<{{r.relationship}}>>{% endif %}
-
-{% endfor %}
-
-{% endfor %}
+{% endfor -%}
 
 @enduml
+
+{% if req_spec.classification %}##### {{req_spec.classification}} #####{% endif %}
