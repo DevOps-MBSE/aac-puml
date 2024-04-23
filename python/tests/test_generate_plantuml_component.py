@@ -6,6 +6,7 @@ from unittest import TestCase
 
 from aac.execute.command_line import cli, initialize_cli
 
+
 class TestGeneratePlantUMLComponent(TestCase):
     def test_puml_component(self):
         # Like in core going to rely on the CLI testing for this, have not determined what we would like to test here

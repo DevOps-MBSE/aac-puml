@@ -1,5 +1,3 @@
-
-
 from click.testing import CliRunner
 from os import listdir, path
 from typing import Tuple
@@ -7,6 +5,7 @@ from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 from aac.execute.command_line import cli, initialize_cli
+
 
 class TestGeneratePlantUMLRequirements(TestCase):
     def test_puml_requirements(self):

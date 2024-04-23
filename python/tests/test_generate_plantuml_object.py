@@ -6,6 +6,7 @@ from unittest import TestCase
 
 from aac.execute.command_line import cli, initialize_cli
 
+
 class TestGeneratePlantUMLObject(TestCase):
     def test_puml_object(self):
 
