@@ -39,7 +39,6 @@ jobs:
           name: aac_puml
           path: python/dist
           if-no-files-found: error
-          overwrite: true
 
       - name: Build Documentation
         run: |

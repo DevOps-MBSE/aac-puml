@@ -1,3 +1,5 @@
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+
 {%- macro space(count) -%}{% for i in range(0, count)%}  {% endfor %}{%- endmacro -%}
 {%- macro print_components(model, indent_level) %}
 {%- for interface in model.interfaces -%}
@@ -27,3 +29,5 @@ title {{model.name}} Component Diagram
 
 {{print_components(model, 0)}}
 @enduml
+
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}

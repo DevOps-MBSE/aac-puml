@@ -1,4 +1,4 @@
-##### {{usecase.classification}} #####
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
 
 @startuml {{usecase.name}} Sequence Diagram
 title {{usecase.name}} Sequence Diagram
@@ -11,4 +11,4 @@ participant {{participant.type}} as {{participant.name}}
 {% endfor %}
 @enduml
 
-##### {{usecase.classification}} #####
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}

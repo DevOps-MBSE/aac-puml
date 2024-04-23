@@ -1,3 +1,5 @@
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
+
 @startuml {{req_spec.title}} Requirements Diagram
 
 mainframe **req** [{{package | default('Package')}}] **{{title}}** [{{subtitle | default('Requirements')}}]
@@ -15,3 +17,5 @@ object "<<{{req_spec.type}}>> **{{req_spec.title}}**" as {{req_spec.name}} {
 {% endfor -%}
 
 @enduml
+
+{% if usecase.classification %}##### {{usecase.classification}} #####{% endif %}
