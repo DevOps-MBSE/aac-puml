@@ -61,14 +61,13 @@ def _output_sort(model: Definition, defined_interfaces: set, model_interfaces: s
     return defined_interfaces, model_interfaces, model_outputs
 
 
-def model_sort(models: list[dict], defined_interfaces: set, classification: Optional[str]) -> list[dict]:
+def model_sort(models: list[dict], defined_interfaces: set) -> list[dict]:
     """
     Helper method for extracting and sorting data from a model
 
     Args:
         models (List[dict]): A list of model definitions
         defined_interfaces (set): a set of all the input and output types.  Passed in as an empty set usually, but used in recursion.
-        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A List of dictionaries of organized data for diagram generation
@@ -93,13 +92,10 @@ def model_sort(models: list[dict], defined_interfaces: set, classification: Opti
                 for component in model.structure["model"]["components"]:
                     component_type = component["model"]
                     model_components.append(model_sort(models=context.get_definitions_by_name(component_type),
-                                                       defined_interfaces=defined_interfaces,
-                                                       classification=classification)[0])
+                                                       defined_interfaces=defined_interfaces)[0])
                 model_dict["components"] = model_components
             if model_interfaces:
                 model_dict["interfaces"] = list(model_interfaces)
-        if classification:
-            model_dict["classification"] = classification
 
             definitions.append(model_dict)
     return definitions

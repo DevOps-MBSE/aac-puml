@@ -2,16 +2,14 @@
 Helper methods for extracting and sorting pertinent model data for use in generating
 object diagrams in a PUML format.
 """
-from typing import Optional
 
 
-def get_object_data(models: list[dict], classification: Optional[str]) -> list[dict]:
+def get_object_data(models: list[dict]) -> list[dict]:
     """
     Helper method for extracting data from a model
 
     Args:
         models (List[dict]): A list of model definitions
-        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A list of dictionaries of organized data for diagram generation
@@ -38,8 +36,6 @@ def get_object_data(models: list[dict], classification: Optional[str]) -> list[d
             model_dict["name"] = model_name
             model_dict["objects"] = object_declarations
             model_dict["object_hierarchies"] = object_hierarchies
-            if classification:
-                model_dict["classification"] = classification
 
             definitions.append(model_dict)
     return definitions

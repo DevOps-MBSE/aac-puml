@@ -63,13 +63,14 @@ def puml_component(architecture_file: str, output_directory: str, classification
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    if classification:
-        classification = classification.upper()
-    component_data = model_sort(models=parsed_file, defined_interfaces=set(), classification=classification)
+    component_data = model_sort(models=parsed_file, defined_interfaces=set())
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
+    if classification:
+        classification = classification.upper()
     for model in component_data:
+        model["classification"] = classification
         yaml_list.append([{"model": model}])
 
     # Concatenate data definitions into a single string in yaml format
@@ -166,14 +167,14 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     parsed_definitions: list[Definition] = parse(architecture_file)
 
     # Sort definition data into required data
-    if classification:
-        classification = classification.upper()
-    use_case_data = sort_use_case_components(parsed_file=parsed_definitions,
-                                             classification=classification)
+    use_case_data = sort_use_case_components(parsed_file=parsed_definitions)
 
     # Take a single use case at a time to extract participant and step data in the form of a list of strings
     yaml_list = []
+    if classification:
+        classification = classification.upper()
     for use_case in use_case_data:
+        use_case["classification"] = classification
         yaml_list.append([{"usecase": use_case}])
 
     # Concatenate data definitions into a single string in yaml format
@@ -275,14 +276,15 @@ def puml_object(architecture_file: str, output_directory: str, classification: O
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    if classification:
-        classification = classification.upper()
     # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
-    object_data = get_object_data(models=parsed_file, classification=classification)
+    object_data = get_object_data(models=parsed_file)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
+    if classification:
+        classification = classification.upper()
     for model in object_data:
+        model["classification"] = classification
         yaml_list.append([{"model": model}])
 
     # Concatenate data definitions into a single string in yaml format
@@ -393,13 +395,14 @@ def puml_requirements(architecture_file: str, output_directory: str, classificat
         if definition.get_root_key() == "req":
             req_definitions[definition.name] = definition
 
-    if classification:
-        classification = classification.upper()
-    requirement_data = get_requirements_defs(req_definitions, classification)
+    requirement_data = get_requirements_defs(reqs=req_definitions)
 
     # Create a List of strings containing the sorted data definitions
     yaml_list = []
+    if classification:
+        classification = classification.upper()
     for req in requirement_data:
+        req["classification"] = classification
         yaml_list.append([{"req_spec": req}])
 
     # Concatenate data definitions into a single string in yaml format

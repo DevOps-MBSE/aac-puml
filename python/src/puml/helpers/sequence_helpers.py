@@ -5,7 +5,7 @@ sequence diagrams in a PUML format.
 from aac.context.definition import Definition
 
 
-def sort_use_case_components(parsed_file: list[Definition], classification: str) -> list[dict]:
+def sort_use_case_components(parsed_file: list[Definition]) -> list[dict]:
     """
     Helper method for sorting the use case definition into its components.
 
@@ -42,8 +42,6 @@ def sort_use_case_components(parsed_file: list[Definition], classification: str)
         use_case_dict["name"] = use_case_title
         use_case_dict["participants"] = participants
         use_case_dict["sequences"] = sequences
-        if classification:
-            use_case_dict["classification"] = classification
         properties.append(use_case_dict)
 
     return properties

@@ -5,13 +5,12 @@ diagrams in a PUML format.
 from typing import Optional
 
 
-def get_requirements_defs(reqs: dict, classification: Optional[str]) -> list[dict]:
+def get_requirements_defs(reqs: dict) -> list[dict]:
     """
     Helper method for extracting and sorting data from a requirement specification.
 
     Args:
         reqs (dict): A dictionary of requirement definitions.
-        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
 
     Returns:
         A list of dictionaries of organized data for diagram generation.
@@ -36,8 +35,7 @@ def get_requirements_defs(reqs: dict, classification: Optional[str]) -> list[dic
             req_dict["attributes"] = attributes
             req_dict["type"] = tadi_type
             req_dict["connected"] = connected
-            if classification:
-                req_dict["classification"] = classification
+            
             requirements.append(req_dict)
     return requirements
 

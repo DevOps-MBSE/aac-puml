@@ -1,5 +1,3 @@
-{% if model.classification %}##### {{model.classification}} #####{% endif %}
-
 {%- macro space(count) -%}{% for i in range(0, count)%}  {% endfor %}{%- endmacro -%}
 {%- macro print_components(model, indent_level) %}
 {%- for interface in model.interfaces -%}
@@ -23,6 +21,7 @@
 {{space(indent_level)}}{{output.source}} --> {{output.type}} : {{output.name}}
 {% endfor -%}
 {%- endmacro -%}
+{% if model.classification %}##### {{model.classification}} #####{% endif %}
 
 @startuml {{model.name}} Component Diagram
 title {{model.name}} Component Diagram

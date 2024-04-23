@@ -81,7 +81,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/usecase.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
             exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
 
@@ -95,7 +95,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/usecase.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
             exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
 
@@ -115,7 +115,7 @@ class TestGeneratePlantUMLDiagrams(TestCase):
         with TemporaryDirectory() as temp_dir:
             aac_file_path = path.join(path.dirname(__file__), "alarm_clock/alarm_clock.yaml")
 
-            args = [aac_file_path, temp_dir, "UNCLASSIFIED"]
+            args = [aac_file_path, temp_dir]
 
             exit_code, output_message = self.run_puml_sequence_cli_command_with_args(args)
 
