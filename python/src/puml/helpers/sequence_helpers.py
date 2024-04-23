@@ -20,7 +20,6 @@ def sort_use_case_components(parsed_file: list[Definition], classification: str)
     use_case_actors: dict = {}
     use_case_steps: dict = {}
     properties: list = []
-    use_case_dict: dict = {}
 
     # Sort through the parsed definitions into their top level categories
     for definition in parsed_file:
@@ -39,12 +38,14 @@ def sort_use_case_components(parsed_file: list[Definition], classification: str)
         participants = _get_use_case_participants(use_case=use_case, use_case_actors=use_case_actors)
         sequences = _get_use_case_steps(use_case=use_case, use_case_steps=use_case_steps)
 
+        use_case_dict: dict = {}
         use_case_dict["name"] = use_case_title
         use_case_dict["participants"] = participants
         use_case_dict["sequences"] = sequences
         if classification:
             use_case_dict["classification"] = classification
         properties.append(use_case_dict)
+
     return properties
 
 

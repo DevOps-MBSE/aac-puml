@@ -93,8 +93,8 @@ def model_sort(models: list[dict], defined_interfaces: set, classification: Opti
                 for component in model.structure["model"]["components"]:
                     component_type = component["model"]
                     model_components.append(model_sort(models=context.get_definitions_by_name(component_type),
-                                                       defined_interfaces=defined_interfaces)[0],
-                                                       classification=classification)
+                                                       defined_interfaces=defined_interfaces,
+                                                       classification=classification)[0])
                 model_dict["components"] = model_components
             if model_interfaces:
                 model_dict["interfaces"] = list(model_interfaces)
