@@ -63,7 +63,8 @@ def puml_component(architecture_file: str, output_directory: str, classification
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    classification = classification.upper()
+    if classification:
+        classification = classification.upper()
     component_data = model_sort(models=parsed_file, defined_interfaces=set(), classification=classification)
 
     # Create a List of strings containing the sorted data definitions
@@ -94,7 +95,7 @@ def puml_component(architecture_file: str, output_directory: str, classification
     return new_file, ExecutionResult(plugin_name, "puml-component", status, messages)
 
 
-def after_puml_component_generate(architecture_file: str, output_directory: str, run_generate: Callable
+def after_puml_component_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-component command.
@@ -104,12 +105,13 @@ def after_puml_component_generate(architecture_file: str, output_directory: str,
                                  generate a PlantUML component diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
         run_generate (Callable): Callback reference to the run_reference method from the Generate plugin.
 
     Returns:
         The results of the execution of the check command.
     """
-    arch_file_content, execution_status = puml_component(architecture_file, output_directory)
+    arch_file_content, execution_status = puml_component(architecture_file, output_directory, classification)
 
     puml_component_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/component_diagram_generator.aac")
@@ -164,7 +166,8 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     parsed_definitions: list[Definition] = parse(architecture_file)
 
     # Sort definition data into required data
-    classification = classification.upper()
+    if classification:
+        classification = classification.upper()
     use_case_data = sort_use_case_components(parsed_file=parsed_definitions,
                                              classification=classification)
 
@@ -201,7 +204,7 @@ def puml_sequence(architecture_file: str, output_directory: str, classification:
     return new_file, ExecutionResult(plugin_name, "puml-sequence", status, messages)
 
 
-def after_puml_sequence_generate(architecture_file: str, output_directory: str, run_generate: Callable
+def after_puml_sequence_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable
 ) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-sequence command.
@@ -211,6 +214,7 @@ def after_puml_sequence_generate(architecture_file: str, output_directory: str, 
                                  generate a PlantUML sequence diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
@@ -271,7 +275,8 @@ def puml_object(architecture_file: str, output_directory: str, classification: O
     parsed_file = parse(architecture_file)
 
     # Sort definitions into required data
-    classification = classification.upper()
+    if classification:
+        classification = classification.upper()
     # gets back a list of dictionaries containing a list of object_declarations, and a list of object hierarchies
     object_data = get_object_data(models=parsed_file, classification=classification)
 
@@ -308,7 +313,7 @@ def puml_object(architecture_file: str, output_directory: str, classification: O
     return new_file, ExecutionResult(plugin_name, "puml-object", status, messages)
 
 
-def after_puml_object_generate(architecture_file: str, output_directory: str, run_generate: Callable) -> ExecutionResult:
+def after_puml_object_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-object command.
 
@@ -317,12 +322,13 @@ def after_puml_object_generate(architecture_file: str, output_directory: str, ru
                                  generate a PlantUML object diagram.
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
         The results of the execution of the generate command.
     """
-    arch_file_content, execution_status = puml_object(architecture_file, output_directory)
+    arch_file_content, execution_status = puml_object(architecture_file, output_directory, classification)
 
     puml_object_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/object_diagram_generator.aac")
@@ -387,7 +393,8 @@ def puml_requirements(architecture_file: str, output_directory: str, classificat
         if definition.get_root_key() == "req":
             req_definitions[definition.name] = definition
 
-    classification = classification.upper()
+    if classification:
+        classification = classification.upper()
     requirement_data = get_requirements_defs(req_definitions, classification)
 
     # Create a List of strings containing the sorted data definitions
@@ -423,7 +430,7 @@ def puml_requirements(architecture_file: str, output_directory: str, classificat
     return new_file, ExecutionResult(plugin_name, "puml-requirements", status, messages)
 
 
-def after_puml_requirements_generate(architecture_file: str, output_directory: str, run_generate: Callable) -> ExecutionResult:
+def after_puml_requirements_generate(architecture_file: str, output_directory: str, classification: Optional[str], run_generate: Callable) -> ExecutionResult:
     """
     Run the Generate generate command after the puml-requirements command.
 
@@ -433,6 +440,7 @@ def after_puml_requirements_generate(architecture_file: str, output_directory: s
 
         output_directory (str): The output directory into which the PlantUML (.puml) diagram file
                                 will be written.
+        classification (Optional[str]): The level of classification for the output diagram file, or none if not provided.
         run_generate (Callable): Callback reference to the run_generate method from the Generate plugin.
 
     Returns:
@@ -441,7 +449,7 @@ def after_puml_requirements_generate(architecture_file: str, output_directory: s
     puml_requirements_generator_file = path.abspath(
         path.join(path.dirname(__file__), "./generators/requirements_diagram_generator.aac")
     )
-    arch_file_content, result = puml_requirements(architecture_file, output_directory)
+    arch_file_content, result = puml_requirements(architecture_file, output_directory, classification)
     return run_generate(
         aac_plugin_file=arch_file_content,
         generator_file=puml_requirements_generator_file,
