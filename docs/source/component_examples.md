@@ -8,7 +8,7 @@ All AaC constraint checks were successful.
 Wrote PUML Component Diagram(s) to ./tests/alarm_clock/diagrams/component/.
 ```
 
-## Basic Command Output
+## Basic Command File Content
 
 ```
 @startuml AlarmClock Component Diagram
@@ -45,7 +45,7 @@ All AaC constraint checks were successful.
 Wrote PUML Component Diagram(s) to ./tests/alarm_clock/diagrams/component/.
 ```
 
-## Command with Classification Output
+## Command with Classification File Content
 
 ```
 ##### UNCLASSIFIED #####
@@ -81,5 +81,10 @@ Timestamp --> AlarmClock : targetTime
 ## Command Execution Failure
 
 ```bash
-
+$ aac puml-component ./tests/alarm_clock/structures.yaml ./tests/alarm_clock/diagrams/component
+No applicable model definitions to generate a component diagram.
 ```
+
+## Generated Files
+
+Include screen shot of file tree, need to do from different comp.
