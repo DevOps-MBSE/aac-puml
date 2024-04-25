@@ -36,14 +36,14 @@ For viewing example usage and results of the object diagram generation, view [Ob
 
 For direct information on PUML sequence diagrams, view the [sequence diagram documentation](https://plantuml.com/sequence-diagram).
 
-A sequence diagram helps to represent the organization and relationship of system components so that complex systems are able to be better understood and evaluated for interdependencies and efficient design.
+A sequence diagram helps to represent the flow of actions and/or data between system components or users and system components so that complex systems are able to be better understood and evaluated for accurate behavior paths through the designed system.
 
 For viewing example usage and results of the component diagram generation, view [Component Examples](component_examples).
 
-## Component Diagrams
+## Requirements Diagrams
 
-For direct information on PUML component diagrams, view the [component diagram documentation](https://plantuml.com/component-diagram).
+For direct information on SysML requirement diagrams, view the [requirement diagram documentation](https://sysml.org/sysml-faq/what-is-requirement-diagram.html).
 
-A component diagram helps to represent the organization and relationship of system components so that complex systems are able to be better understood and evaluated for interdependencies and efficient design.
+A requirements diagram helps to provide a way of tracing a capability the system shall satisfy by relating the requirement to model elements to use cases to show the complete relationship from requirement to verification within the system.
 
-For viewing example usage and results of the component diagram generation, view [Component Examples](component_examples).
+For viewing example usage and results of the requirements diagram generation, view [Requirements Examples](requirements_examples).
