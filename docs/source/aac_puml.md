@@ -34,7 +34,7 @@ Options:
 
 ## Examples
 
-For viewing example input and output of executing this command, view [this page](component_examples).
+For viewing example input and output of executing this command, view [Component Examples](component_examples).
 
 ## puml-object Command
 
@@ -62,7 +62,7 @@ Options:
 
 ## Examples
 
-For viewing example input and output of executing this command, view [this page](object_examples).
+For viewing example input and output of executing this command, view [Object Examples](object_examples).
 
 ## puml-requirements Command
 
@@ -90,7 +90,7 @@ Options:
 
 ## Examples
 
-For viewing example input and output of executing this command, view [this page](requirements_examples)
+For viewing example input and output of executing this command, view [Requirements Examples](requirements_examples)
 
 ## puml-sequence Command
 
@@ -118,4 +118,4 @@ Options:
 
 ## Examples
 
-For viewing example input and output of executing this command, view [this page](sequence_examples).
+For viewing example input and output of executing this command, view [Sequence Examples](sequence_examples).
