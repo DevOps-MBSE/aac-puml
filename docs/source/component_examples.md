@@ -87,4 +87,4 @@ No applicable model definitions to generate a component diagram.
 
 ## Generated Files
 
-Include screen shot of file tree, need to do from different comp.
+![Component Files](../images/component_files.png)
