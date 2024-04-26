@@ -65,4 +65,4 @@ No applicable requirement specification definitions to generate a requirements d
 
 ## Generated Files
 
-![Requirements Files](../images/reequirement_files.png)
+![Requirements Files](../images/requirement_files.png)
