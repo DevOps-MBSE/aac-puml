@@ -59,4 +59,4 @@ No applicable model definitions to generate an object diagram.
 
 ## Generated Files
 
-Include screen shot of file tree, need to do from different comp.
+![Object Files](../images/object_files.png)

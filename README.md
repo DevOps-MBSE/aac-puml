@@ -5,18 +5,18 @@
    to a PlantUML (PUML) file. (see https://plantuml.com)
 
    Tools exist at the the above website to convert the PUML file to a various types of diagram images.
-   These types correspond to the 9 traditional SysML diagram types:
-        - Requirement diagram (req)
+   These types correspond to some traditional SysML diagram types:
+        - Requirement diagram (REQ)
         - Structure Diagrams
-        - Block Definition Diagram (bdd)
-        - Internal Block Diagram (ibd)
-        - Parametric Diagram (par)
-        - Package diagram (pkg)
+        - Block Definition Diagram (BDD)
+        - Internal Block Diagram (IBD)
+        - Parametric Diagram (PAR)
+        - Package diagram (PKG)
         - Behavior Diagrams
-        - Activity diagram (act)
-        - Sequence diagram (sd)
-        - State Machine diagram (stm)
-        - Use Case diagram (uc)
+        - Activity diagram (ACT)
+        - Sequence diagram (SD)
+        - State Machine diagram (STM)
+        - Use Case diagram (UC)
 
 PYTHON VERSION COMPATIBILITY:
    Currently, Python version 3.9.13 is required to avoid certain dependency version issues.

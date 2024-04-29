@@ -61,4 +61,4 @@ No applicable use case definitions to generate a sequence diagram.
 
 ## Generated Files
 
-Include screen shot of file tree, need to do from different comp.
+![Sequence Files](../images/sequence_files.png)
