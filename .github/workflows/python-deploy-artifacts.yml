@@ -29,7 +29,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: aac_puml_wheel
-          path: python/dist/
+          path: dist/
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
