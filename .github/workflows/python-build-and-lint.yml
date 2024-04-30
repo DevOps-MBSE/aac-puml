@@ -51,4 +51,3 @@ jobs:
         with:
           name: aac-puml-docs
           path: python/docs/doc_artifacts
-          overwrite: true
