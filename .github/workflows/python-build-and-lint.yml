@@ -36,7 +36,7 @@ jobs:
       - name: Upload Python Wheel
         uses: actions/upload-artifact@v3
         with:
-          name: aac_puml
+          name: aac_puml_wheel
           path: python/dist
           if-no-files-found: error
 
