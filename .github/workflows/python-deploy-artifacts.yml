@@ -2,11 +2,11 @@ name: Deploy Python Artifacts
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - python/**
+  push:
+    branches:
+      - main
+    paths:
+      - python/**
 
 defaults:
   run:
@@ -25,7 +25,7 @@ jobs:
       - name: Download Python Wheel
         uses: actions/download-artifact@v3
         with:
-          name: aac_wheel
+          name: aac_puml_wheel
           path: python/dist/
 
       - name: Publish distribution to PyPI
