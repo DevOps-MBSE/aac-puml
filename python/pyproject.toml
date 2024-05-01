@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +13,7 @@ authors = [
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
 requires-python = ">= 3.9.13"
 dependencies = [
-	"aac>=0.4.3",
+	"aac >= 0.4.3",
 ]
 [project.optional_dependencies]
 doc = [
@@ -33,14 +33,14 @@ doc = [
 	"pytz ~= 2023.3"
 ]
 test = [
-	"behave>=1.2.6",
-	"build>=1.1.1",
-	"coverage>=7.4.3",
-	"flake8>=4.0",
-	"nose2>=0.10.0",
-	"pipdeptree>=2.16.1",
-	"pyflakes>=2.4",
-	"tox>=3.24"
+	"behave >= 1.2.6",
+	"build >= 1.1.1",
+	"coverage >= 7.4.3",
+	"flake8 >= 4.0",
+	"nose2 > =0.10.0",
+	"pipdeptree >= 2.16.1",
+	"pyflakes >= 2.4",
+	"tox >= 3.24"
 ]
 readme = "README.md"
 license = {text = "MIT License"}

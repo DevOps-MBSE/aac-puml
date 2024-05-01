@@ -1,6 +1,4 @@
-[![Main branch aac-puml Workflow](https://github.com/DevOps-MBSE/aac-puml/actions/workflows/main-branch.yml/badge.svg)](https://github.com/DevOps-MBSE/aac-puml/actions/workflows/main-branch.yml)
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/from-referrer/)
-
+# aac-puml
 This plugin implements a conversion from an AaC model definition specified in an .aac file
 to a PlantUML (PUML) file. (see https://plantuml.com)
 
@@ -42,12 +40,12 @@ A MANIFEST file with these lines was added:
    include tox.ini
    include src/puml/.aac
 
-## TO BUILD FROM TERMINAL
+## BUILD FROM TERMINAL
 
 cd python
 pip install -e .
 
-## TO TEST FROM TERMINAL
+## TEST FROM TERMINAL
 
 cd python
 pip install -e .
