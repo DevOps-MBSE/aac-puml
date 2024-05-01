@@ -18,11 +18,8 @@ jobs:
         with:
           python-version: 3.9.13
 
-      - name: Install requirements
-        run: pip install -r requirements.txt
-
       - name: Install the aac-puml Package
-        run: pip install -e .
+        run: pip install -e .[all]
 
       - name: Lint with flake8
         run: flake8 .

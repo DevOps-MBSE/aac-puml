@@ -24,10 +24,7 @@ jobs:
           python-version: ${{ matrix.py_version }}
 
       - name: Install the AaC PUML Package
-        run: pip install -e .
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
+        run: pip install -e .[all]
 
       - name: Run Tox Tests
         run: tox -e $(echo py${{ matrix.py_version }} | awk -F "." '{print $1$2;}')

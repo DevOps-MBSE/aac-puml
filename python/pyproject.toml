@@ -51,6 +51,11 @@ test = [
 	"pyflakes >= 2.4",
 	"tox >= 3.24"
 ]
+all = [
+	"aac >= 0.4.3",
+	"aac-puml[doc]",
+	"aac-puml[test]"
+]
 
 [project.entry-points."aac"]
 puml-component = "puml"
