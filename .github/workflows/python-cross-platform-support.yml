@@ -103,12 +103,6 @@ jobs:
       - name: Test Plugin Commands
         run: echo "Replace with testing the package commands of this repo"
 
-      - name: Get ${{ github.event.repository.name }} Package Version
-        id: package-version
-        run: |
-          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
-
       - name: Upload logs from failed runs
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
