@@ -16,15 +16,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Python 3.9.13
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9.13
+          python-version: 3.11
 
-      - name: Install the AaC PUML Package
-        run: python -m pip install -e .
+      - name: Install ${{ github.event.repository.name }} Package
+        run: pip install -e .[all]
 
       - name: Create Dependencies Package
         id: os_id
@@ -37,11 +37,18 @@ jobs:
         run: |
           ./secure_install/pipeline_scripts/create_install_archive.bat
 
+      - name: Get ${{ github.event.repository.name }} Package Version
+        id: package-version
+        run: |
+          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+
       - name: Upload Dependencies Package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: secure_install_${{ matrix.os }}
+          name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
           path: python/secure_install/aac_secure_install_*
+
 
   os_test_matrix:
     name: Test ${{ matrix.os }}/${{ matrix.py_version }} Secure Install Air Gap
@@ -51,10 +58,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-latest, windows-latest, macos-13, macos-14] # Annoyingly, Github actions don't support anchors
-        py_version: ["3.9.13"] # py_version: ["3.9.13", "3.10.0", "3.11.0"]
+        py_version: ["3.11.7"]   # py_version: ["3.9.0", "3.10.0", "3.11.0"]
         # exclude:
         #   - os: ubuntu-latest
-        #     py_version: 3.9.13
+        #     py_version: 3.9.0
         #   - os: ubuntu-latest
         #     py_version: 3.10.0
         #   - os: macos-latest
@@ -62,17 +69,23 @@ jobs:
 
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.py_version }}
+          python-version:  ${{ matrix.py_version }}
 
       - name: Checkout Repository # Checked-out repository is necessary to test the first party plugin generation.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Get ${{ github.event.repository.name }} Package Version
+        id: package-version
+        run: |
+          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
 
       - name: Download Secure Install
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: secure_install_${{ matrix.os }}
+          name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
           path: python/
 
       - name: Install from Secure Install
@@ -90,9 +103,15 @@ jobs:
       - name: Test Plugin Commands
         run: echo "Replace with testing the package commands of this repo"
 
+      - name: Get ${{ github.event.repository.name }} Package Version
+        id: package-version
+        run: |
+          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+
       - name: Upload logs from failed runs
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: failed_test_log
+          name: failed_test_log_${{steps.package-version.outputs.VERSION_STRING}}
           path: ${{ env.pythonLocation }}/**/aac.log

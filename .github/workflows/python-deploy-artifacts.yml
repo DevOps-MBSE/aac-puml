@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - $default-branch
     paths:
       - python/**
 
@@ -21,15 +21,18 @@ jobs:
     name: Deploy Artifacts
     runs-on: ubuntu-22.04
     needs: build_deployment_artifacts
-    permissions:
-      # Important:  This permission is mandatory for trusted publishing
-      id-token: write
     steps:
+      - name: Get ${{ github.event.repository.name }} Package Version
+        id: package-version
+        run: |
+          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+
       - name: Download Python Wheel
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: aac_puml_wheel
-          path: dist/
+          name: ${{ github.event.repository.name }}_${{steps.package-version.outputs.VERSION_STRING}}_wheel
+          path: python/dist/
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

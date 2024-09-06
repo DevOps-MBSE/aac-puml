@@ -31,24 +31,34 @@ pyproject.toml vs setup.py
    To coincide with these changes, some changes to tox.ini and the addition of a MANIFEST.ini file were also necessary.
 
     These lines were added to tox.ini:
+    ```
         isolated_build = True
         skipsdist = True
+    ```
 
     A MANIFEST file with these lines was added:
+    ```
         graft src
         graft tests
         include tox.ini
         include src/puml/.aac
+    ```
 
 TO BUILD FROM TERMINAL:
+```
    cd python
    pip install -e .
+```
 
 TO TEST FROM TERMINAL:
+```
    cd python
    pip install -e .
    python -m unittest
+```
 
 To generate a requirements.txt file populated with hashes, use:
+```
    pip install pip-tools
-   pip-compile requirements.in --generate-hashes
+   pip-compile --generate-hashes pyproject.toml
+```
