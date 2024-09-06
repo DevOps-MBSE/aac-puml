@@ -10,9 +10,6 @@ authors = [
 ]
 description = "PlantUML diagram output plugin for AaC (Architecture-as-Code) project"
 requires-python = ">= 3.9.13"
-dependencies = [
-	"aac>=0.4.3"
-]
 readme = "README.md"
 license = {text = "MIT License"}
 keywords = ["SysML", "Architecture-as-Code", "System Engineering", "MBSE"]
@@ -22,7 +19,6 @@ classifiers = [
 	"Operating System :: OS Independent",
     "Topic :: Scientific/Engineering"
 ]
-
 dependencies = [
 	"aac >= 0.4.3",
 ]
