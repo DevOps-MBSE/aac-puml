@@ -35,7 +35,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ github.event.repository.name }}_${{steps.package-version.outputs.VERSION_STRING}}_wheel
-          path: python/dist/
+          path: dist/
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
