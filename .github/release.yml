@@ -18,7 +18,7 @@ changelog:
       labels:
         - fixed
     - title: Security 🔒
-      labels: 
+      labels:
         - security
     - title: Documentation ✏️📘
       labels:
