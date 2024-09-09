@@ -3,7 +3,7 @@ name: Main branch Workflow
 
 on:
   push:
-    branches: [$default-branch]
+    branches: [main]
 
 jobs:
   build_python_artifacts:
@@ -21,4 +21,4 @@ jobs:
 
   build_and_deploy_documentation:
     name: Build and Deploy GitHub Pages
-    uses: ./.github/workflows/sphinx.yml
+    uses: ./.github/workflows/deploy-pages.yml
