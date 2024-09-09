@@ -25,6 +25,9 @@ jobs:
       # Important:  This permission is mandatory for trusted publishing
       id-token: write
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
       - name: Get ${{ github.event.repository.name }} Package Version
         id: package-version
         run: |
