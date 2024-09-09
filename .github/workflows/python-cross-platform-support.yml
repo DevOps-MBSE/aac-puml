@@ -26,11 +26,11 @@ jobs:
       - name: Install ${{ github.event.repository.name }} Package
         run: pip install -e .[all]
 
-      - name: Get ${{ github.event.repository.name }} Package Version
-        id: package-version
-        run: |
-          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+      # - name: Get ${{ github.event.repository.name }} Package Version
+      #   id: package-version
+      #   run: |
+      #     VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+      #     echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
 
       - name: Create Dependencies Package
         id: os_id
@@ -46,7 +46,8 @@ jobs:
       - name: Upload Dependencies Package
         uses: actions/upload-artifact@v4
         with:
-          name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
+          # name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
+          name: secure_install_${{ matrix.os }}
           path: python/secure_install/aac_secure_install_*
 
 
@@ -76,16 +77,17 @@ jobs:
       - name: Checkout Repository # Checked-out repository is necessary to test the first party plugin generation.
         uses: actions/checkout@v4
 
-      - name: Get ${{ github.event.repository.name }} Package Version
-        id: package-version
-        run: |
-          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+      # - name: Get ${{ github.event.repository.name }} Package Version
+      #   id: package-version
+      #   run: |
+      #     VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+      #     echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
 
       - name: Download Secure Install
         uses: actions/download-artifact@v4
         with:
-          name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
+          # name: secure_install_${{ matrix.os }}_${{steps.package-version.outputs.VERSION_STRING}}
+          name: secure_install_${{ matrix.os }}
           path: python/
 
       - name: Install from Secure Install
@@ -107,5 +109,6 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: failed_test_log_${{steps.package-version.outputs.VERSION_STRING}}
+          # name: failed_test_log_${{steps.package-version.outputs.VERSION_STRING}}
+          name: failed_test_log
           path: ${{ env.pythonLocation }}/**/aac.log
