@@ -26,6 +26,12 @@ jobs:
       - name: Install ${{ github.event.repository.name }} Package
         run: pip install -e .[all]
 
+      - name: Get ${{ github.event.repository.name }} Package Version
+        id: package-version
+        run: |
+          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+
       - name: Create Dependencies Package
         id: os_id
         if: matrix.os != 'windows-latest'
@@ -36,12 +42,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           ./secure_install/pipeline_scripts/create_install_archive.bat
-
-      - name: Get ${{ github.event.repository.name }} Package Version
-        id: package-version
-        run: |
-          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION
 
       - name: Upload Dependencies Package
         uses: actions/upload-artifact@v4
@@ -80,7 +80,7 @@ jobs:
         id: package-version
         run: |
           VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION
+          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
 
       - name: Download Secure Install
         uses: actions/download-artifact@v4
