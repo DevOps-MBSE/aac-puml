@@ -1,6 +1,11 @@
 on:
   workflow_call:
 
+    outputs:
+      version-string:
+        description: "The package version"
+        value: ${{ jobs.build_python_artifacts.outputs.version-string}}
+
 defaults:
   run:
     working-directory: ./python
@@ -9,6 +14,8 @@ jobs:
   build_python_artifacts:
     name: Build Artifacts
     runs-on: ubuntu-22.04
+    outputs:
+      version-string: ${{ steps.package-version.outputs.VERSION_STRING}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
