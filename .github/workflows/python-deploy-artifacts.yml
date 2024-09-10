@@ -25,19 +25,16 @@ jobs:
       # Important:  This permission is mandatory for trusted publishing
       id-token: write
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        
       - name: Get ${{ github.event.repository.name }} Package Version
         id: package-version
         run: |
-          VERSION=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
-          echo VERSION_STRING=$VERSION >> $GITHUB_OUTPUT
+          VERSION_1=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
+          echo VERSION_STRING_1=$VERSION_1 >> $GITHUB_OUTPUT
 
       - name: Download Python Wheel
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}_${{steps.package-version.outputs.VERSION_STRING}}_wheel
+          name: ${{ github.event.repository.name }}_${{steps.package-version.outputs.VERSION_STRING_1}}_wheel
           path: dist/
 
       - name: Publish distribution to PyPI
