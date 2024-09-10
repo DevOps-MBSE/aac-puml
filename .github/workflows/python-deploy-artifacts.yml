@@ -28,7 +28,7 @@ jobs:
       - name: Download Python Wheel
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}_${{needs.build_deployment_artifacts.outputs.VERSION_STRING}}_wheel
+          name: ${{ github.event.repository.name }}_${{needs.build_deployment_artifacts.package-version.outputs.VERSION_STRING}}_wheel
           path: dist/
 
       - name: Publish distribution to PyPI
