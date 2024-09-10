@@ -26,7 +26,7 @@ jobs:
       id-token: write
     steps:
       - name: Get ${{ github.event.repository.name }} Package Version
-        id: package-version
+        id: package-version-1
         run: |
           VERSION_1=$(pip show ${{ github.event.repository.name }} | grep Version | cut -f 2 -d " ")
           echo VERSION_STRING_1=$VERSION_1 >> $GITHUB_OUTPUT
@@ -34,7 +34,7 @@ jobs:
       - name: Download Python Wheel
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}_${{steps.package-version.outputs.VERSION_STRING_1}}_wheel
+          name: ${{ github.event.repository.name }}_${{steps.package-version-1.outputs.VERSION_STRING_1}}_wheel
           path: dist/
 
       - name: Publish distribution to PyPI
