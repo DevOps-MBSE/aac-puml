@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-	"aac >= 0.4.3",
+	"aac >= 0.4.29",
 ]
 [project.optional-dependencies]
 doc = [
@@ -52,7 +52,6 @@ test = [
 ]
 
 all = [
-	"aac >= 0.4.8",
 	"aac-puml[doc]",
 	"aac-puml[test]"
 ]
