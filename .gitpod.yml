@@ -27,4 +27,4 @@ vscode:
     - ms-python.python
     - samuelcolvin.jinjahtml
     - streetsidesoftware.code-spell-checker
-
+    - jebbs.plantuml
