@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aac-puml"
-version = "0.1.13"
+version = "0.1.14"
 authors = [
 	{name="AaC Dev Team", email="asdfasdaf@email.com"}
 ]
@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-	"aac >= 0.4.3",
+	"aac >= 0.4.29",
 ]
 [project.optional-dependencies]
 doc = [
@@ -52,7 +52,6 @@ test = [
 ]
 
 all = [
-	"aac >= 0.4.8",
 	"aac-puml[doc]",
 	"aac-puml[test]"
 ]
