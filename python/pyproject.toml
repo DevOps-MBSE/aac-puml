@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aac-puml"
-version = "0.1.14"
+version = "0.1.15"
 authors = [
 	{name="AaC Dev Team", email="asdfasdaf@email.com"}
 ]
@@ -45,7 +45,7 @@ test = [
 	"build >= 1.1.1",
 	"coverage >= 7.4.3",
 	"flake8 >= 4.0.0",
-	"nose2 >= 0.10.0",
+    "nose2 >= 0.10.0",
 	"pipdeptree >= 2.16.1",
 	"pyflakes >= 2.4",
 	"tox >= 3.24",
