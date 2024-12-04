@@ -13,10 +13,10 @@ tasks:
   - name: Python Virtual Environment
     init: |
       cd python/
-      python -m venv venv --system-site-packages
+      python3.9 -m venv venv --system-site-packages
       source venv/bin/activate
       python -m pip install --upgrade pip
-      pip install -e .
+      pip install -e .[all]
     command: cd /workspace/aac-puml/python/; source venv/bin/activate # Always launch a console with our virtual env
 
 vscode:
