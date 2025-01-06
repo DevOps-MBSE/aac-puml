@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest, windows-latest, macos-13, macos-14] # Annoyingly, Github actions don't support anchors
+        os: [ubuntu-20.04, ubuntu-latest, windows-2022, macos-13, macos-14] # Annoyingly, Github actions don't support anchors
 
     steps:
       - name: Checkout Repository
@@ -28,12 +28,12 @@ jobs:
 
       - name: Create Dependencies Package
         id: os_id
-        if: matrix.os != 'windows-latest'
+        if: matrix.os != 'windows-2022'
         run: |
           ./secure_install/pipeline_scripts/create_install_archive.bash
 
       - name: Create Dependencies Package
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2022'
         run: |
           ./secure_install/pipeline_scripts/create_install_archive.bat
 
@@ -51,7 +51,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest, windows-latest, macos-13, macos-14] # Annoyingly, Github actions don't support anchors
+        os: [ubuntu-20.04, ubuntu-latest, windows-2022, macos-13, macos-14] # Annoyingly, Github actions don't support anchors
         py_version: ["3.11.7"]   # py_version: ["3.9.0", "3.10.0", "3.11.0"]
         # exclude:
         #   - os: ubuntu-latest
@@ -77,13 +77,13 @@ jobs:
           path: python/
 
       - name: Install from Secure Install
-        if: matrix.os != 'windows-latest'
+        if: matrix.os != 'windows-2022'
         run: |
           chmod +x ./aac_secure_install_*/install_aac_air_gap.bash
           ./aac_secure_install_*/install_aac_air_gap.bash
 
       - name: Install from Secure Install
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2022'
         run: |
           cd (Get-ChildItem -Filter aac_secure_install_*)
           .\install_aac_air_gap.bat
