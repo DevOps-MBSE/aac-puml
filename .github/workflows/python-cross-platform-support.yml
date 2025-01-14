@@ -29,7 +29,7 @@ jobs:
 
       - name: Create Dependencies Package
         id: os_id
-        if: matrix.os != 'windows-latest'
+        if: matrix.os != 'windows-2022'
         run: |
           ./secure_install/pipeline_scripts/create_install_archive.bash
 
@@ -79,7 +79,7 @@ jobs:
           path: python/
 
       - name: Install from Secure Install
-        if: matrix.os != 'windows-latest'
+        if: matrix.os != 'windows-2022'
         run: |
           chmod +x ./aac_secure_install_*/install_aac_air_gap.bash
           ./aac_secure_install_*/install_aac_air_gap.bash

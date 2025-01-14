@@ -74,7 +74,7 @@ aac puml-requirements my_model.aac output/directory
 
 ### Classification
 
-The `--classification` argument will allow a user to provide a classification level for adding header and footer markings to the output diagram file. 
+The `--classification` argument will allow a user to provide a classification level for adding header and footer markings to the output diagram file.
 
 ## Help
 
